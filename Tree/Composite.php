@@ -11,9 +11,6 @@ namespace Tree;
 
 class Composite extends Component
 {
-    
-    const ROOT = 'root';
-    
     /**
      * @var Component[]
      */

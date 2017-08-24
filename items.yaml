@@ -1,1 +1,16 @@
 iron:
+  time: 0
+
+copper:
+  time: 0
+
+ironGear:
+  time: 0.5
+  children:
+    iron: 2
+
+redBottle:
+  time: 5
+  children:
+    ironGear: 1
+    copper: 1

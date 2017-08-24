@@ -1,1 +1,9 @@
 # Created by .ignore support plugin (hsz.mobi)
+.gitignore
+.idea
+.vagrant
+vendor
+ubuntu-xenial-16.04-cloudimg-console.log
+composer.phar
+phpunit.phar
+Vagrantfile

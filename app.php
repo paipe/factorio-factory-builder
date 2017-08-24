@@ -8,22 +8,13 @@
 
 $loader = require_once __DIR__.'/vendor/autoload.php';
 
-$iron = new \Tree\Item('iron');
-$copper = new \Tree\Item('copper');
-$ironGear = new \Tree\Composite('ironGear', 0.5);
-$ironGear->addItems($iron, 2);
-$redBottle = new \Tree\Composite('redBottle', 5);
-$redBottle->addItems($ironGear, 1);
-$redBottle->addItems($copper, 1);
+$parser = new \Parser\Parser();
+$tree = $parser->buildTree('redBottle');
 
-print_r(array_count_values($redBottle->countItems(1)));
-print_r($redBottle->countConstructTime(1));
+//print_r($tree->countConstructTime(0.1));
 
-$context = new \FactoryBlock\FactoryContext();
-$context->data = $redBottle->countConstructTime(1);
-$context->root = 'redBottle';
-$context->count = 1;
+$builder = new \Builder\SimpleBuilder();
+$builder->setTree($tree);
+$builder->setCount(0.01);
+$builder->showBuildObjects();
 
-$factory = new \FactoryBlock\Factory();
-$factory->setContext($context);
-var_dump($factory->build());

@@ -43,7 +43,7 @@ class Item extends Component
         return $result;
     }
 
-    public function countConstructTime($number, $parent)
+    public function countConstructTime($number, $parent = self::ROOT)
     {
         return [
             $this->name => [

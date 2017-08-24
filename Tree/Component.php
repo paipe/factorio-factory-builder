@@ -11,13 +11,15 @@ namespace Tree;
 
 abstract class Component
 {
+    const ROOT = 'root';
+
     abstract public function countItems($number);
     
-    abstract public function countConstructTime($number, $parent);
+    abstract public function countConstructTime($number, $parent = self::ROOT);
 
     abstract protected function getName();
     
-    public function addItems()
+    public function addItems($component, $count)
     {
         throw new \Exception('unsupported method');
     }

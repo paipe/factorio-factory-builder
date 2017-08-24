@@ -9,7 +9,9 @@
 namespace Drawer;
 
 
-class Drawer
+abstract class Drawer
 {
-
+    
+    abstract public function draw(array $data);
+    
 }
