@@ -2,7 +2,15 @@
   "autoload": {
     "psr-0": {
       "Tree": "Tree/",
-      "FactoryBlock": "FactoryBlock/"
+      "Builder": "Builder/",
+      "Parser": "Parser/",
+      "Drawer": "Drawer/"
     }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "6.3.0"
+  },
+  "require": {
+    "symfony/yaml": "^3.3"
   }
 }
