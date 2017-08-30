@@ -16,5 +16,7 @@ $tree = $parser->buildTree('redBottle');
 $builder = new \Builder\SimpleBuilder();
 $builder->setTree($tree);
 $builder->setCount(0.01);
-$builder->showBuildObjects();
+$drawer = new \Drawer\ArrayDrawer();
+$planner = new \Planner\SimplePlanner($builder, $drawer);
+$planner->plan();
 

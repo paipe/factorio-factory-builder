@@ -4,7 +4,8 @@
       "Tree": "Tree/",
       "Builder": "Builder/",
       "Parser": "Parser/",
-      "Drawer": "Drawer/"
+      "Drawer": "Drawer/",
+      "Planner": "Planner/"
     }
   },
   "require-dev": {

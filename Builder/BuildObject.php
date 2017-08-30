@@ -14,6 +14,12 @@ use Drawer\ArrayDrawer;
 class BuildObject
 {
 
+    const M_SPACE = '__';
+    const M_FABRIC = 'ff';
+    const M_LEFT_ROAD = 'lr';
+    const M_UP_MANIPULATOR = 'um';
+    const M_UP_KLEWN9 = 'uk';
+
     /**
      * @var string
      */
@@ -49,17 +55,17 @@ class BuildObject
         for ($y = 0; $y < $height; $y++) {
             for ($x = 0; $x < $width; $x++) {
                 if (in_array($y, [0, 6, 7], true)) {
-                    $fabric[$y][$x] = 'lr';
+                    $fabric[$y][$x] = self::M_LEFT_ROAD;
                 } elseif (in_array($y, [2, 3, 4], true)) {
-                    $fabric[$y][$x] = 'ff';
+                    $fabric[$y][$x] = self::M_FABRIC;
                 } elseif ($y === 1 && ($x - 1) % 3 === 0) {
-                    $fabric[$y][$x] = 'um';
+                    $fabric[$y][$x] = self::M_UP_MANIPULATOR;
                 } elseif ($y === 5 && ($x - 1) % 3 === 0) {
-                    $fabric[$y][$x] = 'um';
+                    $fabric[$y][$x] = self::M_UP_MANIPULATOR;
                 } elseif ($height === 8 && $y === 5 && $x % 3 === 0) {
-                    $fabric[$y][$x] = 'uk';
+                    $fabric[$y][$x] = self::M_UP_KLEWN9;
                 } else {
-                    $fabric[$y][$x] = '__';
+                    $fabric[$y][$x] = self::M_SPACE;
                 }
             }
         }
