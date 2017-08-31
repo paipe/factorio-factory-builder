@@ -39,7 +39,7 @@ class SimplePlanner extends Planner
                 continue;
             }
             $this->putObjectOnTheMap($y, $x, $buildObject->buildFabric());
-            $x += self::DISTANCE;
+            $x += self::DISTANCE * 10;
         }
     }
 
@@ -51,8 +51,8 @@ class SimplePlanner extends Planner
 
         $ySize = count($object);
         $xSize = count($object[0]);
-        $maxY = $objectY + $ySize - 1;
-        $maxX = $objectX + $xSize - 1;
+        $maxY = max($objectY + $ySize - 1, count($this->map) - 1);
+        $maxX = max($objectX + $xSize - 1, isset($this->map[0]) ? count($this->map[0]) - 1 : 0);
 
         if (!isset($this->map[$maxY]) || !isset($this->map[0][$maxX])) {
             for ($y = 0; $y <= $maxY; $y++) {
@@ -64,8 +64,8 @@ class SimplePlanner extends Planner
             }
         }
 
-        for ($y = $objectY; $y < $ySize; $y++) {
-            for ($x = $objectX; $x < $xSize; $x++) {
+        for ($y = $objectY; $y < $objectY + $ySize; $y++) {
+            for ($x = $objectX; $x < $objectX + $xSize; $x++) {
                 $this->map[$y][$x] = $object[$y - $objectY][$x - $objectX];
             }
         }
