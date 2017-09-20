@@ -4,13 +4,31 @@ iron:
 copper:
   time: 0
 
-ironGear:
+iron_gear:
   time: 0.5
   children:
     iron: 2
 
-redBottle:
+red_bottle:
   time: 5
   children:
-    ironGear: 1
+    iron_gear: 1
     copper: 1
+
+factory:
+  time: 10
+  children:
+    iron: 9
+    iron_gear: 5
+    green_scheme: 3
+
+green_schema:
+  time: 3
+  children:
+    iron: 2
+    copper_wire: 5
+
+copper_wire:
+  time: 1
+  children:
+    copper: 3

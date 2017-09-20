@@ -12,6 +12,6 @@ namespace Drawer;
 abstract class Drawer
 {
     
-    abstract public function draw(array $data);
+    abstract public function draw(array $data, array $schema);
     
 }

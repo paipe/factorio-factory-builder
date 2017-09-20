@@ -18,7 +18,8 @@ class BuildObject
     const M_FABRIC = 'ff';
     const M_LEFT_ROAD = 'lr';
     const M_UP_MANIPULATOR = 'um';
-    const M_UP_KLEWN9 = 'uk';
+    const M_UP_LONG_MANIPULATOR = 'ul';
+    const M_CHEST = 'ch';
 
     /**
      * @var string
@@ -56,14 +57,16 @@ class BuildObject
             for ($x = 0; $x < $width; $x++) {
                 if (in_array($y, [0, 6, 7], true)) {
                     $fabric[$y][$x] = self::M_LEFT_ROAD;
-                } elseif (in_array($y, [2, 3, 4], true)) {
+                } elseif ($y === 2 && $x % 3 === 0) {
                     $fabric[$y][$x] = self::M_FABRIC;
+                } elseif ($y === 2 && ($x - 1) % 3 === 0) {
+                    $fabric[$y][$x] = $this->productName;
                 } elseif ($y === 1 && ($x - 1) % 3 === 0) {
                     $fabric[$y][$x] = self::M_UP_MANIPULATOR;
                 } elseif ($y === 5 && ($x - 1) % 3 === 0) {
                     $fabric[$y][$x] = self::M_UP_MANIPULATOR;
                 } elseif ($height === 8 && $y === 5 && $x % 3 === 0) {
-                    $fabric[$y][$x] = self::M_UP_KLEWN9;
+                    $fabric[$y][$x] = self::M_UP_LONG_MANIPULATOR;
                 } else {
                     $fabric[$y][$x] = self::M_SPACE;
                 }
@@ -72,11 +75,14 @@ class BuildObject
         
         return $fabric;
     }
-    
-    public function show()
+
+    public function buildSource()
     {
-        $fabric = $this->buildFabric();
-        $drawer = new ArrayDrawer();
-        $drawer->draw($fabric);
+        return [
+            [self::M_CHEST],
+            [self::M_UP_MANIPULATOR],
+            [self::M_LEFT_ROAD]
+        ];
     }
+    
 }

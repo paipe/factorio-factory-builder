@@ -10,21 +10,20 @@ namespace Planner;
 
 
 use Builder\BuildObject;
-use Drawer\ArrayDrawer;
 
 class SimplePlanner extends Planner
 {
 
     const DISTANCE = 10;
 
-    private $map;
+    private $map = [];
+    private $schema = [];
     
     public function plan()
     {
         $buildObjects = $this->builder->build();
         $this->prepare($buildObjects);
-        $drawer = new ArrayDrawer();
-        $drawer->draw($this->map);
+        $this->drawer->draw($this->map, $this->schema);
     }
 
     /**
@@ -35,11 +34,17 @@ class SimplePlanner extends Planner
         $y = 0;
         $x = 0;
         foreach ($buildObjects as $buildObject) {
-            if ($buildObject->factoryCount === 0) {
-                continue;
+            if ($buildObject->factoryCount > 0) {
+                $this->putObjectOnTheMap($y, $x, $buildObject->buildFabric());
+                for ($i = 0; $i < $buildObject->factoryCount; $i++) {
+                    $this->addItemToScheme($y + 4, $x + ($i * 3), $buildObject->productName);
+                }
+            } else {
+                $this->putObjectOnTheMap($y, $x, $buildObject->buildSource());
+                $this->addItemToScheme($y, $x, $buildObject->productName);
             }
-            $this->putObjectOnTheMap($y, $x, $buildObject->buildFabric());
-            $x += self::DISTANCE * 10;
+
+            $x += $buildObject->factoryCount * 3 + self::DISTANCE;
         }
     }
 
@@ -70,6 +75,11 @@ class SimplePlanner extends Planner
             }
         }
 
+    }
+
+    private function addItemToScheme($y, $x, $name)
+    {
+        $this->schema[$y . ':' . $x] = $name;
     }
 
 }
