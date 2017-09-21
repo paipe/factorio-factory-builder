@@ -33,11 +33,12 @@ class SimplePlanner extends Planner
     {
         $y = 0;
         $x = 0;
+        list($buildObjects, $rowSplitter) = $this->sortObjects($buildObjects);
         foreach ($buildObjects as $buildObject) {
             if ($buildObject->factoryCount > 0) {
                 $this->putObjectOnTheMap($y, $x, $buildObject->buildFabric());
                 for ($i = 0; $i < $buildObject->factoryCount; $i++) {
-                    $this->addItemToScheme($y + 4, $x + ($i * 3), $buildObject->productName);
+                    $this->addItemToScheme($y + 3, $x + ($i * 3) + 1, $buildObject->productName);
                 }
             } else {
                 $this->putObjectOnTheMap($y, $x, $buildObject->buildSource());
@@ -80,6 +81,19 @@ class SimplePlanner extends Planner
     private function addItemToScheme($y, $x, $name)
     {
         $this->schema[$y . ':' . $x] = $name;
+    }
+
+    /**
+     * @param BuildObject[] $buildObjects
+     */
+    private function sortObjects($buildObjects)
+    {
+        $objects = [];
+        foreach ($buildObjects as $buildObject) {
+            $objects[] = $buildObject->factoryCount > 0 ?
+                ['width' => 3 * $buildObject->factoryCount, 'height' => 8] :
+                ['width' => 1, 'height' => 8];
+        }
     }
 
 }

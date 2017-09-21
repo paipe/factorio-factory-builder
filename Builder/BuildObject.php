@@ -59,8 +59,8 @@ class BuildObject
                     $fabric[$y][$x] = self::M_LEFT_ROAD;
                 } elseif ($y === 2 && $x % 3 === 0) {
                     $fabric[$y][$x] = self::M_FABRIC;
-                } elseif ($y === 2 && ($x - 1) % 3 === 0) {
-                    $fabric[$y][$x] = $this->productName;
+//                } elseif ($y === 2 && ($x - 1) % 3 === 0) {
+//                    $fabric[$y][$x] = $this->productName;
                 } elseif ($y === 1 && ($x - 1) % 3 === 0) {
                     $fabric[$y][$x] = self::M_UP_MANIPULATOR;
                 } elseif ($y === 5 && ($x - 1) % 3 === 0) {

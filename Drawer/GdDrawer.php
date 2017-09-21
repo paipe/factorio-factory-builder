@@ -47,7 +47,12 @@ class GdDrawer extends Drawer
 
         foreach ($schema as $coords => $name) {
             list($y, $x) = explode(':', $coords);
-            $this->drawObject($img, $name, $x, $y);
+            $this->drawObject(
+                $img,
+                $name,
+                $x * self::PIXELS_ON_DOT,
+                $y * self::PIXELS_ON_DOT
+            );
         }
 
         imagejpeg($img, 'result.jpeg');
