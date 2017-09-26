@@ -11,7 +11,7 @@ namespace Planner;
 
 use Builder\BuildObject;
 
-class SimplePlanner extends Planner
+class SquarePlanner extends Planner
 {
     const HEIGHT   = 8;
 
