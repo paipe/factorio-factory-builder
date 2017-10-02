@@ -79,33 +79,40 @@ class SquarePlanner extends Planner
         for ($i = 0; $i < pow(2, $objectsGaps); $i++) {
             $gapsCombinations[] = str_split(str_pad(decbin($i), $objectsGaps, "0", STR_PAD_LEFT));
         }
-        $bestCombination = ['rate' => PHP_INT_MAX];
+        $bestCombination = ['rate' => PHP_INT_MAX, 'square' => PHP_INT_MAX];
         foreach ($this->permute($objectsWidth) as $objectsSequence) {
             foreach ($gapsCombinations as $gapsCombination) {
                 $countGaps = array_count_values($gapsCombination);
                 $y = self::HEIGHT * (1 + (isset($countGaps[1]) ? $countGaps[1] : 0));
-                $x = array_reduce($objectsSequence, function($carry, $item) use ($gapsCombinations) {
+                $x = array_reduce($objectsSequence, function($carry, $item) use ($gapsCombination) {
                     $carry['current'] += $item;
                     if ($carry['current'] > $carry['max']) {
                         $carry['max'] = $carry['current'];
                     }
-                    if (isset($b[$carry['index']]) && $gapsCombinations[$carry['index']] == 1) {
+                    if (isset($gapsCombination[$carry['index']]) && $gapsCombination[$carry['index']] == 1) {
                         $carry['current'] = 0;
                     }
                     $carry['index']++;
 
                     return $carry;
                 }, ['max' => 0, 'current' => 0, 'index' => 0])['max'];
-                if (abs($x - $y) < $bestCombination['rate']) {
+//                if (abs($x - $y) < $bestCombination['rate'] || (abs($x - $y) == $bestCombination['rate'] && $x * $y < $bestCombination['square'])) {
+//                if ($x * $y < $bestCombination['square'] || ($x * $y == $bestCombination['square'] && abs($x - $y) < $bestCombination['rate'])) {
+//                if ($x * $y + abs($x - $y) < $bestCombination['square'] + $bestCombination['rate']) {
+                $kRate   = 100;
+                $kSquare = 1;
+                if ($x * $y * $kSquare < $bestCombination['square'] && abs($x - $y) * $kRate < $bestCombination['rate']) {
                     $bestCombination = [
                         'sequence' => $objectsSequence,
-                        'gaps' => $gapsCombination,
-                        'rate' => abs($x - $y)
+                        'gaps'     => $gapsCombination,
+                        'rate'     => abs($x - $y) * $kRate,
+                        'square'   => $x * $y * $kSquare
                     ];
                 }
             }
         }
         unset($bestCombination['rate']);
+        unset($bestCombination['square']);
         return $bestCombination;
 
     }
