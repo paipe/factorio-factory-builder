@@ -46,9 +46,15 @@ class SquarePlanner extends Planner
                 for ($k = 0; $k < $object->factoryCount; $k++) {
                     $this->addItemToScheme($y + 3, $x + ($k * 3) + 1, $object->productName);
                 }
+                //outer
+                $this->addItemToRoadScheme($y, $x, self::OUT . $object->productName);
+                for ($j = 0; $j < count($object->in); $j++) {
+                    $this->addItemToRoadScheme($y + $j + 6, $x + ($object->factoryCount * 3) - 1, self::IN . $object->in[$j]);
+                }
             } else {
                 $this->putObjectOnTheMap($y, $x, $object->buildSource());
                 $this->addItemToScheme($y, $x, $object->productName);
+                $this->addItemToRoadScheme($y + 2, $x, self::OUT . $object->productName);
             }
 
             if (isset($combinations['gaps'][$i]) && $combinations['gaps'][$i] == 1) {

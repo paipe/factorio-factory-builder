@@ -17,6 +17,9 @@ abstract class Planner
 {
     const DISTANCE = 10;
 
+    const OUT = 'out_';
+    const IN  = 'in_';
+
     /**
      * @var Builder
      */
@@ -36,6 +39,11 @@ abstract class Planner
      * @var array
      */
     protected $schema = [];
+
+    /**
+     * @var array
+     */
+    protected $roadSchema;
 
     /**
      * Planner constructor.
@@ -96,6 +104,16 @@ abstract class Planner
     protected function addItemToScheme($y, $x, $name)
     {
         $this->schema[$y . ':' . $x] = $name;
+    }
+
+    /**
+     * @param int $y
+     * @param int $x
+     * @param string $name
+     */
+    protected function addItemToRoadScheme($y, $x, $name)
+    {
+        $this->roadSchema[$y . ':' . $x] = $name;
     }
 
 
