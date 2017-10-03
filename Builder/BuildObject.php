@@ -16,9 +16,9 @@ class BuildObject
 
     const M_SPACE = '__';
     const M_FABRIC = 'ff';
-    const M_LEFT_ROAD = 'lr';
-    const M_UP_MANIPULATOR = 'um';
-    const M_UP_LONG_MANIPULATOR = 'ul';
+    const M_ROAD_LEFT = 'lr';
+    const M_INSERTER_UP = 'um';
+    const M_LONG_HANDED_INSERTER_UP = 'ul';
     const M_CHEST = 'ch';
 
     /**
@@ -56,17 +56,17 @@ class BuildObject
         for ($y = 0; $y < $height; $y++) {
             for ($x = 0; $x < $width; $x++) {
                 if (in_array($y, [0, 6, 7], true)) {
-                    $fabric[$y][$x] = self::M_LEFT_ROAD;
+                    $fabric[$y][$x] = self::M_ROAD_LEFT;
                 } elseif ($y === 2 && $x % 3 === 0) {
                     $fabric[$y][$x] = self::M_FABRIC;
 //                } elseif ($y === 2 && ($x - 1) % 3 === 0) {
 //                    $fabric[$y][$x] = $this->productName;
                 } elseif ($y === 1 && ($x - 1) % 3 === 0) {
-                    $fabric[$y][$x] = self::M_UP_MANIPULATOR;
+                    $fabric[$y][$x] = self::M_INSERTER_UP;
                 } elseif ($y === 5 && ($x - 1) % 3 === 0) {
-                    $fabric[$y][$x] = self::M_UP_MANIPULATOR;
+                    $fabric[$y][$x] = self::M_INSERTER_UP;
                 } elseif ($height === 8 && $y === 5 && $x % 3 === 0) {
-                    $fabric[$y][$x] = self::M_UP_LONG_MANIPULATOR;
+                    $fabric[$y][$x] = self::M_LONG_HANDED_INSERTER_UP;
                 } else {
                     $fabric[$y][$x] = self::M_SPACE;
                 }
@@ -80,8 +80,8 @@ class BuildObject
     {
         return [
             [self::M_CHEST],
-            [self::M_UP_MANIPULATOR],
-            [self::M_LEFT_ROAD]
+            [self::M_INSERTER_UP],
+            [self::M_ROAD_LEFT]
         ];
     }
     

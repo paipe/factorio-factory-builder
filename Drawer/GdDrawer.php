@@ -16,11 +16,11 @@ class GdDrawer extends Drawer
     const SRC_PATH = 'src/';
     const SRC_EXTENSION = '.png';
 
-    private static $maping = [
+    private static $mapping = [
         BuildObject::M_FABRIC => 'fabric',
-        BuildObject::M_UP_MANIPULATOR => 'up_manipulator',
-        BuildObject::M_UP_LONG_MANIPULATOR => 'up_long_manipulator',
-        BuildObject::M_LEFT_ROAD => 'left_road',
+        BuildObject::M_INSERTER_UP => 'inserter_up',
+        BuildObject::M_LONG_HANDED_INSERTER_UP => 'long_handed_inserter_up',
+        BuildObject::M_ROAD_LEFT => 'road_left',
         BuildObject::M_CHEST => 'chest',
     ];
 
@@ -63,7 +63,7 @@ class GdDrawer extends Drawer
     {
         $filename =
             self::SRC_PATH .
-            (isset(self::$maping[$type]) ? self::$maping[$type] : $type) .
+            (isset(self::$mapping[$type]) ? self::$mapping[$type] : $type) .
             self::SRC_EXTENSION;
 
         $dotImgSize = getimagesize($filename);
