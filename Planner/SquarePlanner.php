@@ -66,6 +66,9 @@ class SquarePlanner extends Planner
 
         }
 
+        $this->map = $this->expandMap();
+        $this->buildRoads();
+
     }
 
     /**
@@ -142,6 +145,57 @@ class SquarePlanner extends Planner
                 yield from $this->permute($newItems, $newPerms);
             }
         }
+    }
+
+    private function buildRoads()
+    {
+        $in = [];
+        $out = [];
+        foreach ($this->roadSchema as $coords => $item) {
+            $nameValue = explode('_', $item);
+            $direction = array_shift($nameValue);
+            $productName = implode('_', $nameValue);
+            switch ($direction) {
+                case self::IN:
+                    $in[$coords] = $productName;
+                    break;
+                case self::OUT:
+                    $out[$coords] = $productName;
+                    break;
+            }
+        }
+
+        foreach ($out as $outCoords => $outDot) {
+            foreach ($in as $inCoords => $inDot) {
+                $this->buildRoad(explode(',', $outCoords), explode(',', $inCoords));
+            }
+        }
+    }
+
+    /**
+     * @param array $start
+     * @param array $goal
+     */
+    private function buildRoad($start, $goal)
+    {
+        $map = $this->map;
+        $openList = [];
+        $closedList = [];
+
+
+
+    }
+
+    private function expandMap()
+    {
+        $height = count($this->map);
+        $width  = count($this->map[0]);
+
+        $expandedMap = $this->map;
+        $expandedMap = array_merge($expandedMap, array_fill($height, $height * 2, [BuildObject::M_SPACE]));
+        $expandedMap[0] = array_merge($expandedMap[0], array_fill($width, $width / 4, BuildObject::M_SPACE));
+
+        return $expandedMap;
     }
 
 }
