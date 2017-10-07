@@ -47,14 +47,14 @@ class SquarePlanner extends Planner
                     $this->addItemToScheme($y + 3, $x + ($k * 3) + 1, $object->productName);
                 }
                 //outer
-                $this->addItemToRoadScheme($y, $x, self::OUT . $object->productName);
+                $this->addItemToRoadScheme($y, $x, self::OUT . '_' . $object->productName);
                 for ($j = 0; $j < count($object->in); $j++) {
-                    $this->addItemToRoadScheme($y + $j + 6, $x + ($object->factoryCount * 3) - 1, self::IN . $object->in[$j]);
+                    $this->addItemToRoadScheme($y + $j + 6, $x + ($object->factoryCount * 3) - 1, self::IN . '_' . $object->in[$j]);
                 }
             } else {
                 $this->putObjectOnTheMap($y, $x, $object->buildSource());
                 $this->addItemToScheme($y, $x, $object->productName);
-                $this->addItemToRoadScheme($y + 2, $x, self::OUT . $object->productName);
+                $this->addItemToRoadScheme($y + 2, $x, self::OUT . '_' . $object->productName);
             }
 
             if (isset($combinations['gaps'][$i]) && $combinations['gaps'][$i] == 1) {
@@ -157,33 +157,33 @@ class SquarePlanner extends Planner
             $productName = implode('_', $nameValue);
             switch ($direction) {
                 case self::IN:
+                    $coords = explode(':', $coords);
+                    $coords[1] = $coords[1] + 1;
+                    $coords = implode(':', $coords);
                     $in[$coords] = $productName;
                     break;
                 case self::OUT:
+                    $coords = explode(':', $coords);
+                    $coords[1] = $coords[1] - 1;
+                    $coords = implode(':', $coords);
                     $out[$coords] = $productName;
                     break;
             }
         }
-
+        $roads = [];
         foreach ($out as $outCoords => $outDot) {
             foreach ($in as $inCoords => $inDot) {
-                $this->buildRoad(explode(',', $outCoords), explode(',', $inCoords));
+                if ($outDot == $inDot) {
+                    $roads[] = $this->pathFinder->findPath($this->map, explode(':', $outCoords), explode(':', $inCoords));
+                }
             }
         }
-    }
 
-    /**
-     * @param array $start
-     * @param array $goal
-     */
-    private function buildRoad($start, $goal)
-    {
-        $map = $this->map;
-        $openList = [];
-        $closedList = [];
-
-
-
+        foreach ($roads as $road) {
+            foreach ($road as $dot) {
+                $this->putObjectOnTheMap($dot[0], $dot[1], BuildObject::M_ROAD_LEFT);
+            }
+        }
     }
 
     private function expandMap()
@@ -194,6 +194,16 @@ class SquarePlanner extends Planner
         $expandedMap = $this->map;
         $expandedMap = array_merge($expandedMap, array_fill($height, $height * 2, [BuildObject::M_SPACE]));
         $expandedMap[0] = array_merge($expandedMap[0], array_fill($width, $width / 4, BuildObject::M_SPACE));
+
+        $newHeight = count($expandedMap);
+        $newWidth  = count($expandedMap[0]);
+        for ($i = 0; $i < $newHeight; $i++) {
+            for ($j = 0; $j < $newWidth; $j++) {
+                if (!isset($expandedMap[$i][$j])) {
+                    $expandedMap[$i][$j] = BuildObject::M_SPACE;
+                }
+            }
+        }
 
         return $expandedMap;
     }

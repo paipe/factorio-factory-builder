@@ -5,7 +5,8 @@
       "Builder": "Builder/",
       "Parser": "Parser/",
       "Drawer": "Drawer/",
-      "Planner": "Planner/"
+      "Planner": "Planner/",
+      "PathFinder": "PathFinder/"
     }
   },
   "require-dev": {

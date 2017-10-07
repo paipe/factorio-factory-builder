@@ -15,5 +15,6 @@ $builder = new \Builder\SimpleBuilder();
 $builder->setTree($tree);
 $builder->setCount(10);
 $drawer = new \Drawer\GdDrawer();
-$planner = new \Planner\SquarePlanner($builder, $drawer);
+$pathFinder = new \PathFinder\SimplePathFinder();
+$planner = new \Planner\SquarePlanner($builder, $drawer, $pathFinder);
 $planner->plan();

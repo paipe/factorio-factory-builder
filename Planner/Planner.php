@@ -12,13 +12,14 @@ namespace Planner;
 use Builder\Builder;
 use Builder\BuildObject;
 use Drawer\Drawer;
+use PathFinder\PathFinder;
 
 abstract class Planner
 {
     const DISTANCE = 10;
 
-    const OUT = 'out_';
-    const IN  = 'in_';
+    const OUT = 'out';
+    const IN  = 'in';
 
     /**
      * @var Builder
@@ -29,6 +30,11 @@ abstract class Planner
      * @var Drawer
      */
     protected $drawer;
+
+    /**
+     * @var PathFinder
+     */
+    protected $pathFinder;
 
     /**
      * @var array
@@ -50,11 +56,13 @@ abstract class Planner
      *
      * @param \Builder\Builder $builder
      * @param \Drawer\Drawer $drawer
+     * @param \PathFinder\PathFinder $pathFinder
      */
-    public function __construct(Builder $builder, Drawer $drawer)
+    public function __construct(Builder $builder, Drawer $drawer, PathFinder $pathFinder)
     {
         $this->builder = $builder;
         $this->drawer  = $drawer;
+        $this->pathFinder = $pathFinder;
     }
 
     /**
