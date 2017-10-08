@@ -54,21 +54,33 @@ abstract class Planner
     /**
      * Planner constructor.
      *
-     * @param \Builder\Builder $builder
-     * @param \Drawer\Drawer $drawer
      * @param \PathFinder\PathFinder $pathFinder
      */
-    public function __construct(Builder $builder, Drawer $drawer, PathFinder $pathFinder)
+    public function __construct(PathFinder $pathFinder)
     {
-        $this->builder = $builder;
-        $this->drawer  = $drawer;
         $this->pathFinder = $pathFinder;
     }
 
     /**
-     * @return mixed
+     * @param BuildObject[] $buildObjects
      */
-    abstract public function plan();
+    abstract public function plan($buildObjects);
+
+    /**
+     * @return array
+     */
+    public function getMap()
+    {
+        return $this->map;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSchema()
+    {
+        return $this->schema;
+    }
 
     /**
      * @param int $objectY

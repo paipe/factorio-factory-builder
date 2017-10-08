@@ -15,7 +15,13 @@ class GdDrawer extends Drawer
     const PIXELS_ON_DOT = 50;
     const SRC_PATH = 'src/';
     const SRC_EXTENSION = '.png';
+    const RESULT_FILENAME = 'result.jpeg';
 
+    /**
+     * Mapping BuildObject constants to src file names
+     *
+     * @var array
+     */
     private static $mapping = [
         BuildObject::M_FABRIC => 'fabric',
         BuildObject::M_INSERTER_UP => 'inserter_up',
@@ -24,6 +30,12 @@ class GdDrawer extends Drawer
         BuildObject::M_CHEST => 'chest',
     ];
 
+    /**
+     * Create result image
+     *
+     * @param array $data buildings type
+     * @param array $schema structure type
+     */
     public function draw(array $data, array $schema) {
         $width = count($data[0]) * self::PIXELS_ON_DOT;
         $height = count($data) * self::PIXELS_ON_DOT;
@@ -55,10 +67,16 @@ class GdDrawer extends Drawer
             );
         }
 
-        imagejpeg($img, 'result.jpeg');
+        imagejpeg($img, self::RESULT_FILENAME);
         imagedestroy($img);
     }
 
+    /**
+     * @param resource $img - result img resource
+     * @param string $type - BuildObject constant
+     * @param int $x1 - left top dot X coordinate
+     * @param int $y1 - left top dot Y coordinate
+     */
     private function drawObject($img, $type, $x1, $y1)
     {
         $filename =

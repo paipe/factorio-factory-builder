@@ -29,15 +29,4 @@ class SimpleBuilder extends Builder
         return $result;
     }
 
-    public function showBuildObjects()
-    {
-        $buildObjects = $this->build();
-        foreach ($buildObjects as $object) {
-            if ($object->factoryCount > 0) {
-                $object->show();
-                echo PHP_EOL . '===============' . PHP_EOL;
-            }
-        }
-    }
-    
 }

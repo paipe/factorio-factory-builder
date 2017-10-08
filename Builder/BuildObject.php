@@ -9,8 +9,6 @@
 namespace Builder;
 
 
-use Drawer\ArrayDrawer;
-
 class BuildObject
 {
 
@@ -59,8 +57,6 @@ class BuildObject
                     $fabric[$y][$x] = self::M_ROAD_LEFT;
                 } elseif ($y === 2 && $x % 3 === 0) {
                     $fabric[$y][$x] = self::M_FABRIC;
-//                } elseif ($y === 2 && ($x - 1) % 3 === 0) {
-//                    $fabric[$y][$x] = $this->productName;
                 } elseif ($y === 1 && ($x - 1) % 3 === 0) {
                     $fabric[$y][$x] = self::M_INSERTER_UP;
                 } elseif ($y === 5 && ($x - 1) % 3 === 0) {

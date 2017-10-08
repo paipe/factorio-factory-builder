@@ -13,19 +13,12 @@ use Builder\BuildObject;
 
 class SquarePlanner extends Planner
 {
-    const HEIGHT   = 8;
-
-    public function plan()
-    {
-        $buildObjects = $this->builder->build();
-        $this->prepare($buildObjects);
-        $this->drawer->draw($this->map, $this->schema);
-    }
+    const HEIGHT = 8;
 
     /**
      * @param BuildObject[] $buildObjects
      */
-    private function prepare($buildObjects)
+    public function plan($buildObjects)
     {
         $y = 0;
         $x = 0;
@@ -105,9 +98,6 @@ class SquarePlanner extends Planner
 
                     return $carry;
                 }, ['max' => 0, 'current' => 0, 'index' => 0])['max'];
-//                if (abs($x - $y) < $bestCombination['rate'] || (abs($x - $y) == $bestCombination['rate'] && $x * $y < $bestCombination['square'])) {
-//                if ($x * $y < $bestCombination['square'] || ($x * $y == $bestCombination['square'] && abs($x - $y) < $bestCombination['rate'])) {
-//                if ($x * $y + abs($x - $y) < $bestCombination['square'] + $bestCombination['rate']) {
                 $kRate   = 100;
                 $kSquare = 1;
                 if ($x * $y * $kSquare < $bestCombination['square'] && abs($x - $y) * $kRate < $bestCombination['rate']) {

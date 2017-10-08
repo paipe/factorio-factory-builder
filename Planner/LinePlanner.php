@@ -11,13 +11,7 @@ namespace Planner;
 
 class LinePlanner extends Planner {
 
-    public function plan() {
-        $buildObjects = $this->builder->build();
-        $this->prepare($buildObjects);
-        $this->drawer->draw($this->map, $this->schema);
-    }
-
-    private function prepare($buildObjects)
+    public function plan($buildObjects)
     {
         $x = 0;
         $y = 0;
