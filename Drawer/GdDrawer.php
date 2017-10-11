@@ -25,28 +25,29 @@ class GdDrawer extends Drawer
     private static $mapping = [
         BuildObject::M_FABRIC => 'fabric',
         BuildObject::M_INSERTER_UP => 'inserter_up',
+        BuildObject::M_INSERTER_DOWN => 'inserter_down',
         BuildObject::M_LONG_HANDED_INSERTER_UP => 'long_handed_inserter_up',
-        BuildObject::M_ROAD_LEFT => 'road_left',
+        BuildObject::M_ROAD => 'road',
         BuildObject::M_CHEST => 'chest',
     ];
 
     /**
      * Create result image
      *
-     * @param array $data buildings type
+     * @param array $map buildings type
      * @param array $schema structure type
      */
-    public function draw(array $data, array $schema) {
-        $width = count($data[0]) * self::PIXELS_ON_DOT;
-        $height = count($data) * self::PIXELS_ON_DOT;
+    public function draw(array $map, array $schema) {
+        $width = count($map[0]) * self::PIXELS_ON_DOT;
+        $height = count($map) * self::PIXELS_ON_DOT;
         $img = imagecreatetruecolor($width, $height);
 
         $white = imagecolorallocate($img, 255, 255, 255);
         imagefill($img, 0, 0, $white);
 
-        foreach ($data as $y => $row) {
+        foreach ($map as $y => $row) {
             foreach ($row as $x => $dot) {
-                if ($dot !== BuildObject::M_SPACE) {
+                if ($dot !== BuildObject::M_SPACE && $dot !== BuildObject::M_BLOCKED && $dot !== BuildObject::M_ROAD) {
                     $this->drawObject(
                         $img,
                         $dot,
@@ -57,14 +58,27 @@ class GdDrawer extends Drawer
             }
         }
 
-        foreach ($schema as $coords => $name) {
+        $roadSchema = [];
+        foreach ($schema as $coords => $data) {
+            if ($data['name'] == BuildObject::M_ROAD) {
+                $roadSchema[$coords] = $data;
+                continue;
+            }
             list($y, $x) = explode(':', $coords);
             $this->drawObject(
                 $img,
-                $name,
+                $data['name'],
                 $x * self::PIXELS_ON_DOT,
                 $y * self::PIXELS_ON_DOT
             );
+        }
+
+        $roadIndex = 0;
+        $road = [];
+        foreach ($roadSchema as $coords => $item) {
+            if ($item['index'] == $roadIndex) {
+
+            }
         }
 
         imagejpeg($img, self::RESULT_FILENAME);

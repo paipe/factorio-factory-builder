@@ -119,11 +119,11 @@ abstract class Planner
     /**
      * @param int $y
      * @param int $x
-     * @param string $name
+     * @param array $data
      */
-    protected function addItemToScheme($y, $x, $name)
+    protected function addItemToScheme($y, $x, $data)
     {
-        $this->schema[$y . ':' . $x] = $name;
+        $this->schema[$y . ':' . $x] = $data;
     }
 
     /**

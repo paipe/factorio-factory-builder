@@ -14,12 +14,14 @@ use Builder\BuildObject;
 class SimplePathFinder extends PathFinder
 {
     private $map;
-    private $openSet = [];
-    private $closedSet = [];
+    private $openSet;
+    private $closedSet;
 
     public function findPath($map, $start, $goal)
     {
         $this->map = $map;
+        $this->openSet = [];
+        $this->closedSet = [];
         $path = $this->run($start, $goal);
 
         return $path;

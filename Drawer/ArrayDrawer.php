@@ -11,9 +11,9 @@ namespace Drawer;
 
 class ArrayDrawer extends Drawer
 {
-    public function draw(array $data, array $schema)
+    public function draw(array $map, array $schema)
     {
-        foreach ($data as $rows) {
+        foreach ($map as $rows) {
             foreach ($rows as $cell) {
                 echo $cell;
             }

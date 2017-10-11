@@ -15,6 +15,8 @@ class SquarePlanner extends Planner
 {
     const HEIGHT = 8;
 
+    private $roadIndex = 0;
+
     /**
      * @param BuildObject[] $buildObjects
      */
@@ -37,7 +39,7 @@ class SquarePlanner extends Planner
             if ($object->factoryCount > 0) {
                 $this->putObjectOnTheMap($y, $x, $object->buildFabric());
                 for ($k = 0; $k < $object->factoryCount; $k++) {
-                    $this->addItemToScheme($y + 3, $x + ($k * 3) + 1, $object->productName);
+                    $this->addItemToScheme($y + 3, $x + ($k * 3) + 1, ['name' => $object->productName]);
                 }
                 //outer
                 $this->addItemToRoadScheme($y, $x, self::OUT . '_' . $object->productName);
@@ -46,7 +48,7 @@ class SquarePlanner extends Planner
                 }
             } else {
                 $this->putObjectOnTheMap($y, $x, $object->buildSource());
-                $this->addItemToScheme($y, $x, $object->productName);
+                $this->addItemToScheme($y, $x, ['name' => $object->productName]);
                 $this->addItemToRoadScheme($y + 2, $x, self::OUT . '_' . $object->productName);
             }
 
@@ -59,7 +61,7 @@ class SquarePlanner extends Planner
 
         }
 
-        $this->map = $this->expandMap();
+//        $this->map = $this->expandMap();
         $this->buildRoads();
 
     }
@@ -160,20 +162,27 @@ class SquarePlanner extends Planner
                     break;
             }
         }
-        $roads = [];
         foreach ($out as $outCoords => $outDot) {
             foreach ($in as $inCoords => $inDot) {
                 if ($outDot == $inDot) {
-                    $roads[] = $this->pathFinder->findPath($this->map, explode(':', $outCoords), explode(':', $inCoords));
+                    $road = $this->pathFinder->findPath($this->map, explode(':', $outCoords), explode(':', $inCoords));
+                    foreach ($road as $key => $dot) {
+                        switch ($key) {
+                            case 0:
+                                $this->addItemToScheme($dot[0], $dot[1] - 1, ['name' => BuildObject::M_ROAD, 'index' => $this->roadIndex, 'start' => ['y' => $dot[0], 'x' => $dot[1]]]);
+                                break;
+                            case count($road) - 1:
+                                $this->addItemToScheme($dot[0], $dot[1] + 1, ['name' => BuildObject::M_ROAD, 'index' => $this->roadIndex]);
+                                break;
+                        }
+                        $this->putObjectOnTheMap($dot[0], $dot[1], BuildObject::M_ROAD);
+                        $this->addItemToScheme($dot[0], $dot[1], ['name' => BuildObject::M_ROAD, 'index' => $this->roadIndex]);
+                    }
+                    $this->roadIndex++;
                 }
             }
         }
 
-        foreach ($roads as $road) {
-            foreach ($road as $dot) {
-                $this->putObjectOnTheMap($dot[0], $dot[1], BuildObject::M_ROAD_LEFT);
-            }
-        }
     }
 
     private function expandMap()
