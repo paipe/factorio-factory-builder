@@ -169,14 +169,14 @@ class SquarePlanner extends Planner
                     foreach ($road as $key => $dot) {
                         switch ($key) {
                             case 0:
-                                $this->addItemToScheme($dot[0], $dot[1] - 1, ['name' => BuildObject::M_ROAD, 'index' => $this->roadIndex, 'start' => ['y' => $dot[0], 'x' => $dot[1]]]);
+                                $this->addItemToScheme($dot[0], $dot[1] - 1, ['name' => BuildObject::M_PATH, 'index' => $this->roadIndex, 'start' => ['y' => $dot[0], 'x' => $dot[1]]]);
                                 break;
                             case count($road) - 1:
-                                $this->addItemToScheme($dot[0], $dot[1] + 1, ['name' => BuildObject::M_ROAD, 'index' => $this->roadIndex]);
+                                $this->addItemToScheme($dot[0], $dot[1] + 1, ['name' => BuildObject::M_PATH, 'index' => $this->roadIndex]);
                                 break;
                         }
-                        $this->putObjectOnTheMap($dot[0], $dot[1], BuildObject::M_ROAD);
-                        $this->addItemToScheme($dot[0], $dot[1], ['name' => BuildObject::M_ROAD, 'index' => $this->roadIndex]);
+                        $this->putObjectOnTheMap($dot[0], $dot[1], BuildObject::M_PATH);
+                        $this->addItemToScheme($dot[0], $dot[1], ['name' => BuildObject::M_PATH, 'index' => $this->roadIndex]);
                     }
                     $this->roadIndex++;
                 }

@@ -27,7 +27,8 @@ class GdDrawer extends Drawer
         BuildObject::M_INSERTER_UP => 'inserter_up',
         BuildObject::M_INSERTER_DOWN => 'inserter_down',
         BuildObject::M_LONG_HANDED_INSERTER_UP => 'long_handed_inserter_up',
-        BuildObject::M_ROAD => 'road',
+        BuildObject::M_PATH => 'road',
+        BuildObject::M_ROADL_LEFT => 'road_left',
         BuildObject::M_CHEST => 'chest',
     ];
 
@@ -47,12 +48,12 @@ class GdDrawer extends Drawer
 
         foreach ($map as $y => $row) {
             foreach ($row as $x => $dot) {
-                if ($dot !== BuildObject::M_SPACE && $dot !== BuildObject::M_BLOCKED && $dot !== BuildObject::M_ROAD) {
+                if ($dot !== BuildObject::M_SPACE && $dot !== BuildObject::M_BLOCKED && $dot !== BuildObject::M_PATH) {
                     $this->drawObject(
                         $img,
                         $dot,
-                        $x * self::PIXELS_ON_DOT,
-                        $y * self::PIXELS_ON_DOT
+                        $x,
+                        $y
                     );
                 }
             }
@@ -60,7 +61,7 @@ class GdDrawer extends Drawer
 
         $roadSchema = [];
         foreach ($schema as $coords => $data) {
-            if ($data['name'] == BuildObject::M_ROAD) {
+            if ($data['name'] == BuildObject::M_PATH) {
                 $roadSchema[$coords] = $data;
                 continue;
             }
@@ -68,18 +69,13 @@ class GdDrawer extends Drawer
             $this->drawObject(
                 $img,
                 $data['name'],
-                $x * self::PIXELS_ON_DOT,
-                $y * self::PIXELS_ON_DOT
+                $x,
+                $y
             );
         }
 
-        $roadIndex = 0;
-        $road = [];
-        foreach ($roadSchema as $coords => $item) {
-            if ($item['index'] == $roadIndex) {
+        $this->drawRoads($roadSchema, $img);
 
-            }
-        }
 
         imagejpeg($img, self::RESULT_FILENAME);
         imagedestroy($img);
@@ -93,6 +89,8 @@ class GdDrawer extends Drawer
      */
     private function drawObject($img, $type, $x1, $y1)
     {
+        $x1 = $x1 * self::PIXELS_ON_DOT;
+        $y1 = $y1 * self::PIXELS_ON_DOT;
         $filename =
             self::SRC_PATH .
             (isset(self::$mapping[$type]) ? self::$mapping[$type] : $type) .
@@ -102,6 +100,68 @@ class GdDrawer extends Drawer
         $dotImg = imagecreatefrompng($filename);
         imagecopy($img, $dotImg, $x1, $y1, 0, 0, $dotImgSize[0], $dotImgSize[0]);
         imagedestroy($dotImg);
+    }
+
+    /**
+     * @param array $roadSchema
+     * @param resource $img
+     */
+    public function drawRoads($roadSchema, $img) {
+        //TODO draw road turns
+        $roads = [];
+        $roadStarts = [];
+        foreach ($roadSchema as $coords => $item) {
+            $roads[$item['index']][] = explode(':', $coords);
+            if (isset($item['start'])) {
+                $roadStarts[$item['index']] = $item['start'];
+            }
+
+        }
+
+        $arr1 = [-1, 0, 1];
+        $arr2 = $arr1;
+        $modifiers = [];
+        foreach ($arr1 as $var1) {
+            foreach ($arr2 as $var2) {
+                if (($var1 == $var2 && $var1 == 0) || (abs($var1) - abs($var2)) == 0) {
+                    continue;
+                }
+                $modifiers[] = ['x' => $var1, 'y' => $var2];
+            }
+        }
+
+        /** @var array $directions - key format: yx modifiers */
+        $directions = [
+            '10'  => 'up',
+            '-10' => 'down',
+            '01'  => 'left',
+            '0-1' => 'right'
+        ];
+
+        foreach ($roadStarts as $index => $coords) {
+            $prevX = $coords['x'];
+            $prevY = $coords['y'];
+            while (!empty($roads[$index])) {
+                foreach ($modifiers as $modifier) {
+                    foreach ($roads[$index] as $key => &$dot) {
+                        if ($dot[0] == $prevY + $modifier['y'] && $dot[1] == $prevX + $modifier['x']) {
+                            $this->drawObject(
+                                $img,
+                                'road_' . $directions[$modifier['y'] . $modifier['x']],
+                                $prevX,
+                                $prevY
+                            );
+                            $prevX = $dot[1];
+                            $prevY = $dot[0];
+                            unset($roads[$index][$key]);
+                            break 2;
+                        }
+                    }
+                }
+            }
+
+
+        }
     }
 
 }
