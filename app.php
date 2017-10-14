@@ -13,7 +13,7 @@ $tree = $parser->buildTree('red_bottle');
 
 $builder = new \Builder\SimpleBuilder();
 $builder->setTree($tree);
-$builder->setCount(10);
+$builder->setCount(0.5);
 $drawer = new \Drawer\GdDrawer();
 $pathFinder = new \PathFinder\SimplePathFinder();
 $planner = new \Planner\SquarePlanner($pathFinder);

@@ -38,7 +38,8 @@ class GdDrawer extends Drawer
      * @param array $map buildings type
      * @param array $schema structure type
      */
-    public function draw(array $map, array $schema) {
+    public function draw(array $map, array $schema)
+    {
         $width = count($map[0]) * self::PIXELS_ON_DOT;
         $height = count($map) * self::PIXELS_ON_DOT;
         $img = imagecreatetruecolor($width, $height);
@@ -106,8 +107,8 @@ class GdDrawer extends Drawer
      * @param array $roadSchema
      * @param resource $img
      */
-    public function drawRoads($roadSchema, $img) {
-        //TODO draw road turns
+    public function drawRoads($roadSchema, $img)
+    {
         $roads = [];
         $roadStarts = [];
         foreach ($roadSchema as $coords => $item) {
@@ -132,27 +133,38 @@ class GdDrawer extends Drawer
 
         /** @var array $directions - key format: yx modifiers */
         $directions = [
-            '10'  => 'up',
+            '10' => 'up',
             '-10' => 'down',
-            '01'  => 'left',
+            '01' => 'left',
             '0-1' => 'right'
         ];
 
         foreach ($roadStarts as $index => $coords) {
             $prevX = $coords['x'];
             $prevY = $coords['y'];
+            $prevDirection = null;
             while (!empty($roads[$index])) {
                 foreach ($modifiers as $modifier) {
                     foreach ($roads[$index] as $key => &$dot) {
                         if ($dot[0] == $prevY + $modifier['y'] && $dot[1] == $prevX + $modifier['x']) {
+                            if (is_null($prevDirection) || $prevDirection == $directions[$modifier['y'] . $modifier['x']]) {
+                                $roadType = 'road_' . $directions[$modifier['y'] . $modifier['x']];
+                            } else {
+//                                if (in_array($prevDirection, ['left', 'right'])) {
+                                $roadType = 'road_' . $prevDirection . '_' . $directions[$modifier['y'] . $modifier['x']];
+//                                } else {
+//                                    $roadType = 'road_' . $directions[$modifier['y'] . $modifier['x']] . '_' . $prevDirection;
+//                                }
+                            }
                             $this->drawObject(
                                 $img,
-                                'road_' . $directions[$modifier['y'] . $modifier['x']],
+                                $roadType,
                                 $prevX,
                                 $prevY
                             );
                             $prevX = $dot[1];
                             $prevY = $dot[0];
+                            $prevDirection = $directions[$modifier['y'] . $modifier['x']];
                             unset($roads[$index][$key]);
                             break 2;
                         }
