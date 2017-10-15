@@ -22,13 +22,14 @@ factory:
     iron_gear_wheel: 5
     green_scheme: 3
 
-green_schema:
-  time: 3
+electronic_circuit:
+  time: 0.5
   children:
-    iron_plate: 2
-    copper_wire: 5
+    iron_plate: 1
+    copper_cable: 3
 
-copper_wire:
+copper_cable:
+  output: 2
   time: 0.5
   children:
     copper_plate: 1

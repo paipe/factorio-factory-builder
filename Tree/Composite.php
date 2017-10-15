@@ -27,14 +27,21 @@ class Composite extends Component
     private $name;
 
     /**
+     * @var int
+     */
+    private $outputCount;
+
+    /**
      * Composite constructor.
      * @param string $name
      * @param integer $constructTime
+     * @param integer $outputCount
      */
-    public function __construct($name, $constructTime)
+    public function __construct($name, $constructTime, $outputCount = 1)
     {
         $this->name = $name;
-        $this->constructTime = $constructTime;        
+        $this->constructTime = $constructTime;
+        $this->outputCount = $outputCount;
     }
 
     /**
@@ -62,7 +69,8 @@ class Composite extends Component
         $result = [
             $this->name => [
                 'name'     => $this->name,
-                'time'     => $this->constructTime * $number,
+                'output'   => $this->outputCount,
+                'time'     => $this->constructTime * $number / $this->outputCount,
                 'count'    => $number,
                 'parent'   => [$parent],
                 'children' => array_count_values($this->getChildrenNames())
