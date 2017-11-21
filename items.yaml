@@ -5,12 +5,12 @@ copper_plate:
   time: 0
 
 iron_gear_wheel:
-  time: 1
+  time: 0.5
   children:
     iron_plate: 2
 
 red_bottle:
-  time: 10
+  time: 5
   children:
     iron_gear_wheel: 1
     copper_plate: 1
@@ -22,13 +22,14 @@ factory:
     iron_gear_wheel: 5
     green_scheme: 3
 
-green_schema:
-  time: 3
+electronic_circuit:
+  time: 0.5
   children:
-    iron_plate: 2
-    copper_wire: 5
+    iron_plate: 1
+    copper_cable: 3
 
-copper_wire:
-  time: 1
+copper_cable:
+  output: 2
+  time: 0.5
   children:
     copper_plate: 1
