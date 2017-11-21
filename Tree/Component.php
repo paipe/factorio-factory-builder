@@ -7,20 +7,30 @@
  * Time: 23:22
  */
 
+declare(strict_types=1);
+
 namespace Tree;
+
+use Exceptions\UnsupportedMethodException;
 
 abstract class Component
 {
-    const ROOT = 'root';
+    protected const ROOT = 'root';
 
-    abstract public function countItems($number);
-    
-    abstract public function countConstructTime($number, $parent = self::ROOT);
+    protected $name;
+    protected $constructTime;
 
-    abstract protected function getName();
+    abstract public function countItems(int $number): array;
     
-    public function addItems($component, $count)
+    abstract public function countConstructTime(float $number, string $parent = self::ROOT): array;
+
+    public function addItems(Component $component, int $count): void
     {
-        throw new \Exception('unsupported method');
+        throw new UnsupportedMethodException();
+    }
+
+    protected function getName(): string
+    {
+        return $this->name;
     }
 }

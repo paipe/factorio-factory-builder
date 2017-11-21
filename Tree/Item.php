@@ -7,34 +7,20 @@
  * Time: 10:57
  */
 
+declare(strict_types=1);
+
 namespace Tree;
 
 class Item extends Component
 {
-    /**
-     * @var string
-     */
-    private $name;
 
-    /**
-     * @var integer
-     */
-    private $constructTime = 0;
-
-    /**
-     * Item constructor.
-     * @param string $name
-     */
-    public function __construct($name)
+    public function __construct(string $name)
     {
         $this->name = $name;
+        $this->constructTime = 0;
     }
 
-    /**
-     * @param int $number
-     * @return array
-     */
-    public function countItems($number)
+    public function countItems(int $number): array
     {
         $result = [];
         for ($i = 0; $i < $number; $i++) {
@@ -43,7 +29,7 @@ class Item extends Component
         return $result;
     }
 
-    public function countConstructTime($number, $parent = self::ROOT)
+    public function countConstructTime(float $number, string $parent = self::ROOT): array
     {
         return [
             $this->name => [
@@ -53,10 +39,5 @@ class Item extends Component
                 'parent' => [$parent]
             ]
         ];
-    }
-
-    protected function getName()
-    {
-        return $this->name;
     }
 }

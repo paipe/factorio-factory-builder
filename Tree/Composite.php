@@ -7,6 +7,8 @@
  * Time: 11:06
  */
 
+declare(strict_types=1);
+
 namespace Tree;
 
 class Composite extends Component
@@ -16,32 +18,13 @@ class Composite extends Component
      */
     private $resources = [];
 
-    /**
-     * @var integer
-     */
-    private $constructTime;
-
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * Composite constructor.
-     * @param string $name
-     * @param integer $constructTime
-     */
-    public function __construct($name, $constructTime)
+    public function __construct(string $name, int $constructTime)
     {
         $this->name = $name;
         $this->constructTime = $constructTime;        
     }
 
-    /**
-     * @param int $number
-     * @return array
-     */
-    public function countItems($number)
+    public function countItems(int $number): array
     {
         $result = [];
         foreach ($this->resources as $resource) {
@@ -52,12 +35,7 @@ class Composite extends Component
         return $result;
     }
 
-    /**
-     * @param int $number
-     * @param string $parent
-     * @return array
-     */
-    public function countConstructTime($number, $parent = self::ROOT)
+    public function countConstructTime(float $number, string $parent = self::ROOT): array
     {
         $result = [
             $this->name => [
@@ -84,26 +62,14 @@ class Composite extends Component
         return $result;
     }
 
-    /**
-     * @param Component $component
-     * @param integer $count
-     */
-    public function addItems($component, $count)
+    public function addItems(Component $component, int $count): void
     {
         for ($i = 0; $i < $count; $i++) {
             $this->resources[] = $component;
         }
     }
 
-    /**
-     * @return string
-     */
-    protected function getName()
-    {
-        return $this->name;
-    }
-    
-    private function getChildrenNames()
+    private function getChildrenNames(): array
     {
         $result = [];
         foreach ($this->resources as $resource) {

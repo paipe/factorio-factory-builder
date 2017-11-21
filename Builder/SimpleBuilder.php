@@ -15,7 +15,7 @@ class SimpleBuilder extends Builder
     /**
      * @return BuildObject[] array
      */
-    public function build()
+    public function build(): array
     {
         $result = [];
 

@@ -7,29 +7,34 @@
  * Time: 17:30
  */
 
+declare(strict_types=1);
+
 namespace Parser;
 
+use Exceptions\EmptyItemsException;
 use Symfony\Component\Yaml\Yaml;
+use Tree\Component;
 use Tree\Composite;
 use Tree\Item;
 
 class Parser
 {
-    const YAML = __DIR__ . '/../items.yaml';
+    private const YAML_FILE = __DIR__ . '/../items.yaml';
 
     private $data;
 
-    public function buildTree($name)
+    public function buildTree(string $name): Component
     {
-        $this->parse();
-        if (!isset($this->data[$name])) {
-            return false;
+        $this->data = $this->parse();
+        if (empty($this->data)) {
+            throw new EmptyItemsException();
         }
+
         return $this->construct($name, $this->data[$name]);
 
     }
 
-    private function construct($name, $item)
+    private function construct(string $name, array $item): Component
     {
         if (isset($item['children'])) {
             $result = new Composite($name, $item['time']);
@@ -43,9 +48,9 @@ class Parser
         return $result;
     }
 
-    private function parse()
+    private function parse(): array
     {
-        $this->data = Yaml::parse(file_get_contents(self::YAML));
+        return Yaml::parse(file_get_contents(self::YAML_FILE));
     }
 
 }
