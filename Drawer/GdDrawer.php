@@ -28,7 +28,7 @@ class GdDrawer extends Drawer
         BuildObject::M_INSERTER_DOWN => 'inserter_down',
         BuildObject::M_LONG_HANDED_INSERTER_UP => 'long_handed_inserter_up',
         BuildObject::M_PATH => 'road',
-        BuildObject::M_ROADL_LEFT => 'road_left',
+        BuildObject::M_ROAD_LEFT => 'road_left',
         BuildObject::M_CHEST => 'chest',
     ];
 

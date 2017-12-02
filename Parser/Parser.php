@@ -37,7 +37,7 @@ class Parser
     private function construct(string $name, array $item): Component
     {
         if (isset($item['children'])) {
-            $result = new Composite($name, $item['time'], isset($item['output']) ? $item['output'] : 1);
+            $result = new Composite($name, $item['time']);
             foreach ($item['children'] as $children => $count) {
                 $result->addItems($this->construct($children, $this->data[$children]), $count);
             }

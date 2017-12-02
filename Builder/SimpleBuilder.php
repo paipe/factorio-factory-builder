@@ -6,15 +6,14 @@
  * Time: 16:09
  */
 
+declare(strict_types=1);
+
 namespace Builder;
 
 
 class SimpleBuilder extends Builder
 {
 
-    /**
-     * @return BuildObject[] array
-     */
     public function build(): array
     {
         $result = [];

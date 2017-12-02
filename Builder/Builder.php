@@ -6,6 +6,8 @@
  * Time: 16:08
  */
 
+declare(strict_types=1);
+
 namespace Builder;
 
 
@@ -23,22 +25,16 @@ abstract class Builder
      */
     protected $count;
 
-    /**
-     * @param Component $tree
-     */
-    public function setTree($tree)
+    public function setTree(Component $tree): void
     {
         $this->tree = $tree;
     }
 
-    /**
-     * @param int $count
-     */
-    public function setCount($count)
+    public function setCount(int $count): void
     {
         $this->count = $count;
     }
 
-    abstract public function build();
+    abstract public function build(): array;
 
 }

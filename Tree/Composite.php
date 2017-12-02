@@ -18,11 +18,10 @@ class Composite extends Component
      */
     private $resources = [];
 
-    public function __construct(string $name, int $constructTime)
+    public function __construct(string $name, float $constructTime)
     {
         $this->name = $name;
         $this->constructTime = $constructTime;
-        $this->outputCount = $outputCount;
     }
 
     public function countItems(int $number): array
@@ -41,8 +40,7 @@ class Composite extends Component
         $result = [
             $this->name => [
                 'name'     => $this->name,
-                'output'   => $this->outputCount,
-                'time'     => $this->constructTime * $number / $this->outputCount,
+                'time'     => $this->constructTime * $number,
                 'count'    => $number,
                 'parent'   => [$parent],
                 'children' => array_count_values($this->getChildrenNames())
