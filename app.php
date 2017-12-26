@@ -6,7 +6,7 @@
  * Time: 23:12
  */
 
-$loader = require_once __DIR__.'/vendor/autoload.php';
+$loader = require_once __DIR__ . '/vendor/autoload.php';
 
 $parser = new \Parser\Parser();
 $tree = $parser->buildTree('electronic_circuit');

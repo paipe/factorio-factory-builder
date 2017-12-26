@@ -50,6 +50,7 @@ abstract class Planner
      * @var array
      */
     protected $roadSchema;
+    protected $roadIndex = 0;
 
     /**
      * Planner constructor.
@@ -136,6 +137,74 @@ abstract class Planner
         $this->roadSchema[$y . ':' . $x] = $name;
     }
 
+    protected function buildRoads()
+    {
+        $in = [];
+        $out = [];
+        foreach ($this->roadSchema as $coords => $item) {
+            $nameValue = explode('_', $item);
+            $direction = array_shift($nameValue);
+            $productName = implode('_', $nameValue);
+            switch ($direction) {
+                case Planner::IN:
+                    $coords = explode(':', $coords);
+                    $coords[1] = $coords[1] + 1;
+                    $coords = implode(':', $coords);
+                    $in[$coords] = $productName;
+                    break;
+                case Planner::OUT:
+                    $coords = explode(':', $coords);
+                    $coords[1] = $coords[1] - 1;
+                    $coords = implode(':', $coords);
+                    $out[$coords] = $productName;
+                    break;
+            }
+        }
+        foreach ($out as $outCoords => $outDot) {
+            foreach ($in as $inCoords => $inDot) {
+                if ($outDot == $inDot) {
+                    $road = $this->pathFinder->findPath($this->map, explode(':', $outCoords), explode(':', $inCoords));
+                    //рисуем сразу после того, как построили путь, чтобы новый путь шел в обход построенных дорог
+                    foreach ($road as $key => $dot) {
+                        switch ($key) {
+                            case 0:
+                                $this->addItemToScheme($dot[0], $dot[1] - 1, ['name' => BuildObject::M_PATH, 'index' => $this->roadIndex, 'start' => ['y' => $dot[0], 'x' => $dot[1]]]);
+                                break;
+                            case count($road) - 1:
+                                $this->addItemToScheme($dot[0], $dot[1] + 1, ['name' => BuildObject::M_PATH, 'index' => $this->roadIndex]);
+                                break;
+                        }
+                        $this->putObjectOnTheMap($dot[0], $dot[1], BuildObject::M_PATH);
+                        $this->addItemToScheme($dot[0], $dot[1], ['name' => BuildObject::M_PATH, 'index' => $this->roadIndex]);
+                    }
+                    $this->roadIndex++;
+                }
+            }
+        }
+
+    }
+
+    protected function expandMap()
+    {
+        $height = count($this->map);
+        $width = count($this->map[0]);
+
+        $expandedMap = $this->map;
+        $expandedMap = array_merge($expandedMap, array_fill($height, $height * 2, [BuildObject::M_SPACE]));
+        $expandedMap[0] = array_merge($expandedMap[0], array_fill($width, $width / 4, BuildObject::M_SPACE));
+
+        $newHeight = count($expandedMap);
+        $newWidth = count($expandedMap[0]);
+        for ($i = 0; $i < $newHeight; $i++) {
+            for ($j = 0; $j < $newWidth; $j++) {
+                if (!isset($expandedMap[$i][$j])) {
+                    $expandedMap[$i][$j] = BuildObject::M_SPACE;
+                }
+            }
+        }
+
+        return $expandedMap;
+    }
 
 
 }
