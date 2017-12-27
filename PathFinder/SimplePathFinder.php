@@ -17,9 +17,13 @@ class SimplePathFinder extends PathFinder
     private $openSet;
     private $closedSet;
 
+    //костыль
+    private $goal;
+
     public function findPath($map, $start, $goal)
     {
         $this->map = $map;
+        $this->goal = $goal;
         $this->openSet = [];
         $this->closedSet = [];
         $path = $this->run($start, $goal);
@@ -144,7 +148,10 @@ class SimplePathFinder extends PathFinder
             if (!isset($this->map[$node->y + $modifier['y']][$node->x + $modifier['x']])) {
                 continue;
             }
-            if ($this->map[$node->y + $modifier['y']][$node->x + $modifier['x']] != BuildObject::M_SPACE) {
+            if (
+                $this->map[$node->y + $modifier['y']][$node->x + $modifier['x']] != BuildObject::M_SPACE &&
+                ($node->y + $modifier['y'] != $this->goal[0] || $node->x + $modifier['x'] != $this->goal[1])
+            ) {
                 continue;
             }
 

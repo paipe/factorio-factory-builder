@@ -75,7 +75,8 @@ class GdDrawer extends Drawer
             );
         }
 
-        $this->drawRoads($roadSchema, $img);
+        //с map пожалуй костыль, нужна для дорисовки окончания дорог
+        $this->drawRoads($roadSchema, $img, $map);
 
 
         imagejpeg($img, self::RESULT_FILENAME);
@@ -107,72 +108,71 @@ class GdDrawer extends Drawer
      * @param array $roadSchema
      * @param resource $img
      */
-    public function drawRoads($roadSchema, $img)
+    public function drawRoads($roadSchema, $img, $map)
     {
         $roads = [];
         $roadStarts = [];
         foreach ($roadSchema as $coords => $item) {
-            $roads[$item['index']][] = explode(':', $coords);
+            $dots = explode(':', $coords);
+            $roads[$item['index']][] = [
+                'x' => $dots[1],
+                'y' => $dots[0]
+            ];
             if (isset($item['start'])) {
                 $roadStarts[$item['index']] = $item['start'];
             }
 
         }
 
-        $arr1 = [-1, 0, 1];
-        $arr2 = $arr1;
-        $modifiers = [];
-        foreach ($arr1 as $var1) {
-            foreach ($arr2 as $var2) {
-                if (($var1 == $var2 && $var1 == 0) || (abs($var1) - abs($var2)) == 0) {
-                    continue;
-                }
-                $modifiers[] = ['x' => $var1, 'y' => $var2];
-            }
-        }
-
         /** @var array $directions - key format: yx modifiers */
         $directions = [
-            '10' => 'up',
-            '-10' => 'down',
-            '01' => 'left',
-            '0-1' => 'right'
+            '10' => 'down',
+            '-10' => 'up',
+            '01' => 'right',
+            '0-1' => 'left'
         ];
 
         foreach ($roadStarts as $index => $coords) {
-            $prevX = $coords['x'];
-            $prevY = $coords['y'];
+            $prevY = null;
+            $prevX = null;
             $prevDirection = null;
-            while (!empty($roads[$index])) {
-                foreach ($modifiers as $modifier) {
-                    foreach ($roads[$index] as $key => &$dot) {
-                        if ($dot[0] == $prevY + $modifier['y'] && $dot[1] == $prevX + $modifier['x']) {
-                            if (is_null($prevDirection) || $prevDirection == $directions[$modifier['y'] . $modifier['x']]) {
-                                $roadType = 'road_' . $directions[$modifier['y'] . $modifier['x']];
-                            } else {
-//                                if (in_array($prevDirection, ['left', 'right'])) {
-                                $roadType = 'road_' . $prevDirection . '_' . $directions[$modifier['y'] . $modifier['x']];
-//                                } else {
-//                                    $roadType = 'road_' . $directions[$modifier['y'] . $modifier['x']] . '_' . $prevDirection;
-//                                }
-                            }
-                            $this->drawObject(
-                                $img,
-                                $roadType,
-                                $prevX,
-                                $prevY
-                            );
-                            $prevX = $dot[1];
-                            $prevY = $dot[0];
-                            $prevDirection = $directions[$modifier['y'] . $modifier['x']];
-                            unset($roads[$index][$key]);
-                            break 2;
-                        }
-                    }
+            foreach ($roads[$index] as $key => &$dot) {
+                if ($prevX == null && $prevY == null) {
+                    $prevX = $dot['x'];
+                    $prevY = $dot['y'];
+                    continue;
                 }
+                $direction = $directions[(string)($dot['y'] - $prevY) . (string)($dot['x'] - $prevX)];
+                if (is_null($prevDirection)) {
+                    $prevDirection = $direction;
+                }
+                if ($direction === $prevDirection) {
+                    $roadType = 'road_' . $direction;
+                } else {
+                    $roadType = 'road_' . $prevDirection . '_' .  $direction;
+                }
+
+                $this->drawObject(
+                    $img,
+                    $roadType,
+                    $prevX,
+                    $prevY
+                );
+                $prevX = $dot['x'];
+                $prevY = $dot['y'];
+                $prevDirection = $direction;
             }
-
-
+            if ($direction == 'left') {
+                $roadType = 'road_left';
+            } else {
+                $roadType = 'road_' . $direction . '_left';
+            }
+            $this->drawObject(
+                $img,
+                $roadType,
+                $prevX,
+                $prevY
+            );
         }
     }
 
