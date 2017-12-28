@@ -12,6 +12,7 @@ namespace Planner;
 use Builder\Builder;
 use Builder\BuildObject;
 use Drawer\Drawer;
+use Map\Map;
 use PathFinder\PathFinder;
 
 abstract class Planner
@@ -45,6 +46,11 @@ abstract class Planner
      * @var array
      */
     protected $schema = [];
+
+    /**
+     * @var Map
+     */
+    protected $objectMap;
 
     /**
      * @var array

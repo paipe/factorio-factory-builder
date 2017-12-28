@@ -6,7 +6,9 @@
       "Parser": "Parser/",
       "Drawer": "Drawer/",
       "Planner": "Planner/",
-      "PathFinder": "PathFinder/"
+      "PathFinder": "PathFinder/",
+      "Map": "Map/",
+      "Objects": "Map/Objects/"
     }
   },
   "require-dev": {
