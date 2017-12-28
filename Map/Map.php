@@ -22,4 +22,29 @@ class Map
     {
 
     }
+
+    public function addEntryPont($productName, $coordinates)
+    {
+
+    }
+
+    public function addExitPoint($productName, $coordinates)
+    {
+
+    }
+
+    public function getStartEndRoadCombinations(): array
+    {
+
+    }
+
+    public function getWidth(): int
+    {
+
+    }
+
+    public function getHeight(): int
+    {
+
+    }
 }

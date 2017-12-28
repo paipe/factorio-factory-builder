@@ -85,6 +85,14 @@ class ObjectMapBuilder extends Builder
             }
         }
 
+        $fabricMap->addExitPoint($object['name'], ['x' => 0, 'y' => 0]);
+        $x = 3 * $count;
+        $y = 6;
+        foreach ($object['in'] as $product) {
+            $fabricMap->addEntryPont($product, ['x' => $x, 'y' => $y]);
+            $y++;
+        }
+
         return $fabricMap;
 
     }
@@ -106,6 +114,7 @@ class ObjectMapBuilder extends Builder
             new RoadObject(RoadObject::D_LEFT),
             ['x' => $x, 'y' => $y + 2]
         );
+        $sourceMap->addExitPoint($object['name'], ['x' => 0, 'y' => 2]);
 
         return $sourceMap;
     }
