@@ -24,7 +24,7 @@ class RoadObject extends ObjectProto
 
     protected $direction;
 
-    public function __construct($direction)
+    public function __construct($direction, $incrIndex = false)
     {
         $this->direction = $direction;
     }

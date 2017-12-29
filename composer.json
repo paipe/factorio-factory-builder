@@ -8,7 +8,8 @@
       "Planner": "Planner/",
       "PathFinder": "PathFinder/",
       "Map": "Map/",
-      "Objects": "Map/Objects/"
+      "Objects": "Map/Objects/",
+      "Utils": "Utils/"
     }
   },
   "require-dev": {

@@ -10,6 +10,7 @@ namespace Planner;
 
 
 use Map\Map;
+use Utils\Utils;
 
 class objectMapPlanner extends Planner
 {
@@ -29,7 +30,11 @@ class objectMapPlanner extends Planner
         $x = 0;
         $y = 0;
         foreach ($buildObjects as $object) {
-            $this->objectMap->mergeMaps($object);
+            $this->objectMap->mergeMaps(
+                $object,
+                Utils::getCoords($x, $y),
+                Utils::getCoords(0, 0)
+            );
             $x += $object->getWidth() + self::DISTANCE;
         }
 
@@ -44,7 +49,11 @@ class objectMapPlanner extends Planner
             //ищем от конца до начала, чтобы потом не разворачивать массив
             $road = $this->pathFinder->findPath($this->objectMap, $combination['end'], $combination['start']);
             foreach ($road as $roadMap) {
-                $this->objectMap->mergeMaps($roadMap);
+                $this->objectMap->mergeMaps(
+                    $roadMap,
+                    Utils::getCoords(0, 0),
+                    Utils::getCoords(0, 0)
+                );
             }
         }
     }

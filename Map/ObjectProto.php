@@ -9,10 +9,20 @@
 namespace Map;
 
 
-class ObjectProto
+abstract class ObjectProto
 {
     protected $width;
     protected $height;
+
+    public function getWidth()
+    {
+        return $this->width;
+    }
+
+    public function getHeight()
+    {
+        return $this->height;
+    }
 
 
 }

@@ -14,6 +14,7 @@ use Map\Objects\ChestObject;
 use Map\Objects\FactoryObject;
 use Map\Objects\InserterObject;
 use Map\Objects\RoadObject;
+use Utils\Utils;
 
 class ObjectMapBuilder extends Builder
 {
@@ -44,42 +45,42 @@ class ObjectMapBuilder extends Builder
             //сама фабрика
             $fabricMap->addObject(
                 new FactoryObject($object['name'], $object['children']),
-                ['x' => $x, 'y' => $y + 2]
+                Utils::getCoords($x,$y + 2)
             );
             //верхний манипулятор на выгрузку
             $fabricMap->addObject(
                 new InserterObject(InserterObject::D_UP, InserterObject::T_DEFAULT),
-                ['x' => $x + 1, 'y' => $y + 1]
+                Utils::getCoords($x + 1,$y + 1)
             );
             //нижний стандартный манипулятор
             $fabricMap->addObject(
                 new InserterObject(InserterObject::D_DOWN, InserterObject::T_DEFAULT),
-                ['x' => $x, 'y' => $y + 5]
+                Utils::getCoords($x,$y + 5)
             );
             if (count($object['children']) > 1) {
                 //нижний длинный манипулятор, если на входе два продукта
                 $fabricMap->addObject(
                     new InserterObject(InserterObject::D_DOWN, InserterObject::T_LONG),
-                    ['x' => $x + 1, 'y' => $y + 5]
+                    Utils::getCoords($x + 1,$y + 5)
                 );
             }
             //сверху и снизу строим дорогу справа налево
             for ($j = 0; $j < 3; $j++) {
                 //верхняя
-                $fabricMap->addObject(
+                $fabricMap->addRoadObject(
                     new RoadObject(RoadObject::D_LEFT),
-                    ['x' => $x + $j, 'y' => $y]
+                    Utils::getCoords($x + $j, $y)
                 );
                 //нижняя
-                $fabricMap->addObject(
+                $fabricMap->addRoadObject(
                     new RoadObject(RoadObject::D_LEFT),
-                    ['x' => $x + $j, 'y' => $y + 6]
+                    Utils::getCoords($x + $j, $y + 6)
                 );
                 //вторая нижняя, если на входе два продукта
                 if (count($object['children']) > 1) {
-                    $fabricMap->addObject(
+                    $fabricMap->addRoadObject(
                         new RoadObject(RoadObject::D_LEFT),
-                        ['x' => $x + $j, 'y' => $y + 7]
+                        Utils::getCoords($x + $j, $y + 7)
                     );
                 }
             }
@@ -89,7 +90,7 @@ class ObjectMapBuilder extends Builder
         $x = 3 * $count;
         $y = 6;
         foreach ($object['in'] as $product) {
-            $fabricMap->addEntryPont($product, ['x' => $x, 'y' => $y]);
+            $fabricMap->addEntryPoint($product, ['x' => $x, 'y' => $y]);
             $y++;
         }
 
