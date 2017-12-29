@@ -11,5 +11,9 @@ namespace PathFinder;
 
 abstract class PathFinder
 {
+    protected $closedSet;
+    protected $map;
+    protected $openSet;
+
     abstract public function findPath($map, $start, $goal);
 }

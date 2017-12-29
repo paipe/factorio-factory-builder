@@ -9,6 +9,8 @@
 namespace Planner;
 
 
+use Builder\BuildObject;
+
 class LinePlanner extends Planner {
 
     public function plan($buildObjects)
@@ -28,6 +30,63 @@ class LinePlanner extends Planner {
 
             $x += $buildObject->factoryCount * 3 + self::DISTANCE;
         }
+    }
+
+    protected function buildRoads()
+    {
+        $in = [];
+        $out = [];
+        foreach ($this->roadSchema as $coords => $item) {
+            $nameValue = explode('_', $item);
+            $direction = array_shift($nameValue);
+            $productName = implode('_', $nameValue);
+            switch ($direction) {
+                case Planner::IN:
+                    $in[$coords] = $productName;
+                    break;
+                case Planner::OUT:
+                    $out[$coords] = $productName;
+                    break;
+            }
+        }
+        foreach ($out as $outCoords => $outDot) {
+            foreach ($in as $inCoords => $inDot) {
+                if ($outDot == $inDot) {
+                    $road = $this->pathFinder->findPath($this->map, explode(':', $outCoords), explode(':', $inCoords));
+                    //разворачиваем, т.к. в исходном варианте массив идет от конца дороги к началу, что не очень удобно
+                    $road = array_reverse($road);
+                    //рисуем сразу после того, как построили путь, чтобы новый путь шел в обход построенных дорог
+                    foreach ($road as $key => $dot) {
+                        switch ($key) {
+                            case 0:
+                                $this->addItemToScheme(
+                                    $dot[0], $dot[1],
+                                    [
+                                        'name' => BuildObject::M_PATH,
+                                        'index' => $this->roadIndex,
+                                        'start' => ['y' => $dot[0], 'x' => $dot[1]]
+                                    ]
+                                );
+                                break;
+//                            case count($road) - 1:
+//                                break;
+                            default:
+                                $this->addItemToScheme(
+                                    $dot[0], $dot[1],
+                                    [
+                                        'name' => BuildObject::M_PATH,
+                                        'index' => $this->roadIndex
+                                    ]
+                                );
+                                break;
+                        }
+                        $this->putObjectOnTheMap($dot[0], $dot[1], BuildObject::M_PATH);
+                    }
+                    $this->roadIndex++;
+                }
+            }
+        }
+
     }
 
 }

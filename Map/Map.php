@@ -38,6 +38,11 @@ class Map
 
     }
 
+    public function isSpaceAvailable($coordinates): bool
+    {
+
+    }
+
     public function getWidth(): int
     {
 

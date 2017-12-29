@@ -1,26 +1,28 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: alexander
- * Date: 07.10.17
- * Time: 11:38
+ * User: user
+ * Date: 29.12.17
+ * Time: 10:34
  */
 
 namespace PathFinder;
 
 
-use Builder\BuildObject;
+use Map\Map;
+use Map\Objects\RoadObject;
 
-class SimplePathFinder extends PathFinder
+class ObjectMapPathFinder extends PathFinder
 {
 
-    //костыль
-    private $goal;
+    /**
+     * @var Map
+     */
+    protected $map;
 
-    public function findPath($map, $start, $goal)
+    public function findPath($map, $start, $goal): ?Map
     {
         $this->map = $map;
-        $this->goal = $goal;
         $this->openSet = [];
         $this->closedSet = [];
         $path = $this->run($start, $goal);
@@ -28,10 +30,10 @@ class SimplePathFinder extends PathFinder
         return $path;
     }
 
-    private function run($start, $goal)
+    private function run(array $start, array $goal): ?Map
     {
-        $goalNode = new SimpleNode($goal);
-        $startNode = new SimpleNode($start);
+        $startNode = new ObjectMapNode($start);
+        $goalNode  = new ObjectMapNode($goal);
         $startNode->g = 0;
         $startNode->h = $this->heuristicCostEstimate($startNode, $goalNode);
         $startNode->calculateF();
@@ -40,7 +42,7 @@ class SimplePathFinder extends PathFinder
 
         while (!empty($this->openSet)) {
             /**
-             * @var SimpleNode $x
+             * @var ObjectMapNode $x
              */
             list($x, $xKey) = $this->findNodeWithLowestF();
 
@@ -55,7 +57,7 @@ class SimplePathFinder extends PathFinder
             foreach ($nodeNeighbors as $neighbor) {
                 foreach ($this->closedSet as $item) {
                     if ($neighbor->compareNodes($item)) {
-                         continue 2;
+                        continue 2;
                     }
                 }
 
@@ -85,32 +87,17 @@ class SimplePathFinder extends PathFinder
             }
         }
 
-        return false;
+        return null;
     }
 
-    private function heuristicCostEstimate($start, $goal)
+    private function heuristicCostEstimate(NodeProto $start, NodeProto $goal): int
     {
         return abs($start->x - $goal->x) + abs($start->y - $goal->y);
     }
 
-    private function reconstructPath($goalNode)
+    private function findNodeWithLowestF(): array
     {
-        $result = [];
-        $currentNode = $goalNode;
-        while ($currentNode != NULL) {
-            $result[] = [$currentNode->y, $currentNode->x];
-            $currentNode = $currentNode->cameFrom;
-        }
-
-        return $result;
-    }
-
-    /**
-     * @return array
-     */
-    private function findNodeWithLowestF()
-    {
-        $min = new SimpleNode([0, 0]);
+        $min = new ObjectMapNode(['x' => 0, 'y' => 0]);
         $min->f = PHP_INT_MAX;
         $minKey = null;
         foreach ($this->openSet as $key => $node) {
@@ -122,11 +109,22 @@ class SimplePathFinder extends PathFinder
         return [$min, $minKey];
     }
 
-    /**
-     * @param $node
-     * @return SimpleNode[]
-     */
-    private function getNodeNeighbors($node)
+    private function reconstructPath(NodeProto $goalNode): Map
+    {
+        $pathMap = new Map();
+        $currentNode = $goalNode;
+        while ($currentNode != NULL) {
+            $pathMap->addObject(
+                new RoadObject(RoadObject::D_UNKNOWN),
+                ['x' => $currentNode->x, 'y' => $currentNode->y]
+            );
+            $currentNode = $currentNode->cameFrom;
+        }
+
+        return $pathMap;
+    }
+
+    private function getNodeNeighbors(NodeProto $node): array
     {
         $arr1 = [-1, 0, 1];
         $arr2 = $arr1;
@@ -142,19 +140,18 @@ class SimplePathFinder extends PathFinder
 
         $result = [];
         foreach ($modifiers as $modifier) {
-            if (!isset($this->map[$node->y + $modifier['y']][$node->x + $modifier['x']])) {
-                continue;
-            }
-            if (
-                $this->map[$node->y + $modifier['y']][$node->x + $modifier['x']] != BuildObject::M_SPACE &&
-                ($node->y + $modifier['y'] != $this->goal[0] || $node->x + $modifier['x'] != $this->goal[1])
-            ) {
+            $coordinates = [
+                'x' => $node->x + $modifier['x'],
+                'y' => $node->y + $modifier['y']
+            ];
+            if (!$this->map->isSpaceAvailable($coordinates)) {
                 continue;
             }
 
-            $result[] = new SimpleNode([$node->y + $modifier['y'], $node->x + $modifier['x']]);
+            $result[] = new ObjectMapNode($coordinates);
         }
 
         return $result;
     }
+
 }

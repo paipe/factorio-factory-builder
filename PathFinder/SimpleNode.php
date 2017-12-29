@@ -9,22 +9,8 @@
 namespace PathFinder;
 
 
-class Node
+class SimpleNode extends NodeProto
 {
-    public $x;
-
-    public $y;
-
-    public $g;
-
-    public $h;
-
-    public $f;
-
-    /**
-     * @var Node
-     */
-    public $cameFrom;
 
     public function __construct($coords)
     {
@@ -37,7 +23,7 @@ class Node
         $this->f = $this->h + $this->g;
     }
 
-    public function compareNodes(Node $node)
+    public function compareNodes(NodeProto $node)
     {
         $result = false;
         if ($node->x == $this->x && $node->y == $this->y) {

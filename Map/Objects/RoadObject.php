@@ -17,6 +17,7 @@ class RoadObject extends ObjectProto
     const D_RIGHT = 'right';
     const D_DOWN = 'down';
     const D_LEFT = 'left';
+    const D_UNKNOWN = 'unknown';
 
     protected $width = 1;
     protected $height = 1;

@@ -13,37 +13,38 @@ use Map\Map;
 
 class objectMapPlanner extends Planner
 {
+    const DISTANCE = 10;
+
+    /**
+     * @var Map
+     */
+    protected $objectMap;
 
     /**
      * @param Map[] $buildObjects
      */
     public function plan($buildObjects)
     {
-        $map = new Map();
+        $this->objectMap = new Map();
         $x = 0;
         $y = 0;
         foreach ($buildObjects as $object) {
-            $map->mergeMaps($object);
+            $this->objectMap->mergeMaps($object);
             $x += $object->getWidth() + self::DISTANCE;
         }
 
-        $this->buildRoads($map);
+        $this->buildRoads();
 
     }
 
-    /**
-     * @param Map $map
-     */
-    protected function buildRoads($map)
+    protected function buildRoads()
     {
-        $combinations = $map->getStartEndRoadCombinations();
+        $combinations = $this->objectMap->getStartEndRoadCombinations();
         foreach ($combinations as $combination) {
-            $road = $this->pathFinder->findPath($map, $combination['start'], $combination['end']);
-            //разворачиваем, т.к. в исхоном варианте массив идет от конца дороги к началу, что не очень удобно
-            //TODO возможно легче поменять старт и энд в findPath?
-            $road = array_reverse($road);
-            foreach ($road as $key => $coordinates) {
-                //TODO описать отрисовку дороги
+            //ищем от конца до начала, чтобы потом не разворачивать массив
+            $road = $this->pathFinder->findPath($this->objectMap, $combination['end'], $combination['start']);
+            foreach ($road as $roadMap) {
+                $this->objectMap->mergeMaps($roadMap);
             }
         }
     }
