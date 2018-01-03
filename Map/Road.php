@@ -62,7 +62,8 @@ class Road
 
     public function explodeRoad(): array
     {
-
+        //понадобится для разбиения дорог в случае
+        //ответвлений\слияний и прочей темы с ветвлением
     }
 
     public function continuePath(RoadObject $object)

@@ -11,6 +11,8 @@ $loader = require_once __DIR__ . '/vendor/autoload.php';
 $parser = new \Parser\Parser();
 $tree = $parser->buildTree('electronic_circuit');
 
+
+//TODO: учесть тот факт, что фабрика за раз может выкинуть > 1 предмета (напр: медный провод)
 $builder = new \Builder\SimpleBuilder();
 $builder->setTree($tree);
 $builder->setCount(1);
