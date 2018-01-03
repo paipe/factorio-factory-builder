@@ -25,12 +25,18 @@ class InserterObject extends ObjectProto
     protected $height = 1;
 
     protected $direction;
-    protected $type;
+    protected $type = self::T_DEFAULT;
 
-    public function __construct($direction, $type = self::T_DEFAULT)
+    public function setDirection($direction)
     {
         $this->direction = $direction;
+        return $this;
+    }
+
+    public function setType($type)
+    {
         $this->type = $type;
+        return $this;
     }
 
 }

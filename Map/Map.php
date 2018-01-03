@@ -21,22 +21,41 @@ class Map
     private $entryPoints = [];
     private $exitPoints = [];
 
-    public function addObject(ObjectProto $object, $coordinates)
+    public function addObject(ObjectProto $object)
     {
         for ($y = 0; $y < $object->getHeight(); $y++) {
             for ($x = 0; $x < $object->getWidth(); $x++) {
-                $this->grid[$coordinates['y'] + $y][$coordinates['x'] + $x] = $object;
+                if (isset($this->grid[$object->getY() + $y][$object->getX() + $x])) {
+                    throw new \Exception('Перезапись занятой клетки карты!');
+                }
+                $this->grid[$object->getY() + $y][$object->getX() + $x] = $object;
             }
         }
     }
 
-    public function addRoadObject(RoadObject $object, $coordinates, $roadIndex)
+    public function addRoadObject(RoadObject $object, int $roadIndex)
     {
         if (!isset($this->roads[$roadIndex])) {
             throw  new \Exception('Дороги с переданным индексом нет!');
         }
 
-        $this->addObject($object, $coordinates);
+        $lastRoadObject = $this->roads[$roadIndex]->lastRoad();
+        if ($lastRoadObject) {
+            $lastX = $lastRoadObject->getX();
+            $lastY = $lastRoadObject->getY();
+            $x = $object->getX();
+            $y = $object->getY();
+            if (
+                !(
+                    (abs($x - $lastX) == 1 && $y == $lastY) ||
+                    ($x == $lastX && abs($y - $lastY) == 1)
+                )
+            ) {
+                throw new \Exception('Некорректное создание дороги!');
+            }
+        }
+
+        $this->addObject($object);
         $this->roads[$roadIndex]->continuePath($object);
     }
 
@@ -58,6 +77,7 @@ class Map
 
     public function mergeMaps(Map $map, $parentCoordinates, $childCoordinates)
     {
+
 
     }
 

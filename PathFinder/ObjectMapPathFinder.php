@@ -11,6 +11,8 @@ namespace PathFinder;
 
 use Map\Map;
 use Map\Objects\RoadObject;
+use Map\Road;
+use Utils\Utils;
 
 class ObjectMapPathFinder extends PathFinder
 {
@@ -112,11 +114,12 @@ class ObjectMapPathFinder extends PathFinder
     private function reconstructPath(NodeProto $goalNode): Map
     {
         $pathMap = new Map();
+        $roadIndex = $pathMap->addRoad(new Road());
         $currentNode = $goalNode;
         while ($currentNode != NULL) {
-            $pathMap->addObject(
-                new RoadObject(RoadObject::D_UNKNOWN),
-                ['x' => $currentNode->x, 'y' => $currentNode->y]
+            $pathMap->addRoadObject(
+                new RoadObject(Utils::getCoords($currentNode->x, $currentNode->y)),
+                $roadIndex
             );
             $currentNode = $currentNode->cameFrom;
         }

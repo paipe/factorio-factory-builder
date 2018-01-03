@@ -14,6 +14,7 @@ use Map\Objects\ChestObject;
 use Map\Objects\FactoryObject;
 use Map\Objects\InserterObject;
 use Map\Objects\RoadObject;
+use Map\Road;
 use Utils\Utils;
 
 class ObjectMapBuilder extends Builder
@@ -40,47 +41,54 @@ class ObjectMapBuilder extends Builder
         $count = (int)ceil($object['time'] / 0.5);
         $x = 0; //начинаем с левого края
         $y = 0;
+        $isTwoIn = count($object['children']) > 1;
+        $topRoadIndex = $fabricMap->addRoad(new Road());
+        $bottomRoadIndex = $fabricMap->addRoad(new Road());
+        if ($isTwoIn) $secondBottomRoadIndex = $fabricMap->addRoad(new Road());
         for ($i = 0; $i < $count; $i++) {
             $x = $x + ($i * 3);
             //сама фабрика
             $fabricMap->addObject(
-                new FactoryObject($object['name'], $object['children']),
-                Utils::getCoords($x,$y + 2)
+                (new FactoryObject(Utils::getCoords($x,$y + 2)))
+                    ->setInOut($object['children'], $object['name'])
             );
             //верхний манипулятор на выгрузку
             $fabricMap->addObject(
-                new InserterObject(InserterObject::D_UP, InserterObject::T_DEFAULT),
-                Utils::getCoords($x + 1,$y + 1)
+                (new InserterObject(Utils::getCoords($x + 1,$y + 1)))
+                    ->setDirection(InserterObject::D_UP)
+                    ->setType(InserterObject::T_DEFAULT)
             );
             //нижний стандартный манипулятор
             $fabricMap->addObject(
-                new InserterObject(InserterObject::D_DOWN, InserterObject::T_DEFAULT),
-                Utils::getCoords($x,$y + 5)
+                (new InserterObject(Utils::getCoords($x,$y + 5)))
+                    ->setDirection(InserterObject::D_DOWN)
+                    ->setType(InserterObject::T_DEFAULT)
             );
-            if (count($object['children']) > 1) {
+            if ($isTwoIn) {
                 //нижний длинный манипулятор, если на входе два продукта
                 $fabricMap->addObject(
-                    new InserterObject(InserterObject::D_DOWN, InserterObject::T_LONG),
-                    Utils::getCoords($x + 1,$y + 5)
+                    (new InserterObject(Utils::getCoords($x + 1,$y + 5)))
+                        ->setDirection(InserterObject::D_DOWN)
+                        ->setType(InserterObject::T_LONG)
                 );
             }
             //сверху и снизу строим дорогу справа налево
             for ($j = 0; $j < 3; $j++) {
                 //верхняя
                 $fabricMap->addRoadObject(
-                    new RoadObject(RoadObject::D_LEFT),
-                    Utils::getCoords($x + $j, $y)
+                    new RoadObject(Utils::getCoords($x + $j, $y)),
+                    $topRoadIndex
                 );
                 //нижняя
                 $fabricMap->addRoadObject(
-                    new RoadObject(RoadObject::D_LEFT),
-                    Utils::getCoords($x + $j, $y + 6)
+                    new RoadObject(Utils::getCoords($x + $j, $y + 6)),
+                    $bottomRoadIndex
                 );
                 //вторая нижняя, если на входе два продукта
-                if (count($object['children']) > 1) {
+                if ($isTwoIn) {
                     $fabricMap->addRoadObject(
-                        new RoadObject(RoadObject::D_LEFT),
-                        Utils::getCoords($x + $j, $y + 7)
+                        new RoadObject(Utils::getCoords($x + $j, $y + 7)),
+                        $secondBottomRoadIndex
                     );
                 }
             }
@@ -104,16 +112,18 @@ class ObjectMapBuilder extends Builder
         $x = 0;
         $y = 0;
         $sourceMap->addObject(
-            new ChestObject($object['name']),
-            ['x' => $x, 'y' => $y]
+            (new ChestObject(Utils::getCoords($x, $y)))
+                ->setStorage($object['name'])
         );
         $sourceMap->addObject(
-            new InserterObject(InserterObject::D_DOWN, InserterObject::T_DEFAULT),
-            ['x' => $x, 'y' => $y + 1]
+            (new InserterObject(Utils::getCoords($x, $y + 1)))
+                ->setDirection(InserterObject::D_DOWN)
+                ->setType(InserterObject::T_DEFAULT)
         );
-        $sourceMap->addObject(
-            new RoadObject(RoadObject::D_LEFT),
-            ['x' => $x, 'y' => $y + 2]
+        $roadIndex = $sourceMap->addRoad(new Road());
+        $sourceMap->addRoadObject(
+            new RoadObject(Utils::getCoords($x, $y + 2)),
+            $roadIndex
         );
         $sourceMap->addExitPoint($object['name'], ['x' => 0, 'y' => 2]);
 

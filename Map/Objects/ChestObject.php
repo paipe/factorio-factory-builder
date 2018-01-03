@@ -18,9 +18,10 @@ class ChestObject extends ObjectProto
 
     protected $storage;
 
-    public function __construct($storage)
+    public function setStorage($storage)
     {
         $this->storage = $storage;
+        return $this;
     }
 
 }

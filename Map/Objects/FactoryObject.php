@@ -22,11 +22,17 @@ class FactoryObject extends ObjectProto
 
     protected static $globalIndex = 0;
 
-    public function __construct(string $out, array $in)
+    public function __construct($coordinates)
     {
+        parent::__construct($coordinates);
         $this->index = ++self::$globalIndex;
+    }
+
+    public function setInOut($in, $out)
+    {
         $this->out = $out;
         $this->in = $in;
+        return $this;
     }
 
 
