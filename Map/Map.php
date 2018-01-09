@@ -78,7 +78,7 @@ class Map
 
     public function getObjectByCoordinates($coordinates): ?ObjectProto
     {
-        return $grid[$coordinates['y']][$coordinates['x']] ?? null;
+        return $this->grid[$coordinates['y']][$coordinates['x']] ?? null;
     }
 
     public function mergeMaps(Map $map, $coordinates)
@@ -132,8 +132,8 @@ class Map
         $mapEntryPoints = $map->getEntryPoints();
         foreach ($mapEntryPoints as $coords => $entryPoint) {
             if (isset($this->entryPoints[$coords])) {
-                continue;
-                //throw new \Exception('Такой entryPoint уже есть!');
+//                continue;
+                throw new \Exception('Такой entryPoint уже есть!');
             }
             $this->entryPoints[$coords] = $entryPoint;
         }
@@ -141,8 +141,8 @@ class Map
         $mapExitPoints = $map->getExitPoints();
         foreach ($mapExitPoints as $coords => $exitPoint) {
             if (isset($this->exitPoints[$coords])) {
-                continue;
-//                throw new \Exception('Такой exitPoint уже есть!');
+//                continue;
+                throw new \Exception('Такой exitPoint уже есть!');
             }
             $this->exitPoints[$coords] = $exitPoint;
         }
@@ -209,7 +209,7 @@ class Map
             }
         }
 
-        return $width;
+        return $width + 1;
     }
 
     public function getHeight(): int
@@ -221,7 +221,7 @@ class Map
             }
         }
 
-        return $height;
+        return $height + 1;
     }
 
 //    private function getMapSize(): array
