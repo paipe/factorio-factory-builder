@@ -11,6 +11,8 @@ namespace Map;
 
 abstract class ObjectProto
 {
+    protected $fileName;
+
     protected $width;
     protected $height;
 
@@ -41,6 +43,11 @@ abstract class ObjectProto
     public function getY()
     {
         return $this->y;
+    }
+
+    public function getFileName()
+    {
+        return $this->fileName;
     }
 
 

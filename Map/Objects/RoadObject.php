@@ -17,14 +17,20 @@ class RoadObject extends ObjectProto
     const D_RIGHT = 'right';
     const D_DOWN = 'down';
     const D_LEFT = 'left';
-    const D_UNKNOWN = 'unknown';
 
     const D_DEFAULT = 'left';
+
+    protected $fileName = 'road';
 
     protected $width = 1;
     protected $height = 1;
 
     // направление задается перед отрисовкой
     protected $direction;
+
+    public function getFileName()
+    {
+        return $this->fileName . '_' . $this->direction;
+    }
 
 }

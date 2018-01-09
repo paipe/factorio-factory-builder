@@ -39,65 +39,65 @@ class ObjectMapBuilder extends Builder
     {
         $fabricMap = new Map();
         $count = (int)ceil($object['time'] / 0.5);
-        $x = 0; //начинаем с левого края
-        $y = 0;
+
         $isTwoIn = count($object['children']) > 1;
         $topRoadIndex = $fabricMap->addRoad(new Road());
         $bottomRoadIndex = $fabricMap->addRoad(new Road());
         if ($isTwoIn) $secondBottomRoadIndex = $fabricMap->addRoad(new Road());
+
         for ($i = 0; $i < $count; $i++) {
-            $x = $x + ($i * 3);
+            $x = ($i * 3);
             //сама фабрика
             $fabricMap->addObject(
-                (new FactoryObject(Utils::getCoords($x,$y + 2)))
+                (new FactoryObject(Utils::getCoords($x,2)))
                     ->setInOut($object['children'], $object['name'])
             );
             //верхний манипулятор на выгрузку
             $fabricMap->addObject(
-                (new InserterObject(Utils::getCoords($x + 1,$y + 1)))
+                (new InserterObject(Utils::getCoords($x + 1,1)))
                     ->setDirection(InserterObject::D_UP)
                     ->setType(InserterObject::T_DEFAULT)
             );
             //нижний стандартный манипулятор
             $fabricMap->addObject(
-                (new InserterObject(Utils::getCoords($x,$y + 5)))
+                (new InserterObject(Utils::getCoords($x,5)))
                     ->setDirection(InserterObject::D_DOWN)
                     ->setType(InserterObject::T_DEFAULT)
             );
             if ($isTwoIn) {
                 //нижний длинный манипулятор, если на входе два продукта
                 $fabricMap->addObject(
-                    (new InserterObject(Utils::getCoords($x + 1,$y + 5)))
+                    (new InserterObject(Utils::getCoords($x + 1,5)))
                         ->setDirection(InserterObject::D_DOWN)
                         ->setType(InserterObject::T_LONG)
                 );
             }
-            //сверху и снизу строим дорогу справа налево
-            for ($j = 0; $j < 3; $j++) {
-                //верхняя
+        }
+        //сверху и снизу строим дорогу справа налево
+        for ($j = $count * 3 - 1; $j >= 0 ; $j--) {
+            //верхняя
+            $fabricMap->addRoadObject(
+                new RoadObject(Utils::getCoords($j, 0)),
+                $topRoadIndex
+            );
+            //нижняя
+            $fabricMap->addRoadObject(
+                new RoadObject(Utils::getCoords($j, 6)),
+                $bottomRoadIndex
+            );
+            //вторая нижняя, если на входе два продукта
+            if ($isTwoIn) {
                 $fabricMap->addRoadObject(
-                    new RoadObject(Utils::getCoords($x + $j, $y)),
-                    $topRoadIndex
+                    new RoadObject(Utils::getCoords($j, 7)),
+                    $secondBottomRoadIndex
                 );
-                //нижняя
-                $fabricMap->addRoadObject(
-                    new RoadObject(Utils::getCoords($x + $j, $y + 6)),
-                    $bottomRoadIndex
-                );
-                //вторая нижняя, если на входе два продукта
-                if ($isTwoIn) {
-                    $fabricMap->addRoadObject(
-                        new RoadObject(Utils::getCoords($x + $j, $y + 7)),
-                        $secondBottomRoadIndex
-                    );
-                }
             }
         }
 
         $fabricMap->addExitPoint($object['name'], ['x' => 0, 'y' => 0]);
         $x = 3 * $count;
         $y = 6;
-        foreach ($object['in'] as $product) {
+        foreach ($object['children'] as $product => $count) {
             $fabricMap->addEntryPoint($product, ['x' => $x, 'y' => $y]);
             $y++;
         }

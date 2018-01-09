@@ -147,7 +147,7 @@ class ObjectMapPathFinder extends PathFinder
                 'x' => $node->x + $modifier['x'],
                 'y' => $node->y + $modifier['y']
             ];
-            if (!$this->map->isSpaceAvailable($coordinates)) {
+            if (!is_null($this->map->getObjectByCoordinates($coordinates))) {
                 continue;
             }
 

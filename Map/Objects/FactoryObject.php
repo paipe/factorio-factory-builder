@@ -13,6 +13,8 @@ use Map\ObjectProto;
 
 class FactoryObject extends ObjectProto
 {
+    protected $fileName = 'fabric';
+
     protected $width = 3;
     protected $height = 3;
     protected $index;
@@ -28,7 +30,7 @@ class FactoryObject extends ObjectProto
         $this->index = ++self::$globalIndex;
     }
 
-    public function setInOut($in, $out)
+    public function setInOut(array $in, string $out)
     {
         $this->out = $out;
         $this->in = $in;

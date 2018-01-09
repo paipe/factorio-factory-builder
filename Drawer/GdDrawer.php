@@ -17,6 +17,9 @@ class GdDrawer extends Drawer
     const SRC_EXTENSION = '.png';
     const RESULT_FILENAME = 'result.jpeg';
 
+    private $map;
+    private $schema;
+
     /**
      * Mapping BuildObject constants to src file names
      *
@@ -32,22 +35,32 @@ class GdDrawer extends Drawer
         BuildObject::M_CHEST => 'chest',
     ];
 
+    public function setMap(array $map)
+    {
+        $this->map = $map;
+    }
+
+    public function setSchema(array $schema)
+    {
+        $this->schema = $schema;
+    }
+
     /**
      * Create result image
      *
      * @param array $map buildings type
      * @param array $schema structure type
      */
-    public function draw(array $map, array $schema)
+    public function draw()
     {
-        $width = count($map[0]) * self::PIXELS_ON_DOT;
-        $height = count($map) * self::PIXELS_ON_DOT;
+        $width = count($this->map[0]) * self::PIXELS_ON_DOT;
+        $height = count($this->map) * self::PIXELS_ON_DOT;
         $img = imagecreatetruecolor($width, $height);
 
         $white = imagecolorallocate($img, 255, 255, 255);
         imagefill($img, 0, 0, $white);
 
-        foreach ($map as $y => $row) {
+        foreach ($this->map as $y => $row) {
             foreach ($row as $x => $dot) {
                 if ($dot !== BuildObject::M_SPACE && $dot !== BuildObject::M_BLOCKED && $dot !== BuildObject::M_PATH) {
                     $this->drawObject(
@@ -61,7 +74,7 @@ class GdDrawer extends Drawer
         }
 
         $roadSchema = [];
-        foreach ($schema as $coords => $data) {
+        foreach ($this->schema as $coords => $data) {
             if ($data['name'] == BuildObject::M_PATH) {
                 $roadSchema[$coords] = $data;
                 continue;
@@ -76,7 +89,7 @@ class GdDrawer extends Drawer
         }
 
         //с map пожалуй костыль, нужна для дорисовки окончания дорог
-        $this->drawRoads($roadSchema, $img, $map);
+        $this->drawRoads($roadSchema, $img);
 
 
         imagejpeg($img, self::RESULT_FILENAME);
@@ -108,7 +121,7 @@ class GdDrawer extends Drawer
      * @param array $roadSchema
      * @param resource $img
      */
-    public function drawRoads($roadSchema, $img, $map)
+    public function drawRoads($roadSchema, $img)
     {
         $roads = [];
         $roadStarts = [];

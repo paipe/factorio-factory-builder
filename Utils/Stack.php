@@ -14,19 +14,19 @@ class Stack
 
     private $stack = [];
 
-    public function push(mixed $value): int
+    public function push($value): int
     {
         return array_unshift($this->stack, $value);
     }
 
-    public function pop(): mixed
+    public function pop()
     {
         return array_shift($this->stack);
     }
 
-    public function top(): mixed
+    public function top()
     {
-        return current($this->stack);
+        return current($this->stack) ?: null;
     }
 
     public function isEmpty(): bool

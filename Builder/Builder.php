@@ -25,14 +25,16 @@ abstract class Builder
      */
     protected $count;
 
-    public function setTree(Component $tree): void
+    public function setTree(Component $tree): Builder
     {
         $this->tree = $tree;
+        return $this;
     }
 
-    public function setCount(int $count): void
+    public function setCount(int $count): Builder
     {
         $this->count = $count;
+        return $this;
     }
 
     abstract public function build(): array;

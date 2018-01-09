@@ -91,15 +91,19 @@ class Map
         $mapRoads = $map->getRoads();
         foreach ($this->roads as $road) {
             foreach ($mapRoads as $mapRoad) {
-                try {
-                    $road->implodeRoads($mapRoad);
-                } catch (\Exception $e) {
+                if (!$road->isRoadEmpty() && !$mapRoad->isRoadEmpty()) {
+                    try {
+                        $road->implodeRoads($mapRoad);
+                    } catch (\Exception $e) {
 
+                    }
                 }
-                try {
-                    $mapRoad->implodeRoads($road);
-                } catch (\Exception $e) {
+                if (!$road->isRoadEmpty() && !$mapRoad->isRoadEmpty()) {
+                    try {
+                        $mapRoad->implodeRoads($road);
+                    } catch (\Exception $e) {
 
+                    }
                 }
             }
         }
@@ -128,7 +132,8 @@ class Map
         $mapEntryPoints = $map->getEntryPoints();
         foreach ($mapEntryPoints as $coords => $entryPoint) {
             if (isset($this->entryPoints[$coords])) {
-                throw new \Exception('Такой entryPoint уже есть!');
+                continue;
+                //throw new \Exception('Такой entryPoint уже есть!');
             }
             $this->entryPoints[$coords] = $entryPoint;
         }
@@ -136,7 +141,8 @@ class Map
         $mapExitPoints = $map->getExitPoints();
         foreach ($mapExitPoints as $coords => $exitPoint) {
             if (isset($this->exitPoints[$coords])) {
-                throw new \Exception('Такой exitPoint уже есть!');
+                continue;
+//                throw new \Exception('Такой exitPoint уже есть!');
             }
             $this->exitPoints[$coords] = $exitPoint;
         }
@@ -169,8 +175,8 @@ class Map
             foreach ($this->exitPoints as $exitCoords => $exitProduct) {
                 if ($entryProduct === $exitProduct) {
                     $result[] = [
-                        'start' => $entryProduct,
-                        'end'   => $exitProduct
+                        'start' => $entryCoords,
+                        'end'   => $exitCoords
                     ];
                 }
             }
@@ -179,34 +185,70 @@ class Map
         return $result;
     }
 
+    public function iterateMapObjects()
+    {
+        foreach ($this->grid as $y => $row) {
+            foreach ($row as $x => $object) {
+                /** @var ObjectProto $object */
+                if ($object->getX() === $x && $object->getY() === $y) {
+                    yield $object;
+                }
+            }
+        }
+    }
+
+    //подразумеваем, что отрицательных координат у нас нет
     public function getWidth(): int
     {
-        return $this->getMapSize()['width'];
+        $width = 0;
+        foreach ($this->grid as $row) {
+            foreach ($row as $x => $object) {
+                if ($x > $width) {
+                    $width = $x;
+                }
+            }
+        }
+
+        return $width;
     }
 
     public function getHeight(): int
     {
-        return $this->getMapSize()['height'];
-    }
-
-    private function getMapSize(): array
-    {
-        $minX = PHP_INT_MAX;
-        $maxX = 0;
-        $minY = PHP_INT_MAX;
-        $maxY = 0;
-        foreach ($this->grid as $rowKey => $rows) {
-            if ($rowKey > $maxY) $maxY = $rowKey;
-            if ($rowKey < $minY) $minY = $rowKey;
-            foreach ($rows as $pointKey => $point) {
-                if ($pointKey > $maxX) $maxX = $pointKey;
-                if ($pointKey < $minX) $minX = $pointKey;
+        $height = 0;
+        foreach ($this->grid as $y => $row) {
+            if ($y > $height) {
+                $height = $y;
             }
         }
 
-        return [
-            'width'  => abs($minX) + abs($maxX),
-            'height' => abs($minY) + abs($maxY)
-        ];
+        return $height;
     }
+
+//    private function getMapSize(): array
+//    {
+//        if (empty($this->grid)) {
+//            return [
+//                'height' => 0,
+//                'width' => 0
+//            ];
+//        }
+//
+//        $minX = PHP_INT_MAX;
+//        $maxX = 0;
+//        $minY = PHP_INT_MAX;
+//        $maxY = 0;
+//        foreach ($this->grid as $rowKey => $rows) {
+//            if ($rowKey > $maxY) $maxY = $rowKey;
+//            if ($rowKey < $minY) $minY = $rowKey;
+//            foreach ($rows as $pointKey => $point) {
+//                if ($pointKey > $maxX) $maxX = $pointKey;
+//                if ($pointKey < $minX) $minX = $pointKey;
+//            }
+//        }
+//
+//        return [
+//            'width'  => abs($minX) + abs($maxX),
+//            'height' => abs($minY) + abs($maxY)
+//        ];
+//    }
 }

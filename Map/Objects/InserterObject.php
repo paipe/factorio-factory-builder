@@ -19,7 +19,9 @@ class InserterObject extends ObjectProto
     const D_LEFT = 'left';
 
     const T_DEFAULT = 'default';
-    const T_LONG = 'long';
+    const T_LONG = 'long_handed';
+
+    protected $fileName = 'inserter';
 
     protected $width = 1;
     protected $height = 1;
@@ -37,6 +39,11 @@ class InserterObject extends ObjectProto
     {
         $this->type = $type;
         return $this;
+    }
+
+    public function getFileName()
+    {
+        return ($this->type !== self::T_DEFAULT ? $this->type : '') . '_' . $this->fileName . '_' . $this->direction;
     }
 
 }

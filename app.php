@@ -9,15 +9,15 @@
 $loader = require_once __DIR__ . '/vendor/autoload.php';
 
 $parser = new \Parser\Parser();
-$tree = $parser->buildTree('electronic_circuit');
+$tree = $parser->buildTree('red_bottle');
 
 
 //TODO: учесть тот факт, что фабрика за раз может выкинуть > 1 предмета (напр: медный провод)
-$builder = new \Builder\SimpleBuilder();
-$builder->setTree($tree);
-$builder->setCount(1);
-$drawer = new \Drawer\GdDrawer();
-$pathFinder = new \PathFinder\SimplePathFinder();
-$planner = new \Planner\SquarePlanner($pathFinder);
-$planner->plan($builder->build());
-$drawer->draw($planner->getMap(), $planner->getSchema());
+$builder = new \Builder\ObjectMapBuilder();
+$builder->setTree($tree)->setCount(1);
+$drawer = new \Drawer\ObjectMapGdDrawer();
+$pathFinder = new \PathFinder\ObjectMapPathFinder();
+$planner = new \Planner\ObjectMapPlanner($pathFinder);
+$map = $planner->plan($builder->build());
+$drawer->setMap($map);
+$drawer->draw();

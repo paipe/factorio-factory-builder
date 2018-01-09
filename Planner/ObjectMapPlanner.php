@@ -12,7 +12,7 @@ namespace Planner;
 use Map\Map;
 use Utils\Utils;
 
-class objectMapPlanner extends Planner
+class ObjectMapPlanner extends Planner
 {
     const DISTANCE = 10;
 
@@ -23,6 +23,7 @@ class objectMapPlanner extends Planner
 
     /**
      * @param Map[] $buildObjects
+     * @return Map
      */
     public function plan($buildObjects)
     {
@@ -34,11 +35,13 @@ class objectMapPlanner extends Planner
                 $object,
                 Utils::getCoords($x, $y)
             );
+            //строим пока что все в линию слева на право, так что просто инкрементим X
             $x += $object->getWidth() + self::DISTANCE;
         }
 
         $this->buildRoads();
 
+        return $this->objectMap;
     }
 
     protected function buildRoads()
@@ -48,8 +51,8 @@ class objectMapPlanner extends Planner
             //ищем от конца до начала, чтобы потом не разворачивать массив
             $road = $this->pathFinder->findPath(
                 $this->objectMap,
-                explode(':', $combination['end']),
-                explode(':', $combination['start'])
+                Utils::getCoords($combination['end'][0], $combination['end'][2]),
+                Utils::getCoords($combination['start'][0], $combination['start'][2])
             );
             foreach ($road as $roadMap) {
                 $this->objectMap->mergeMaps(
