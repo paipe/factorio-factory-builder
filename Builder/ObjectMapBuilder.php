@@ -11,6 +11,7 @@ namespace Builder;
 
 use Map\Map;
 use Map\Objects\ChestObject;
+use Map\Objects\EePointRoadObject;
 use Map\Objects\FactoryObject;
 use Map\Objects\InserterObject;
 use Map\Objects\RoadObject;
@@ -76,30 +77,50 @@ class ObjectMapBuilder extends Builder
         //сверху и снизу строим дорогу справа налево
         for ($j = $count * 3 - 1; $j >= 0 ; $j--) {
             //верхняя
-            $fabricMap->addRoadObject(
-                new RoadObject(Utils::getCoords($j, 0)),
-                $topRoadIndex
-            );
-            //нижняя
-            $fabricMap->addRoadObject(
-                new RoadObject(Utils::getCoords($j, 6)),
-                $bottomRoadIndex
-            );
-            //вторая нижняя, если на входе два продукта
-            if ($isTwoIn) {
+            if ($j === 0) {
                 $fabricMap->addRoadObject(
-                    new RoadObject(Utils::getCoords($j, 7)),
-                    $secondBottomRoadIndex
+                    (new EePointRoadObject(Utils::getCoords($j, 0)))
+                        ->setPointType(EePointRoadObject::T_EXIT)
+                        ->setPointProduct($object['name']),
+                    $topRoadIndex
+                );
+            } else {
+                $fabricMap->addRoadObject(
+                    new RoadObject(Utils::getCoords($j, 0)),
+                    $topRoadIndex
                 );
             }
-        }
 
-        $fabricMap->addExitPoint($object['name'], ['x' => 0, 'y' => 0]);
-        $x = 3 * $count;
-        $y = 6;
-        foreach ($object['children'] as $product => $count) {
-            $fabricMap->addEntryPoint($product, ['x' => $x, 'y' => $y]);
-            $y++;
+            //нижняя
+            if ($j === $count * 3 - 1) {
+                $fabricMap->addRoadObject(
+                    (new EePointRoadObject(Utils::getCoords($j, 6)))
+                        ->setPointType(EePointRoadObject::T_ENTRY)
+                        ->setPointProduct($object['children'][0]),
+                    $bottomRoadIndex
+                );
+            } else {
+                $fabricMap->addRoadObject(
+                    new RoadObject(Utils::getCoords($j, 6)),
+                    $bottomRoadIndex
+                );
+            }
+            //вторая нижняя, если на входе два продукта
+            if (isset($secondBottomRoadIndex)) {
+                if ($j === $count * 3 - 1) {
+                    $fabricMap->addRoadObject(
+                        (new EePointRoadObject(Utils::getCoords($j, 7)))
+                            ->setPointType(EePointRoadObject::T_ENTRY)
+                            ->setPointProduct($object['children'][1]),
+                        $secondBottomRoadIndex
+                    );
+                } else {
+                    $fabricMap->addRoadObject(
+                        new RoadObject(Utils::getCoords($j, 7)),
+                        $secondBottomRoadIndex
+                    );
+                }
+            }
         }
 
         return $fabricMap;
@@ -122,10 +143,11 @@ class ObjectMapBuilder extends Builder
         );
         $roadIndex = $sourceMap->addRoad(new Road());
         $sourceMap->addRoadObject(
-            new RoadObject(Utils::getCoords($x, $y + 2)),
+            (new EePointRoadObject(Utils::getCoords($x, $y + 2)))
+                ->setPointType(EePointRoadObject::T_EXIT)
+                ->setPointProduct($object['name']),
             $roadIndex
         );
-        $sourceMap->addExitPoint($object['name'], ['x' => 0, 'y' => 2]);
 
         return $sourceMap;
     }

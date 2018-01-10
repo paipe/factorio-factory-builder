@@ -9,6 +9,7 @@
 namespace Map;
 
 
+use Map\Objects\EePointRoadObject;
 use Map\Objects\RoadObject;
 use Utils\Utils;
 
@@ -19,8 +20,6 @@ class Map
      * @var Road[] array
      */
     private $roads = [];
-    private $entryPoints = [];
-    private $exitPoints = [];
 
     public function addObject(ObjectProto $object)
     {
@@ -89,6 +88,8 @@ class Map
         //не самый грамотный вариант, зато не надо писать никаких условий
         //так как сравнение односторонее, нужно пробовать мерджить в обе стороны
         $mapRoads = $map->getRoads();
+        //TODO: если $this->roads пустой, то в обратку ничего смотреться не будет
+        //TODO: это баг или фича?
         foreach ($this->roads as $road) {
             foreach ($mapRoads as $mapRoad) {
                 if (!$road->isRoadEmpty() && !$mapRoad->isRoadEmpty()) {
@@ -129,6 +130,7 @@ class Map
             }
         }
 
+        //TODO: ПЕРЕПИСАТЬ С УЧЕТОМ ИЗМЕНЕНИЙ В ФОРМАТЕ ПОИНТОВ
         $mapEntryPoints = $map->getEntryPoints();
         foreach ($mapEntryPoints as $coords => $entryPoint) {
             if (isset($this->entryPoints[$coords])) {
@@ -148,28 +150,43 @@ class Map
         }
     }
 
-    public function addEntryPoint($productName, $coordinates)
-    {
-        $this->entryPoints[$coordinates['y'] . ':' . $coordinates['x']] = $productName;
-    }
-
-    public function addExitPoint($productName, $coordinates)
-    {
-        $this->exitPoints[$coordinates['y'] . ':' . $coordinates['x']] = $productName;
-    }
-
     public function getEntryPoints()
     {
-        return $this->entryPoints;
+        $entryPoints = [];
+        foreach ($this->grid as $row) {
+            foreach ($row as $object) {
+                if (
+                    $object instanceof EePointRoadObject &&
+                    $object->getPointType() === EePointRoadObject::T_ENTRY
+                ) {
+                    $entryPoints[] = $object;
+                }
+            }
+        }
+
+        return $entryPoints;
     }
 
     public function getExitPoints()
     {
-        return $this->exitPoints;
+        $exitPoints = [];
+        foreach ($this->grid as $row) {
+            foreach ($row as $object) {
+                if (
+                    $object instanceof EePointRoadObject &&
+                    $object->getPointType() === EePointRoadObject::T_EXIT
+                ) {
+                    $exitPoints[] = $object;
+                }
+            }
+        }
+
+        return $exitPoints;
     }
 
     public function getStartEndRoadCombinations(): array
     {
+        //TODO переписать (см. EePointRoadObject)
         $result = [];
         foreach ($this->entryPoints as $entryCoords => $entryProduct) {
             foreach ($this->exitPoints as $exitCoords => $exitProduct) {
