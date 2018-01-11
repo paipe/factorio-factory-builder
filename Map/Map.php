@@ -16,11 +16,6 @@ use Utils\Utils;
 class Map
 {
     private $grid = [];
-    /**
-     * @var Road[] array
-     */
-    //todo возможно, стоит убрать дороги, а roadIndex перенести в сами roadObjects (на подобии fabric global index)
-    private $roads = [];
 
     public function addObject(ObjectProto $object)
     {
@@ -34,9 +29,9 @@ class Map
         }
     }
 
-    public function addRoadObject(RoadObject $object, int $roadIndex)
+    public function addRoadObject(RoadObject $object, int $roadIndex, bool $newRoad = false)
     {
-        if (!isset($this->roads[$roadIndex])) {
+        if (RoadObject::$globalIndex < $roadIndex && !$newRoad) {
             throw  new \Exception('Дороги с переданным индексом нет!');
         }
 
