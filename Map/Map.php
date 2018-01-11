@@ -88,8 +88,6 @@ class Map
         //не самый грамотный вариант, зато не надо писать никаких условий
         //так как сравнение односторонее, нужно пробовать мерджить в обе стороны
         $mapRoads = $map->getRoads();
-        //TODO: если $this->roads пустой, то в обратку ничего смотреться не будет
-        //TODO: это баг или фича?
         foreach ($this->roads as $road) {
             foreach ($mapRoads as $mapRoad) {
                 if (!$road->isRoadEmpty() && !$mapRoad->isRoadEmpty()) {
@@ -129,25 +127,6 @@ class Map
                 }
             }
         }
-
-        //TODO: ПЕРЕПИСАТЬ С УЧЕТОМ ИЗМЕНЕНИЙ В ФОРМАТЕ ПОИНТОВ
-        $mapEntryPoints = $map->getEntryPoints();
-        foreach ($mapEntryPoints as $coords => $entryPoint) {
-            if (isset($this->entryPoints[$coords])) {
-//                continue;
-                throw new \Exception('Такой entryPoint уже есть!');
-            }
-            $this->entryPoints[$coords] = $entryPoint;
-        }
-
-        $mapExitPoints = $map->getExitPoints();
-        foreach ($mapExitPoints as $coords => $exitPoint) {
-            if (isset($this->exitPoints[$coords])) {
-//                continue;
-                throw new \Exception('Такой exitPoint уже есть!');
-            }
-            $this->exitPoints[$coords] = $exitPoint;
-        }
     }
 
     public function getEntryPoints()
@@ -186,14 +165,22 @@ class Map
 
     public function getStartEndRoadCombinations(): array
     {
-        //TODO переписать (см. EePointRoadObject)
         $result = [];
-        foreach ($this->entryPoints as $entryCoords => $entryProduct) {
-            foreach ($this->exitPoints as $exitCoords => $exitProduct) {
-                if ($entryProduct === $exitProduct) {
+        /**
+         * @var EePointRoadObject[] $entryPoints
+         * @var EePointRoadObject[] $exitPoints
+         */
+        $entryPoints = $this->getEntryPoints();
+        $exitPoints  = $this->getExitPoints();
+        foreach($entryPoints as $entryPoint) {
+            foreach ($exitPoints as $exitPoint) {
+                if (
+                    $entryPoint->getX() == $exitPoint->getX() &&
+                    $entryPoint->getY() == $exitPoint->getY()
+                ) {
                     $result[] = [
-                        'start' => $entryCoords,
-                        'end'   => $exitCoords
+                        'entry' => $entryPoint,
+                        'exit'  => $exitPoint
                     ];
                 }
             }

@@ -10,6 +10,7 @@ namespace Planner;
 
 
 use Map\Map;
+use Map\Objects\EePointRoadObject;
 use Utils\Utils;
 
 class ObjectMapPlanner extends Planner
@@ -48,11 +49,17 @@ class ObjectMapPlanner extends Planner
     {
         $combinations = $this->objectMap->getStartEndRoadCombinations();
         foreach ($combinations as $combination) {
+            /**
+             * @var EePointRoadObject $entryPoint
+             * @var EePointRoadObject $exitPoint
+             */
+            $entryPoint = $combination['entry'];
+            $exitPoint  = $combination['exit'];
             //ищем от конца до начала, чтобы потом не разворачивать массив
             $road = $this->pathFinder->findPath(
                 $this->objectMap,
-                Utils::getCoords($combination['end'][0], $combination['end'][2]),
-                Utils::getCoords($combination['start'][0], $combination['start'][2])
+                Utils::getCoords($entryPoint->getX(), $entryPoint->getY()),
+                Utils::getCoords($exitPoint->getX(), $exitPoint->getY())
             );
             foreach ($road as $roadMap) {
                 $this->objectMap->mergeMaps(

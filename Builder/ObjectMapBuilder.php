@@ -44,6 +44,7 @@ class ObjectMapBuilder extends Builder
         $isTwoIn = count($object['children']) > 1;
         $topRoadIndex = $fabricMap->addRoad(new Road());
         $bottomRoadIndex = $fabricMap->addRoad(new Road());
+        $childrenNames = array_keys($object['children']);
         if ($isTwoIn) $secondBottomRoadIndex = $fabricMap->addRoad(new Road());
 
         for ($i = 0; $i < $count; $i++) {
@@ -96,7 +97,7 @@ class ObjectMapBuilder extends Builder
                 $fabricMap->addRoadObject(
                     (new EePointRoadObject(Utils::getCoords($j, 6)))
                         ->setPointType(EePointRoadObject::T_ENTRY)
-                        ->setPointProduct($object['children'][0]),
+                        ->setPointProduct($object['children'][$childrenNames[0]]),
                     $bottomRoadIndex
                 );
             } else {
@@ -111,7 +112,7 @@ class ObjectMapBuilder extends Builder
                     $fabricMap->addRoadObject(
                         (new EePointRoadObject(Utils::getCoords($j, 7)))
                             ->setPointType(EePointRoadObject::T_ENTRY)
-                            ->setPointProduct($object['children'][1]),
+                            ->setPointProduct($object['children'][$childrenNames[1]]),
                         $secondBottomRoadIndex
                     );
                 } else {
