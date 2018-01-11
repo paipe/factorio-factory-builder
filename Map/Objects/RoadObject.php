@@ -28,6 +28,9 @@ class RoadObject extends ObjectProto
     // направление задается перед отрисовкой
     protected $direction;
 
+    protected $prevRoad;
+    protected $nextRoad;
+
     public function getFileName()
     {
         return $this->fileName . '_' . $this->direction;
