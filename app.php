@@ -14,7 +14,7 @@ $tree = $parser->buildTree('red_bottle');
 
 //TODO: учесть тот факт, что фабрика за раз может выкинуть > 1 предмета (напр: медный провод)
 $builder = new \Builder\ObjectMapBuilder();
-$builder->setTree($tree)->setCount(1);
+$builder->setTree($tree)->setCount(0.1);
 $drawer = new \Drawer\ObjectMapGdDrawer();
 $pathFinder = new \PathFinder\ObjectMapPathFinder();
 $planner = new \Planner\ObjectMapPlanner($pathFinder);

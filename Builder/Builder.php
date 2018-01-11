@@ -31,7 +31,7 @@ abstract class Builder
         return $this;
     }
 
-    public function setCount(int $count): Builder
+    public function setCount(float $count): Builder
     {
         $this->count = $count;
         return $this;
