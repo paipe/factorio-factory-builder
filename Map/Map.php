@@ -19,6 +19,7 @@ class Map
     /**
      * @var Road[] array
      */
+    //todo возможно, стоит убрать дороги, а roadIndex перенести в сами roadObjects (на подобии fabric global index)
     private $roads = [];
 
     public function addObject(ObjectProto $object)
