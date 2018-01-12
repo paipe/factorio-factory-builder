@@ -20,6 +20,8 @@ class RoadObject extends ObjectProto
 
     const D_DEFAULT = 'left';
 
+    public static $globalIndex = 0;
+
     protected $fileName = 'road';
     protected $index;
 
@@ -29,13 +31,15 @@ class RoadObject extends ObjectProto
     // направление задается перед отрисовкой
     protected $direction;
 
-    public static $globalIndex = 0;
+    protected $prevRoad;
+    protected $nextRoad;
 
     public function __construct($coordinates, $roadIndex)
     {
         parent::__construct($coordinates);
         $this->index = $roadIndex;
     }
+
 
     public function getFileName()
     {
