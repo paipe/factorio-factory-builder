@@ -10,6 +10,7 @@ namespace Map\Objects;
 
 
 use Map\ObjectProto;
+use Map\Road;
 
 class RoadObject extends ObjectProto
 {
@@ -20,10 +21,7 @@ class RoadObject extends ObjectProto
 
     const D_DEFAULT = 'left';
 
-    public static $globalIndex = 0;
-
     protected $fileName = 'road';
-    protected $index;
 
     protected $width = 1;
     protected $height = 1;
@@ -31,24 +29,83 @@ class RoadObject extends ObjectProto
     // направление задается перед отрисовкой
     protected $direction;
 
+    protected $leftSide;
+    protected $rightSide;
+
     protected $prevRoad;
     protected $nextRoad;
 
-    public function __construct($coordinates, $roadIndex)
-    {
-        parent::__construct($coordinates);
-        $this->index = $roadIndex;
-    }
-
-
-    public function getFileName()
+    public function getFileName(): string
     {
         return $this->fileName . '_' . $this->direction;
     }
 
-    public function getRoadIndex()
+    public function setLeftSide($productName): RoadObject
     {
-        return $this->index;
+        $this->leftSide = $productName;
+        return $this;
+    }
+
+    public function setRightSide($productName): RoadObject
+    {
+        $this->rightSide = $productName;
+        return $this;
+    }
+
+    public function getLeftSide(): string
+    {
+        return $this->leftSide;
+    }
+
+    public function getRightSide(): string
+    {
+        return $this->rightSide;
+    }
+
+    public function getPrevRoad(): RoadObject
+    {
+        return $this->prevRoad;
+    }
+
+    public function getNextRoad(): RoadObject
+    {
+        return $this->nextRoad;
+    }
+
+    public function setPrevRoad(RoadObject $road): void
+    {
+        if (isset($this->prevRoad)) {
+            throw new \Exception('У дороги уже установлен prevRoad');
+        }
+        $this->prevRoad = $road;
+    }
+
+    public function setNextRoad(RoadObject $road): void
+    {
+        if (isset($this->nextRoad)) {
+            throw new \Exception('У дороги уже установлен nextRoad');
+        }
+        $this->nextRoad = $road;
+    }
+
+    public function isEmptyLeftSide(): bool
+    {
+        return !isset($this->leftSide);
+    }
+
+    public function isEmptyRightSide(): bool
+    {
+        return !isset($this->rightSide);
+    }
+
+    public function isEmptyPrevRoad(): bool
+    {
+        return !isset($this->prevRoad);
+    }
+
+    public function isEmptyNextRoad(): bool
+    {
+        return !isset($this->nextRoad);
     }
 
 }

@@ -29,46 +29,36 @@ class Map
         }
     }
 
-    public function addRoadObject(RoadObject $object, int $roadIndex, bool $newRoad = false)
+    public function addRoadObject(RoadObject $object)
     {
-        if (RoadObject::$globalIndex < $roadIndex && !$newRoad) {
-            throw  new \Exception('Дороги с переданным индексом нет!');
-        }
-
-        $lastRoadObject = $this->roads[$roadIndex]->lastRoad();
-        if ($lastRoadObject) {
-            $lastX = $lastRoadObject->getX();
-            $lastY = $lastRoadObject->getY();
-            $x = $object->getX();
-            $y = $object->getY();
+        //todo: потестить, что возвращает класс, если его метод задан, но не установлен
+        $result = false;
+        $coordinateShifts = Utils::getPossibleCoordinatesShift($object->getCoordinates());
+        foreach ($coordinateShifts as $shift) {
+            $testObject = $this->getObjectByCoordinates($shift);
             if (
-                !(
-                    (abs($x - $lastX) == 1 && $y == $lastY) ||
-                    ($x == $lastX && abs($y - $lastY) == 1)
-                )
+                isset($testObject) &&
+                $testObject instanceof RoadObject &&
+                $object->getLeftSide() === $testObject->getLeftSide() &&
+                $object->getRightSide() === $testObject->getRightSide()
             ) {
-                throw new \Exception('Некорректное создание дороги!');
+                if ($object->isEmptyPrevRoad() && $testObject->isEmptyNextRoad()) {
+                    $object->setPrevRoad($testObject);
+                    $testObject->setNextRoad($object);
+                    $result = true;
+                } elseif ($object->isEmptyNextRoad() && $testObject->isEmptyPrevRoad()) {
+                    $object->setNextRoad($testObject);
+                    $testObject->setPrevRoad($object);
+                    $result = true;
+                }
             }
         }
 
-        $this->addObject($object);
-        $this->roads[$roadIndex]->continuePath($object);
-    }
-
-    public function addRoad(Road $road)
-    {
-        $this->roads[] = $road;
-        return $this->getLastRoadIndex();
-    }
-
-    public function getLastRoadIndex(): int
-    {
-        return count($this->roads) - 1;
-    }
-
-    public function getRoads()
-    {
-        return $this->roads;
+        if ($result) {
+            $this->addObject($object);
+        } else {
+            throw new \Exception('Не удалось добавить дорогу, условия не выполнены.');
+        }
     }
 
     public function getObjectByCoordinates($coordinates): ?ObjectProto
@@ -80,46 +70,39 @@ class Map
     {
         $mapWidth = $map->getWidth();
         $mapHeight = $map->getHeight();
-        //пробуем соединять все дороги подряд
-        //не самый грамотный вариант, зато не надо писать никаких условий
-        //так как сравнение односторонее, нужно пробовать мерджить в обе стороны
-        $mapRoads = $map->getRoads();
-        foreach ($this->roads as $road) {
-            foreach ($mapRoads as $mapRoad) {
-                if (!$road->isRoadEmpty() && !$mapRoad->isRoadEmpty()) {
-                    try {
-                        $road->implodeRoads($mapRoad);
-                    } catch (\Exception $e) {
-
-                    }
-                }
-                if (!$road->isRoadEmpty() && !$mapRoad->isRoadEmpty()) {
-                    try {
-                        $mapRoad->implodeRoads($road);
-                    } catch (\Exception $e) {
-
-                    }
-                }
-            }
-        }
-
-        foreach ($mapRoads as $road) {
-            if (!$road->isRoadEmpty()) {
-                $this->roads[] = $road;
-            }
-        }
-
         for ($y = 0; $y < $mapHeight; $y++) {
             for ($x = 0; $x < $mapWidth; $x++) {
                 $object = $map->getObjectByCoordinates(Utils::getCoords($x, $y));
                 if (!is_null($object)) {
-                    if (
-                        isset($this->grid[$coordinates['y'] + $y][$coordinates['x'] + $x]) &&
-                        !($object instanceof RoadObject)
-                    ) {
+                    if (isset($this->grid[$coordinates['y'] + $y][$coordinates['x'] + $x])) {
                         throw new \Exception('Кривой мердж карт!');
                     }
                     $this->grid[$coordinates['y'] + $y][$coordinates['x'] + $x] = $object;
+                }
+            }
+        }
+
+        foreach ($this->grid as $row) {
+            foreach ($row as $object) {
+                if ($object instanceof RoadObject) {
+                    $coordinateShifts = Utils::getPossibleCoordinatesShift($object->getCoordinates());
+                    foreach ($coordinateShifts as $shift) {
+                        $testObject = $this->getObjectByCoordinates($shift);
+                        if (
+                            isset($testObject) &&
+                            $testObject instanceof RoadObject &&
+                            $object->getLeftSide() === $testObject->getLeftSide() &&
+                            $object->getRightSide() === $testObject->getRightSide()
+                        ) {
+                            if ($object->isEmptyPrevRoad() && $testObject->isEmptyNextRoad()) {
+                                $object->setPrevRoad($testObject);
+                                $testObject->setNextRoad($object);
+                            } elseif ($object->isEmptyNextRoad() && $testObject->isEmptyPrevRoad()) {
+                                $object->setNextRoad($testObject);
+                                $testObject->setPrevRoad($object);
+                            }
+                        }
+                    }
                 }
             }
         }

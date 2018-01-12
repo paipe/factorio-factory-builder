@@ -45,6 +45,11 @@ abstract class ObjectProto
         return $this->y;
     }
 
+    public function getCoordinates()
+    {
+        return ['x' => $this->x, 'y' => $this->y];
+    }
+
     public function getFileName()
     {
         return $this->fileName;

@@ -58,8 +58,8 @@ class ObjectMapPlanner extends Planner
             //ищем от конца до начала, чтобы потом не разворачивать массив
             $road = $this->pathFinder->findPath(
                 $this->objectMap,
-                Utils::getCoords($entryPoint->getX(), $entryPoint->getY()),
-                Utils::getCoords($exitPoint->getX(), $exitPoint->getY())
+                $entryPoint->getCoordinates(),
+                $exitPoint->getCoordinates()
             );
             foreach ($road as $roadMap) {
                 $this->objectMap->mergeMaps(

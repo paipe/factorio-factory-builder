@@ -27,6 +27,7 @@ class ObjectMapPathFinder extends PathFinder
         $this->map = $map;
         $this->openSet = [];
         $this->closedSet = [];
+        //todo может сюда дороги передавать?
         $path = $this->run($start, $goal);
 
         return $path;
@@ -114,12 +115,11 @@ class ObjectMapPathFinder extends PathFinder
     private function reconstructPath(NodeProto $goalNode): Map
     {
         $pathMap = new Map();
-        $roadIndex = $pathMap->addRoad(new Road());
         $currentNode = $goalNode;
         while ($currentNode != NULL) {
             $pathMap->addRoadObject(
-                new RoadObject(Utils::getCoords($currentNode->x, $currentNode->y)),
-                $roadIndex
+                //todo поправить, нужна инфа о сторонах дороги
+                new RoadObject(Utils::getCoords($currentNode->x, $currentNode->y))
             );
             $currentNode = $currentNode->cameFrom;
         }

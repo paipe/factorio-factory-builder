@@ -43,7 +43,7 @@ class InserterObject extends ObjectProto
 
     public function getFileName()
     {
-        return ($this->type !== self::T_DEFAULT ? $this->type : '') . '_' . $this->fileName . '_' . $this->direction;
+        return ($this->type !== self::T_DEFAULT ? $this->type . '_' : '') . $this->fileName . '_' . $this->direction;
     }
 
 }
