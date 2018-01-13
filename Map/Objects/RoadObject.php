@@ -72,17 +72,17 @@ class RoadObject extends ObjectProto
         return $this->nextRoad;
     }
 
-    public function setPrevRoad(RoadObject $road): void
+    public function setPrevRoad(RoadObject $road, bool $force = false): void
     {
-        if (isset($this->prevRoad)) {
+        if (isset($this->prevRoad) && !$force) {
             throw new \Exception('У дороги уже установлен prevRoad');
         }
         $this->prevRoad = $road;
     }
 
-    public function setNextRoad(RoadObject $road): void
+    public function setNextRoad(RoadObject $road, bool $force = false): void
     {
-        if (isset($this->nextRoad)) {
+        if (isset($this->nextRoad) && !$force) {
             throw new \Exception('У дороги уже установлен nextRoad');
         }
         $this->nextRoad = $road;

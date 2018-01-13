@@ -61,12 +61,10 @@ class ObjectMapPlanner extends Planner
                 $entryPoint,
                 $exitPoint
             );
-            foreach ($road as $roadMap) {
-                $this->objectMap->mergeMaps(
-                    $roadMap,
-                    Utils::getCoords(0, 0)
-                );
-            }
+            $this->objectMap->mergeMaps(
+                $road,
+                Utils::getCoords(0, 0)
+            );
         }
     }
 

@@ -57,14 +57,14 @@ class ObjectMapBuilder extends Builder
             //нижний стандартный манипулятор
             $fabricMap->addObject(
                 (new InserterObject(Utils::getCoords($x,5)))
-                    ->setDirection(InserterObject::D_DOWN)
+                    ->setDirection(InserterObject::D_UP)
                     ->setType(InserterObject::T_DEFAULT)
             );
             if ($isTwoIn) {
                 //нижний длинный манипулятор, если на входе два продукта
                 $fabricMap->addObject(
                     (new InserterObject(Utils::getCoords($x + 1,5)))
-                        ->setDirection(InserterObject::D_DOWN)
+                        ->setDirection(InserterObject::D_UP)
                         ->setType(InserterObject::T_LONG)
                 );
             }
@@ -107,23 +107,23 @@ class ObjectMapBuilder extends Builder
                 $fabricMap->addRoadObject($road);
             }
             //вторая нижняя, если на входе два продукта
-            if (isset($secondBottomRoadIndex)) {
+            if ($isTwoIn) {
                 if ($j === $count * 3 - 1) {
                     $road = (new EePointRoadObject(Utils::getCoords($j, 7)))
                         ->setPointType(EePointRoadObject::T_ENTRY)
                         ->setPointProduct(array_keys($object['children'])[1]);
-                    if (Utils::isSource(array_keys($object['children'])[0])) {
-                        $road->setLeftSide(array_keys($object['children'])[0]);
+                    if (Utils::isSource(array_keys($object['children'])[1])) {
+                        $road->setLeftSide(array_keys($object['children'])[1]);
                     } else {
-                        $road->setRightSide(array_keys($object['children'])[0]);
+                        $road->setRightSide(array_keys($object['children'])[1]);
                     }
                     $fabricMap->addRoadObject($road);
                 } else {
                     $road = new RoadObject(Utils::getCoords($j, 7));
-                    if (Utils::isSource(array_keys($object['children'])[0])) {
-                        $road->setLeftSide(array_keys($object['children'])[0]);
+                    if (Utils::isSource(array_keys($object['children'])[1])) {
+                        $road->setLeftSide(array_keys($object['children'])[1]);
                     } else {
-                        $road->setRightSide(array_keys($object['children'])[0]);
+                        $road->setRightSide(array_keys($object['children'])[1]);
                     }
                     $fabricMap->addRoadObject($road);
                 }

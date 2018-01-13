@@ -10,6 +10,7 @@ namespace PathFinder;
 
 
 use Map\Map;
+use Map\Objects\EePointRoadObject;
 use Map\Objects\RoadObject;
 use Map\Road;
 use Utils\Utils;
@@ -22,16 +23,26 @@ class ObjectMapPathFinder extends PathFinder
      */
     protected $map;
 
+    protected $goal;
+
     public function findPath($map, $start, $goal): ?Map
     {
         $this->map = $map;
         $this->openSet = [];
         $this->closedSet = [];
+        //todo костыль для пересечения в конечной точке
+        $this->goal = $goal;
         $path = $this->run($start, $goal);
 
         return $path;
     }
 
+    /**
+     * @param EePointRoadObject $start
+     * @param EePointRoadObject $goal
+     * @return Map|null
+     *
+     */
     private function run($start, $goal): ?Map
     {
         $startNode = new ObjectMapNode($start->getCoordinates());
@@ -147,11 +158,13 @@ class ObjectMapPathFinder extends PathFinder
                 'x' => $node->x + $modifier['x'],
                 'y' => $node->y + $modifier['y']
             ];
-            if (!is_null($this->map->getObjectByCoordinates($coordinates))) {
-                continue;
+            $object = $this->map->getObjectByCoordinates($coordinates);
+            if (
+                is_null($object) ||
+                $object === $this->goal
+            ) {
+                $result[] = new ObjectMapNode($coordinates);
             }
-
-            $result[] = new ObjectMapNode($coordinates);
         }
 
         return $result;

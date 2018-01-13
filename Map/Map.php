@@ -65,7 +65,7 @@ class Map
         if ($result) {
             $this->addObject($object);
         } else {
-            throw new \Exception('Не удалось добавить дорогу, условия не выполнены.');
+            throw new \Exception('Не удалось добавить дорогу, условия не выполнены.' . $object->getX() . '_' . $object->getY());
         }
     }
 
@@ -84,7 +84,27 @@ class Map
                 $object = $map->getObjectByCoordinates(Utils::getCoords($x, $y));
                 if (!is_null($object)) {
                     if (isset($this->grid[$coordinates['y'] + $y][$coordinates['x'] + $x])) {
-                        throw new \Exception('Кривой мердж карт!');
+                        if (
+                            $object instanceof RoadObject &&
+                            $this->grid[$coordinates['y'] + $y][$coordinates['x'] + $x] instanceof RoadObject
+                        ) {
+                            /** @var RoadObject $mapRoad */
+                            $mapRoad = $this->grid[$coordinates['y'] + $y][$coordinates['x'] + $x];
+                            if (is_null($mapRoad->getNextRoad()) && !is_null($object->getNextRoad())) {
+                                $mapRoad->setNextRoad($object->getNextRoad());
+                                $object->getNextRoad()->setPrevRoad($mapRoad, true);
+                            } elseif (is_null($mapRoad->getPrevRoad()) && !is_null($object->getPrevRoad())) {
+                                $mapRoad->setPrevRoad($object->getPrevRoad());
+                                $object->getPrevRoad()->setNextRoad($mapRoad, true);
+                            }
+                            continue;
+                        } else {
+                            throw new \Exception('Кривой мердж карт!');
+                        }
+                    }
+                    if ($object->getX() === $x && $object->getY() === $y) {
+                        $object->setX($coordinates['x'] + $x);
+                        $object->setY($coordinates['y'] + $y);
                     }
                     $this->grid[$coordinates['y'] + $y][$coordinates['x'] + $x] = $object;
                 }
@@ -139,6 +159,9 @@ class Map
                         if (is_null($road->getPrevRoad())) {
                             if (!is_null($road->getNextRoad())) {
                                 $road = $road->getNextRoad();
+                            } else {
+                                $prevRoad = $road;
+                                break;
                             }
                             continue;
                         }
@@ -213,10 +236,7 @@ class Map
         $exitPoints  = $this->getExitPoints();
         foreach($entryPoints as $entryPoint) {
             foreach ($exitPoints as $exitPoint) {
-                if (
-                    $entryPoint->getX() == $exitPoint->getX() &&
-                    $entryPoint->getY() == $exitPoint->getY()
-                ) {
+                if ($entryPoint->getPointProduct() === $exitPoint->getPointProduct()) {
                     $result[] = [
                         'entry' => $entryPoint,
                         'exit'  => $exitPoint

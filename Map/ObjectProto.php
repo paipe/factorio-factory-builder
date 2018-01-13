@@ -45,6 +45,17 @@ abstract class ObjectProto
         return $this->y;
     }
 
+    //ЮЗАТЬ ТОЛЬКО ПРИ МЕРДЖЕ КАРТ
+    public function setX($x)
+    {
+        $this->x = $x;
+    }
+
+    public function setY($y)
+    {
+        $this->y = $y;
+    }
+
     public function getCoordinates()
     {
         return ['x' => $this->x, 'y' => $this->y];

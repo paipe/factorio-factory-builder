@@ -17,6 +17,7 @@ class ChestObject extends ObjectProto
     protected $height = 1;
 
     protected $storage;
+    protected $fileName = 'chest';
 
     public function setStorage($storage)
     {
