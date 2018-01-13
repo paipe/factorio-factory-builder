@@ -52,22 +52,22 @@ class RoadObject extends ObjectProto
         return $this;
     }
 
-    public function getLeftSide(): string
+    public function getLeftSide(): ?string
     {
         return $this->leftSide;
     }
 
-    public function getRightSide(): string
+    public function getRightSide(): ?string
     {
         return $this->rightSide;
     }
 
-    public function getPrevRoad(): RoadObject
+    public function getPrevRoad(): ?RoadObject
     {
         return $this->prevRoad;
     }
 
-    public function getNextRoad(): RoadObject
+    public function getNextRoad(): ?RoadObject
     {
         return $this->nextRoad;
     }
@@ -106,6 +106,16 @@ class RoadObject extends ObjectProto
     public function isEmptyNextRoad(): bool
     {
         return !isset($this->nextRoad);
+    }
+
+    public function getDirection(): ?string
+    {
+        return $this->direction;
+    }
+
+    public function setDirection(string $direction): void
+    {
+        $this->direction = $direction;
     }
 
 }

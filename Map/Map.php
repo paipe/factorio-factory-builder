@@ -34,6 +34,7 @@ class Map
         //todo: потестить, что возвращает класс, если его метод задан, но не установлен
         $result = false;
         $coordinateShifts = Utils::getPossibleCoordinatesShift($object->getCoordinates());
+        $countEmpty = 0;
         foreach ($coordinateShifts as $shift) {
             $testObject = $this->getObjectByCoordinates($shift);
             if (
@@ -46,9 +47,16 @@ class Map
                     $object->setPrevRoad($testObject);
                     $testObject->setNextRoad($object);
                     $result = true;
+                    break;
                 } elseif ($object->isEmptyNextRoad() && $testObject->isEmptyPrevRoad()) {
                     $object->setNextRoad($testObject);
                     $testObject->setPrevRoad($object);
+                    $result = true;
+                    break;
+                }
+
+            } else {
+                if (++$countEmpty === 4) {
                     $result = true;
                 }
             }
@@ -68,6 +76,7 @@ class Map
 
     public function mergeMaps(Map $map, $coordinates)
     {
+        //TODO перебивать координаты в объектах
         $mapWidth = $map->getWidth();
         $mapHeight = $map->getHeight();
         for ($y = 0; $y < $mapHeight; $y++) {
@@ -106,6 +115,57 @@ class Map
                 }
             }
         }
+    }
+
+    public function processRoadDirections()
+    {
+        foreach ($this->grid as $row) {
+            foreach ($row as $object) {
+                if ($object instanceof RoadObject && is_null($object->getDirection())) {
+                    $road = $object;
+                    while (!is_null($road->getPrevRoad())) {
+                        $road = $road->getPrevRoad();
+                    }
+
+                    $directions = [
+                        '10' => 'down',
+                        '-10' => 'up',
+                        '01' => 'right',
+                        '0-1' => 'left'
+                    ];
+
+                    $prevDirection = NULL;
+                    do {
+                        if (is_null($road->getPrevRoad())) {
+                            if (!is_null($road->getNextRoad())) {
+                                $road = $road->getNextRoad();
+                            }
+                            continue;
+                        }
+                        
+                        $key = (string)($road->getY() - $road->getPrevRoad()->getY()) .
+                            (string)($road->getX() - $road->getPrevRoad()->getX());
+                        $direction = $directions[$key];
+
+                        if (is_null($prevDirection)) {
+                            $prevDirection = $direction;
+                        }
+                        if ($direction === $prevDirection) {
+                            $roadType = $direction;
+                        } else {
+                            $roadType = $prevDirection . '_' .  $direction;
+                        }
+
+                        $road->getPrevRoad()->setDirection($roadType);
+                        $prevDirection = $direction;
+                        $prevRoad = $road;
+                        $road = $road->getNextRoad();
+                    } while(!is_null($road));
+                    $prevRoad->setDirection('left');
+                }
+            }
+        }
+
     }
 
     public function getEntryPoints()

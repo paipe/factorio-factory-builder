@@ -27,16 +27,15 @@ class ObjectMapPathFinder extends PathFinder
         $this->map = $map;
         $this->openSet = [];
         $this->closedSet = [];
-        //todo может сюда дороги передавать?
         $path = $this->run($start, $goal);
 
         return $path;
     }
 
-    private function run(array $start, array $goal): ?Map
+    private function run($start, $goal): ?Map
     {
-        $startNode = new ObjectMapNode($start);
-        $goalNode  = new ObjectMapNode($goal);
+        $startNode = new ObjectMapNode($start->getCoordinates());
+        $goalNode  = new ObjectMapNode($goal->getCoordinates());
         $startNode->g = 0;
         $startNode->h = $this->heuristicCostEstimate($startNode, $goalNode);
         $startNode->calculateF();
@@ -50,7 +49,7 @@ class ObjectMapPathFinder extends PathFinder
             list($x, $xKey) = $this->findNodeWithLowestF();
 
             if ($x->compareNodes($goalNode)) {
-                return $this->reconstructPath($x);
+                return $this->reconstructPath($x, $start);
             }
 
             unset($this->openSet[$xKey]);
@@ -112,14 +111,15 @@ class ObjectMapPathFinder extends PathFinder
         return [$min, $minKey];
     }
 
-    private function reconstructPath(NodeProto $goalNode): Map
+    private function reconstructPath(NodeProto $goalNode, RoadObject $road): Map
     {
         $pathMap = new Map();
         $currentNode = $goalNode;
         while ($currentNode != NULL) {
             $pathMap->addRoadObject(
-                //todo поправить, нужна инфа о сторонах дороги
-                new RoadObject(Utils::getCoords($currentNode->x, $currentNode->y))
+                (new RoadObject(Utils::getCoords($currentNode->x, $currentNode->y)))
+                    ->setLeftSide($road->getLeftSide())
+                    ->setRightSide($road->getRightSide())
             );
             $currentNode = $currentNode->cameFrom;
         }
