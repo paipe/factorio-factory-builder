@@ -61,10 +61,14 @@ class ObjectMapPlanner extends Planner
                 $entryPoint,
                 $exitPoint
             );
-            $this->objectMap->mergeMaps(
-                $road,
-                Utils::getCoords(0, 0)
-            );
+            try {
+                $this->objectMap->mergeMaps(
+                    $road,
+                    Utils::getCoords(0, 0)
+                );
+            } catch (\Error $e) {
+                echo 'Кривой мердж карт' . PHP_EOL;
+            }
         }
     }
 

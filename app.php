@@ -6,6 +6,7 @@
  * Time: 23:12
  */
 
+$time = -microtime(true);
 $loader = require_once __DIR__ . '/vendor/autoload.php';
 
 $parser = new \Parser\Parser();
@@ -21,3 +22,6 @@ $planner = new \Planner\ObjectMapPlanner($pathFinder);
 $map = $planner->plan($builder->build());
 $drawer->setMap($map);
 $drawer->draw();
+
+$time += microtime(true);
+echo round($time, 2) . ' | ' . memory_get_peak_usage(true) / 1024 / 1024 . ' Мб' . PHP_EOL;
