@@ -6,8 +6,12 @@
  * Time: 23:12
  */
 
-$time = -microtime(true);
 $loader = require_once __DIR__ . '/vendor/autoload.php';
+
+$time = -microtime(true);
+\Utils\Logger::initialize();
+\Utils\Logger::info('Application start');
+
 
 $parser = new \Parser\Parser();
 $tree = $parser->buildTree('red_bottle');
@@ -24,4 +28,8 @@ $drawer->setMap($map);
 $drawer->draw();
 
 $time += microtime(true);
-echo round($time, 2) . ' | ' . memory_get_peak_usage(true) / 1024 / 1024 . ' Мб' . PHP_EOL;
+
+\Utils\Logger::info('Application finish', [
+    'time' => round($time, 2),
+    'memory' => memory_get_peak_usage(true) / 1024 / 1024
+]);

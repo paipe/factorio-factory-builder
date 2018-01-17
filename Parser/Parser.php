@@ -16,6 +16,7 @@ use Symfony\Component\Yaml\Yaml;
 use Tree\Component;
 use Tree\Composite;
 use Tree\Item;
+use Utils\Logger;
 
 class Parser
 {
@@ -25,12 +26,14 @@ class Parser
 
     public function buildTree(string $name): Component
     {
+        Logger::info('Start building tree', ['name' => $name]);
         $this->data = $this->parse();
         if (empty($this->data)) {
             throw new EmptyItemsException();
         }
 
-        return $this->construct($name, $this->data[$name]);
+        $result = $this->construct($name, $this->data[$name]);
+        return $result;
 
     }
 

@@ -16,6 +16,7 @@ use Map\Objects\FactoryObject;
 use Map\Objects\InserterObject;
 use Map\Objects\RoadObject;
 use Map\Road;
+use Utils\Logger;
 use Utils\Utils;
 
 class ObjectMapBuilder extends Builder
@@ -25,6 +26,7 @@ class ObjectMapBuilder extends Builder
     {
         $result = [];
         $schema = $this->tree->countConstructTime($this->count);
+        Logger::info('Start building objects', $schema);
         foreach ($schema as $object) {
             if ($object['time'] > 0) {
                 $result[] = $this->buildFabric($object);
@@ -130,6 +132,11 @@ class ObjectMapBuilder extends Builder
             }
         }
 
+        Logger::info('Fabric added', [
+            'out' => $object['name'],
+            'in'  => implode(', ', array_flip($object['children']))
+        ]);
+
         return $fabricMap;
 
     }
@@ -155,6 +162,9 @@ class ObjectMapBuilder extends Builder
                 ->setLeftSide($object['name'])
         );
 
+        Logger::info('Source added', [
+            'out' => $object['name']
+        ]);
         return $sourceMap;
     }
 
