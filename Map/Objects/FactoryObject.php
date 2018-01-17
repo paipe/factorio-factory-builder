@@ -37,5 +37,13 @@ class FactoryObject extends ObjectProto
         return $this;
     }
 
+    public function getFileName()
+    {
+        //todo костыль лютый
+        return isset($this->out)
+            ? [$this->fileName, $this->out]
+            : $this->fileName;
+    }
+
 
 }

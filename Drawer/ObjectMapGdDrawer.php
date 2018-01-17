@@ -55,12 +55,26 @@ class ObjectMapGdDrawer extends Drawer
     public function drawObject($object) {
         $x = $object->getX() * self::PIXELS_ON_DOT;
         $y = $object->getY() * self::PIXELS_ON_DOT;
-        $fileName = self::SRC_PATH . $object->getFileName() . self::SRC_EXTENSION;
+        $fileName = $object->getFileName();
+        if (is_array($fileName)) {
+            $additionalImage = $fileName[1];
+            $fileName = $fileName[0];
+        }
+        $fileName = self::SRC_PATH . $fileName . self::SRC_EXTENSION;
 
         $objectImgSize = getimagesize($fileName);
         $objectImg = imagecreatefrompng($fileName);
         imagecopy($this->img, $objectImg, $x, $y, 0, 0, $objectImgSize[0], $objectImgSize[0]);
         imagedestroy($objectImg);
+
+        //TODO костыль лютый
+        if (isset($additionalImage)) {
+            $fileName = self::SRC_PATH . $additionalImage . self::SRC_EXTENSION;
+            $objectImgSize = getimagesize($fileName);
+            $objectImg = imagecreatefrompng($fileName);
+            imagecopy($this->img, $objectImg, $x + 50, $y + 50, 0, 0, $objectImgSize[0], $objectImgSize[0]);
+            imagedestroy($objectImg);
+        }
     }
 
 }

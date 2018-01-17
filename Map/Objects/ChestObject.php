@@ -19,10 +19,15 @@ class ChestObject extends ObjectProto
     protected $storage;
     protected $fileName = 'chest';
 
-    public function setStorage($storage)
+    public function setStorage($storage = null)
     {
         $this->storage = $storage;
         return $this;
+    }
+
+    public function getFileName()
+    {
+        return $this->storage ??$this->fileName;
     }
 
 }
