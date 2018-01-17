@@ -40,7 +40,8 @@ class ObjectMapPlanner extends Planner
             $x += $object->getWidth() + self::DISTANCE;
         }
 
-        $this->buildRoads();
+//        $this->buildRoads();
+        $this->newBuildRoads();
 
         return $this->objectMap;
     }
@@ -69,6 +70,47 @@ class ObjectMapPlanner extends Planner
             } catch (\Error $e) {
                 echo 'Кривой мердж карт' . PHP_EOL;
             }
+        }
+    }
+
+    protected function newBuildRoads()
+    {
+        $pointGroups = $this->objectMap->getRoadCombinationsGroupedByProduct();
+        foreach ($pointGroups as $productName => $group) {
+            if (count($group) === 2) {
+                $this->simpleBuildRoad($group);
+            } else {
+                //todo магия ветвления дорог, приди!
+            }
+        }
+
+    }
+
+    /**
+     * @param EePointRoadObject[] $group
+     */
+    protected function simpleBuildRoad($group)
+    {
+        foreach ($group as $object) {
+            if ($object->getPointType() === EePointRoadObject::T_EXIT) {
+                $exitPoint = $object;
+            }
+            if ($object->getPointType() === EePointRoadObject::T_ENTRY) {
+                $entryPoint = $object;
+            }
+        }
+        $road = $this->pathFinder->findPath(
+            $this->objectMap,
+            $entryPoint,
+            $exitPoint
+        );
+        try {
+            $this->objectMap->mergeMaps(
+                $road,
+                Utils::getCoords(0, 0)
+            );
+        } catch (\Error $e) {
+            echo 'Кривой мердж карт' . PHP_EOL;
         }
     }
 

@@ -248,6 +248,20 @@ class Map
         return $result;
     }
 
+    public function getRoadCombinationsGroupedByProduct()
+    {
+        $result = [];
+        foreach ($this->grid as $row) {
+            foreach ($row as $object) {
+                if ($object instanceof EePointRoadObject) {
+                    $result[$object->getPointProduct()] = $object;
+                }
+            }
+        }
+
+        return $result;
+    }
+
     public function iterateMapObjects()
     {
         foreach ($this->grid as $y => $row) {
