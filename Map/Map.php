@@ -76,7 +76,6 @@ class Map
 
     public function mergeMaps(Map $map, $coordinates)
     {
-        //TODO перебивать координаты в объектах
         $mapWidth = $map->getWidth();
         $mapHeight = $map->getHeight();
         for ($y = 0; $y < $mapHeight; $y++) {
@@ -254,7 +253,7 @@ class Map
         foreach ($this->grid as $row) {
             foreach ($row as $object) {
                 if ($object instanceof EePointRoadObject) {
-                    $result[$object->getPointProduct()] = $object;
+                    $result[$object->getPointProduct()][] = $object;
                 }
             }
         }

@@ -11,6 +11,7 @@ namespace Planner;
 
 use Map\Map;
 use Map\Objects\EePointRoadObject;
+use Utils\Logger;
 use Utils\Utils;
 
 class ObjectMapPlanner extends Planner
@@ -36,6 +37,12 @@ class ObjectMapPlanner extends Planner
                 $object,
                 Utils::getCoords($x, $y)
             );
+            Logger::info('Object merged to map.', [
+                'height' => $object->getHeight(),
+                'width'  => $object->getWidth(),
+                'x' => $x,
+                'y' => $y
+            ]);
             //строим пока что все в линию слева на право, так что просто инкрементим X
             $x += $object->getWidth() + self::DISTANCE;
         }
@@ -77,10 +84,12 @@ class ObjectMapPlanner extends Planner
     {
         $pointGroups = $this->objectMap->getRoadCombinationsGroupedByProduct();
         foreach ($pointGroups as $productName => $group) {
-            if (count($group) === 2) {
+            if (count($group) === 1) {
+                continue;
+            } elseif (count($group) === 2) {
                 $this->simpleBuildRoad($group);
             } else {
-                //todo магия ветвления дорог, приди!
+                $this->magickBuildRoad($group);
             }
         }
 
@@ -112,6 +121,20 @@ class ObjectMapPlanner extends Planner
         } catch (\Error $e) {
             echo 'Кривой мердж карт' . PHP_EOL;
         }
+
+        Logger::info('Simple road was built.', [
+            'start' => 'x: ' . $entryPoint->getX() . ', y: ' . $entryPoint->getY(),
+            'end'   => 'x: ' . $exitPoint->getX() . ', y: ' . $exitPoint->getY(),
+            'product' => $entryPoint->getPointProduct()
+        ]);
+    }
+
+    /**
+     * @param EePointRoadObject[] $group
+     */
+    private function magickBuildRoad($group)
+    {
+        //todo ветвление и все такое будут тут
     }
 
 }
