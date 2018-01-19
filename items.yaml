@@ -13,7 +13,7 @@ red_bottle:
   time: 5
   children:
     iron_gear_wheel: 1
-    electronic_circuit: 1
+    copper_plate: 1
 
 factory:
   time: 10
