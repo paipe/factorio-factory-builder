@@ -6,6 +6,8 @@
  * Time: 10:34
  */
 
+declare(strict_types=1);
+
 namespace App\Core;
 
 
@@ -17,7 +19,14 @@ use App\Core\Utils\Utils;
 class PathFinder
 {
 
+    /**
+     * @var array
+     */
     protected $closedSet;
+
+    /**
+     * @var array
+     */
     protected $openSet;
 
     /**
@@ -25,6 +34,9 @@ class PathFinder
      */
     protected $map;
 
+    /**
+     * @var EePointRoadObject
+     */
     protected $goal;
 
     public function findPath($map, $start, $goal): ?Map
@@ -39,13 +51,7 @@ class PathFinder
         return $path;
     }
 
-    /**
-     * @param EePointRoadObject $start
-     * @param EePointRoadObject $goal
-     * @return Map|null
-     *
-     */
-    private function run($start, $goal): ?Map
+    private function run(EePointRoadObject $start, EePointRoadObject $goal): ?Map
     {
         $startNode = new Node($start->getCoordinates());
         $goalNode  = new Node($goal->getCoordinates());
@@ -129,11 +135,14 @@ class PathFinder
         $pathMap = new Map();
         $currentNode = $goalNode;
         while ($currentNode != NULL) {
-            $pathMap->addRoadObject(
-                (new RoadObject(Utils::getCoords($currentNode->x, $currentNode->y)))
-                    ->setLeftSide($road->getLeftSide())
-                    ->setRightSide($road->getRightSide())
-            );
+            $roadObject = new RoadObject(Utils::c($currentNode->x, $currentNode->y));
+            if ($road->getLeftSide() !== null) {
+                $road->setLeftSide($road->getLeftSide());
+            }
+            if ($road->getRightSide() !== null) {
+                $road->setRightSide($road->getRightSide());
+            }
+            $pathMap->addRoadObject($roadObject);
             $currentNode = $currentNode->cameFrom;
         }
 

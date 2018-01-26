@@ -6,13 +6,24 @@
  * Time: 17:36
  */
 
+declare(strict_types=1);
+
 namespace App\Core\Map\Objects;
 
 
 use App\Core\Map\ObjectProto;
 
+/**
+ * Объект дороги
+ * Хранит информацию о ресурсе на левой и правой стороне,
+ * а так же ссылки на предыдущую и следующую дорогу в цепочке
+ *
+ * Class RoadObject
+ * @package App\Core\Map\Objects
+ */
 class RoadObject extends ObjectProto
 {
+    /** Направление дороги */
     const D_UP = 'up';
     const D_RIGHT = 'right';
     const D_DOWN = 'down';
@@ -20,18 +31,47 @@ class RoadObject extends ObjectProto
 
     const D_DEFAULT = 'left';
 
+    /**
+     * @var string
+     */
     protected $fileName = 'road';
 
+    /**
+     * @var int
+     */
     protected $width = 1;
+
+    /**
+     * @var int
+     */
     protected $height = 1;
 
-    // направление задается перед отрисовкой
+    /**
+     * Направление задается перед отрисовкой,
+     * см. Map::processRoadDirections
+     *
+     * @var string
+     */
     protected $direction;
 
+    /**
+     * @var string
+     */
     protected $leftSide;
+
+    /**
+     * @var string
+     */
     protected $rightSide;
 
+    /**
+     * @var RoadObject
+     */
     protected $prevRoad;
+
+    /**
+     * @var RoadObject
+     */
     protected $nextRoad;
 
     public function getFileName(): string
@@ -39,13 +79,13 @@ class RoadObject extends ObjectProto
         return $this->fileName . '_' . $this->direction;
     }
 
-    public function setLeftSide($productName): RoadObject
+    public function setLeftSide(string $productName): RoadObject
     {
         $this->leftSide = $productName;
         return $this;
     }
 
-    public function setRightSide($productName): RoadObject
+    public function setRightSide(string $productName): RoadObject
     {
         $this->rightSide = $productName;
         return $this;
@@ -71,6 +111,11 @@ class RoadObject extends ObjectProto
         return $this->nextRoad;
     }
 
+    /**
+     * @param RoadObject $road
+     * @param bool $force - нужно ли перезаписать связь (по умолчанию выкидывает эксепшен)
+     * @throws \Exception
+     */
     public function setPrevRoad(RoadObject $road, bool $force = false): void
     {
         if (isset($this->prevRoad) && !$force) {
@@ -79,6 +124,11 @@ class RoadObject extends ObjectProto
         $this->prevRoad = $road;
     }
 
+    /**
+     * @param RoadObject $road
+     * @param bool $force - нужно ли перезаписать связь (по умолчанию выкидывает эксепшен)
+     * @throws \Exception
+     */
     public function setNextRoad(RoadObject $road, bool $force = false): void
     {
         if (isset($this->nextRoad) && !$force) {

@@ -6,11 +6,21 @@
  * Time: 16:59
  */
 
+declare(strict_types=1);
+
 namespace App\Core\Map\Objects;
 
 
 use App\Core\Map\ObjectProto;
 
+/**
+ * Объект фабрики
+ * Хранит уникальный глобальный индекс фабрики (пока не понятно зачем),
+ * а так же именя входящих и исходящего продуктов.
+ *
+ * Class FactoryObject
+ * @package App\Core\Map\Objects
+ */
 class FactoryObject extends ObjectProto
 {
     protected $fileName = 'fabric';
@@ -24,25 +34,22 @@ class FactoryObject extends ObjectProto
 
     protected static $globalIndex = 0;
 
-    public function __construct($coordinates)
+    public function __construct(array $coordinates)
     {
         parent::__construct($coordinates);
         $this->index = ++self::$globalIndex;
     }
 
-    public function setInOut(array $in, string $out)
+    public function setInOut(array $in, string $out): FactoryObject
     {
         $this->out = $out;
         $this->in = $in;
         return $this;
     }
 
-    public function getFileName()
+    public function getAdditionalFileName(): ?string
     {
-        //todo костыль лютый
-        return isset($this->out)
-            ? [$this->fileName, $this->out]
-            : $this->fileName;
+        return $this->out;
     }
 
 

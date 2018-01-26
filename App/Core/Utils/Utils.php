@@ -6,17 +6,39 @@
  * Time: 12:04
  */
 
+declare(strict_types=1);
+
 namespace App\Core\Utils;
 
-
+/**
+ * Общий класс для различных утилит
+ *
+ * Class Utils
+ * @package App\Core\Utils
+ */
 class Utils
 {
-    public static function getCoords($x, $y)
+    /**
+     * Берет на вход два числа и возвращает их в массиве координат
+     *
+     * @param int $x
+     * @param int $y
+     * @return array
+     */
+    public static function c($x, $y)
     {
         return ['x' => $x, 'y' => $y];
     }
 
-    public static function getPossibleCoordinatesShift($coordinates)
+    /**
+     * Возвращает координаты, являющиеся сдвигом вверх, влево,
+     * вниз и вправо относительно переданных координат.
+     *
+     * @param array $coordinates
+     * @return array
+     * @throws \Exception
+     */
+    public static function getPossibleCoordinatesShift(array $coordinates): array
     {
         if (!isset($coordinates['x']) || !isset($coordinates['y'])) {
             throw new \Exception('getPossibleCoordinatesShift не корректные входные данные!');
@@ -38,6 +60,15 @@ class Utils
         return $result;
     }
 
+    /**
+     * Возвращает true если переданный продукт является ресурсом-источником
+     * (простейший продукт, не сборный)
+     *
+     * @todo: костыль по сути
+     *
+     * @param $productName
+     * @return bool
+     */
     public static function isSource($productName)
     {
         $source = [

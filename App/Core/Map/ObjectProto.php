@@ -6,64 +6,109 @@
  * Time: 16:29
  */
 
+declare(strict_types=1);
+
 namespace App\Core\Map;
 
-
+/**
+ * Абстрактный класс для всех объектов, которые располагаются
+ * на сетке карты (объект Map)
+ *
+ * Class ObjectProto
+ * @package App\Core\Map
+ */
 abstract class ObjectProto
 {
+    /**
+     * Имя файла, используемое при отрисовке карты
+     *
+     * @var string
+     */
     protected $fileName;
 
+    /**
+     * Ширина объекта на карте (1 клетка или больше)
+     *
+     * @var int
+     */
     protected $width;
+
+    /**
+     * Высота объекта на карте (1 клетка или больше)
+     *
+     * @var int
+     */
     protected $height;
 
+    /**
+     * @var int
+     */
     protected $x;
+
+    /**
+     * @var int
+     */
     protected $y;
 
-    public function __construct($coordinates)
+    public function __construct(array $coordinates)
     {
         $this->x = $coordinates['x'];
         $this->y = $coordinates['y'];
     }
 
-    public function getWidth()
+    public function getWidth(): int
     {
         return $this->width;
     }
 
-    public function getHeight()
+    public function getHeight(): int
     {
         return $this->height;
     }
 
-    public function getX()
+    public function getX(): int
     {
         return $this->x;
     }
 
-    public function getY()
+    public function getY(): int
     {
         return $this->y;
     }
 
-    //ЮЗАТЬ ТОЛЬКО ПРИ МЕРДЖЕ КАРТ
-    public function setX($x)
+    /**
+     * Использовать только при мердже карт!
+     *
+     * @param int $x
+     */
+    public function setX(int $x): void
     {
         $this->x = $x;
     }
 
-    public function setY($y)
+    /**
+     * Использовать только при мердже карт!
+     *
+     * @param int $y
+     */
+    public function setY(int $y): void
     {
         $this->y = $y;
     }
 
-    public function getCoordinates()
+    public function getCoordinates(): array
     {
         return ['x' => $this->x, 'y' => $this->y];
     }
 
-    public function getFileName()
+    public function getFileName(): string
     {
         return $this->fileName;
+    }
+
+    public function getAdditionalFileName(): ?string
+    {
+        return null;
     }
 
 

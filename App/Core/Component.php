@@ -13,6 +13,12 @@ namespace App\Core;
 
 use Exceptions\UnsupportedMethodException;
 
+/**
+ * Абстрактный класс для построения дерева продуктов
+ *
+ * Class Component
+ * @package App\Core
+ */
 abstract class Component
 {
     protected const ROOT = 'root';

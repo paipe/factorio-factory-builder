@@ -11,8 +11,15 @@ declare(strict_types=1);
 
 namespace App\Core\Component;
 
+
 use App\Core\Component;
 
+/**
+ * "Лист" на дереве продуктов (начальные продукты)
+ *
+ * Class Item
+ * @package App\Core\Component
+ */
 class Item extends Component
 {
 

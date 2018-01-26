@@ -6,6 +6,8 @@
  * Time: 16:57
  */
 
+declare(strict_types=1);
+
 namespace App\Core;
 
 
@@ -17,6 +19,12 @@ use App\Core\Map\Objects\RoadObject;
 use App\Core\Utils\Logger;
 use App\Core\Utils\Utils;
 
+/**
+ * Строит мини-схемы на основании дерева компонентов
+ *
+ * Class Builder
+ * @package App\Core
+ */
 class Builder
 {
     /**
@@ -66,25 +74,25 @@ class Builder
             $x = ($i * 3);
             //сама фабрика
             $fabricMap->addObject(
-                (new FactoryObject(Utils::getCoords($x,2)))
+                (new FactoryObject(Utils::c($x,2)))
                     ->setInOut($object['children'], $object['name'])
             );
             //верхний манипулятор на выгрузку
             $fabricMap->addObject(
-                (new InserterObject(Utils::getCoords($x + 1,1)))
+                (new InserterObject(Utils::c($x + 1,1)))
                     ->setDirection(InserterObject::D_UP)
                     ->setType(InserterObject::T_DEFAULT)
             );
             //нижний стандартный манипулятор
             $fabricMap->addObject(
-                (new InserterObject(Utils::getCoords($x,5)))
+                (new InserterObject(Utils::c($x,5)))
                     ->setDirection(InserterObject::D_UP)
                     ->setType(InserterObject::T_DEFAULT)
             );
             if ($isTwoIn) {
                 //нижний длинный манипулятор, если на входе два продукта
                 $fabricMap->addObject(
-                    (new InserterObject(Utils::getCoords($x + 1,5)))
+                    (new InserterObject(Utils::c($x + 1,5)))
                         ->setDirection(InserterObject::D_UP)
                         ->setType(InserterObject::T_LONG)
                 );
@@ -95,21 +103,21 @@ class Builder
             //верхняя
             if ($j === 0) {
                 $fabricMap->addRoadObject(
-                    (new EePointRoadObject(Utils::getCoords($j, 0)))
+                    (new EePointRoadObject(Utils::c($j, 0)))
                         ->setPointType(EePointRoadObject::T_EXIT)
                         ->setPointProduct($object['name'])
                         ->setRightSide($object['name'])
                 );
             } else {
                 $fabricMap->addRoadObject(
-                    (new RoadObject(Utils::getCoords($j, 0)))
+                    (new RoadObject(Utils::c($j, 0)))
                         ->setRightSide($object['name'])
                 );
             }
 
             //нижняя
             if ($j === $count * 3 - 1) {
-                $road = (new EePointRoadObject(Utils::getCoords($j, 6)))
+                $road = (new EePointRoadObject(Utils::c($j, 6)))
                     ->setPointType(EePointRoadObject::T_ENTRY)
                     ->setPointProduct(array_keys($object['children'])[0]);
                 if (Utils::isSource(array_keys($object['children'])[0])) {
@@ -119,7 +127,7 @@ class Builder
                 }
                 $fabricMap->addRoadObject($road);
             } else {
-                $road = new RoadObject(Utils::getCoords($j, 6));
+                $road = new RoadObject(Utils::c($j, 6));
                 if (Utils::isSource(array_keys($object['children'])[0])) {
                     $road->setLeftSide(array_keys($object['children'])[0]);
                 } else {
@@ -130,7 +138,7 @@ class Builder
             //вторая нижняя, если на входе два продукта
             if ($isTwoIn) {
                 if ($j === $count * 3 - 1) {
-                    $road = (new EePointRoadObject(Utils::getCoords($j, 7)))
+                    $road = (new EePointRoadObject(Utils::c($j, 7)))
                         ->setPointType(EePointRoadObject::T_ENTRY)
                         ->setPointProduct(array_keys($object['children'])[1]);
                     if (Utils::isSource(array_keys($object['children'])[1])) {
@@ -140,7 +148,7 @@ class Builder
                     }
                     $fabricMap->addRoadObject($road);
                 } else {
-                    $road = new RoadObject(Utils::getCoords($j, 7));
+                    $road = new RoadObject(Utils::c($j, 7));
                     if (Utils::isSource(array_keys($object['children'])[1])) {
                         $road->setLeftSide(array_keys($object['children'])[1]);
                     } else {
@@ -166,16 +174,16 @@ class Builder
         $x = 0;
         $y = 0;
         $sourceMap->addObject(
-            (new ChestObject(Utils::getCoords($x, $y)))
+            (new ChestObject(Utils::c($x, $y)))
                 ->setStorage($object['name'])
         );
         $sourceMap->addObject(
-            (new InserterObject(Utils::getCoords($x, $y + 1)))
+            (new InserterObject(Utils::c($x, $y + 1)))
                 ->setDirection(InserterObject::D_DOWN)
                 ->setType(InserterObject::T_DEFAULT)
         );
         $sourceMap->addRoadObject(
-            (new EePointRoadObject(Utils::getCoords($x, $y + 2)))
+            (new EePointRoadObject(Utils::c($x, $y + 2)))
                 ->setPointType(EePointRoadObject::T_EXIT)
                 ->setPointProduct($object['name'])
                 ->setLeftSide($object['name'])

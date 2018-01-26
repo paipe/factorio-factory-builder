@@ -6,6 +6,8 @@
  * Time: 16:23
  */
 
+declare(strict_types=1);
+
 namespace App\Core;
 
 
@@ -18,7 +20,7 @@ class Map
 {
     private $grid = [];
 
-    public function addObject(ObjectProto $object)
+    public function addObject(ObjectProto $object): void
     {
         for ($y = 0; $y < $object->getHeight(); $y++) {
             for ($x = 0; $x < $object->getWidth(); $x++) {
@@ -30,7 +32,7 @@ class Map
         }
     }
 
-    public function addRoadObject(RoadObject $object)
+    public function addRoadObject(RoadObject $object): void
     {
         //todo: потестить, что возвращает класс, если его метод задан, но не установлен
         $result = false;
@@ -70,18 +72,18 @@ class Map
         }
     }
 
-    public function getObjectByCoordinates($coordinates): ?ObjectProto
+    public function getObjectByCoordinates(array $coordinates): ?ObjectProto
     {
         return $this->grid[$coordinates['y']][$coordinates['x']] ?? null;
     }
 
-    public function mergeMaps(Map $map, $coordinates)
+    public function mergeMaps(Map $map, array $coordinates): void
     {
         $mapWidth = $map->getWidth();
         $mapHeight = $map->getHeight();
         for ($y = 0; $y < $mapHeight; $y++) {
             for ($x = 0; $x < $mapWidth; $x++) {
-                $object = $map->getObjectByCoordinates(Utils::getCoords($x, $y));
+                $object = $map->getObjectByCoordinates(Utils::c($x, $y));
                 if (!is_null($object)) {
                     if (isset($this->grid[$coordinates['y'] + $y][$coordinates['x'] + $x])) {
                         if (
@@ -137,7 +139,7 @@ class Map
         }
     }
 
-    public function processRoadDirections()
+    public function processRoadDirections(): void
     {
         foreach ($this->grid as $row) {
             foreach ($row as $object) {
@@ -165,7 +167,7 @@ class Map
                             }
                             continue;
                         }
-                        
+
                         $key = (string)($road->getY() - $road->getPrevRoad()->getY()) .
                             (string)($road->getX() - $road->getPrevRoad()->getX());
                         $direction = $directions[$key];
@@ -176,14 +178,14 @@ class Map
                         if ($direction === $prevDirection) {
                             $roadType = $direction;
                         } else {
-                            $roadType = $prevDirection . '_' .  $direction;
+                            $roadType = $prevDirection . '_' . $direction;
                         }
 
                         $road->getPrevRoad()->setDirection($roadType);
                         $prevDirection = $direction;
                         $prevRoad = $road;
                         $road = $road->getNextRoad();
-                    } while(!is_null($road));
+                    } while (!is_null($road));
                     $prevRoad->setDirection('left');
                 }
             }
@@ -191,7 +193,7 @@ class Map
 
     }
 
-    public function getEntryPoints()
+    public function getEntryPoints(): array
     {
         $entryPoints = [];
         foreach ($this->grid as $row) {
@@ -208,7 +210,7 @@ class Map
         return $entryPoints;
     }
 
-    public function getExitPoints()
+    public function getExitPoints(): array
     {
         $exitPoints = [];
         foreach ($this->grid as $row) {
@@ -233,13 +235,13 @@ class Map
          * @var EePointRoadObject[] $exitPoints
          */
         $entryPoints = $this->getEntryPoints();
-        $exitPoints  = $this->getExitPoints();
-        foreach($entryPoints as $entryPoint) {
+        $exitPoints = $this->getExitPoints();
+        foreach ($entryPoints as $entryPoint) {
             foreach ($exitPoints as $exitPoint) {
                 if ($entryPoint->getPointProduct() === $exitPoint->getPointProduct()) {
                     $result[] = [
                         'entry' => $entryPoint,
-                        'exit'  => $exitPoint
+                        'exit' => $exitPoint
                     ];
                 }
             }
@@ -248,7 +250,7 @@ class Map
         return $result;
     }
 
-    public function getRoadCombinationsGroupedByProduct()
+    public function getRoadCombinationsGroupedByProduct(): array
     {
         $result = [];
         foreach ($this->grid as $row) {
@@ -262,7 +264,7 @@ class Map
         return $result;
     }
 
-    public function iterateMapObjects()
+    public function iterateMapObjects(): \Generator
     {
         foreach ($this->grid as $y => $row) {
             foreach ($row as $x => $object) {
@@ -274,7 +276,11 @@ class Map
         }
     }
 
-    //подразумеваем, что отрицательных координат у нас нет
+    /**
+     * Подразумеваем, что отрицательных координат у нас нет.
+     *
+     * @return int
+     */
     public function getWidth(): int
     {
         $width = 0;
@@ -289,6 +295,11 @@ class Map
         return $width + 1;
     }
 
+    /**
+     * Подразумеваем, что отрицательных координат у нас нет.
+     *
+     * @return int
+     */
     public function getHeight(): int
     {
         $height = 0;
@@ -301,31 +312,4 @@ class Map
         return $height + 1;
     }
 
-//    private function getMapSize(): array
-//    {
-//        if (empty($this->grid)) {
-//            return [
-//                'height' => 0,
-//                'width' => 0
-//            ];
-//        }
-//
-//        $minX = PHP_INT_MAX;
-//        $maxX = 0;
-//        $minY = PHP_INT_MAX;
-//        $maxY = 0;
-//        foreach ($this->grid as $rowKey => $rows) {
-//            if ($rowKey > $maxY) $maxY = $rowKey;
-//            if ($rowKey < $minY) $minY = $rowKey;
-//            foreach ($rows as $pointKey => $point) {
-//                if ($pointKey > $maxX) $maxX = $pointKey;
-//                if ($pointKey < $minX) $minX = $pointKey;
-//            }
-//        }
-//
-//        return [
-//            'width'  => abs($minX) + abs($maxX),
-//            'height' => abs($minY) + abs($maxY)
-//        ];
-//    }
 }

@@ -11,8 +11,15 @@ declare(strict_types=1);
 
 namespace App\Core\Component;
 
+
 use App\Core\Component;
 
+/**
+ * Композитный (сборный) продукт на дереве продуктов
+ *
+ * Class Composite
+ * @package App\Core\Component
+ */
 class Composite extends Component
 {
     /**
