@@ -134,7 +134,7 @@ class ObjectMapBuilder extends Builder
 
         Logger::info('Fabric added', [
             'out' => $object['name'],
-            'in'  => implode(', ', array_flip($object['children']))
+            'in'  => implode(', ', array_keys($object['children']))
         ]);
 
         return $fabricMap;
