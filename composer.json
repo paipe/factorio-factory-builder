@@ -1,15 +1,13 @@
 {
   "autoload": {
     "psr-0": {
-      "Tree": "Tree/",
-      "Builder": "Builder/",
-      "Parser": "Parser/",
-      "Drawer": "Drawer/",
-      "Planner": "Planner/",
-      "PathFinder": "PathFinder/",
-      "Map": "Map/",
-      "Objects": "Map/Objects/",
-      "Utils": "Utils/"
+      "App": "App/",
+      "Core": "App/Core/",
+      "Component": "App/Core/Component/",
+      "Map": "App/Core/Map/",
+      "Objects": "App/Core/Map/Objects/",
+      "PathFinder": "App/Core/PathFinder/",
+      "Utils": "App/Core/Utils/"
     }
   },
   "require-dev": {
