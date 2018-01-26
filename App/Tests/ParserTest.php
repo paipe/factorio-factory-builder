@@ -1,5 +1,7 @@
 <?php
 
+$loader = require_once __DIR__ . '/../../vendor/autoload.php';
+
 /**
  * Created by PhpStorm.
  * User: paipe
@@ -11,12 +13,14 @@ class ParserTest extends \PHPUnit\Framework\TestCase
     
     public function testConstruct()
     {
-        $iron = new \App\Component\Item('iron');
-        $ironGear = new \App\Component\Composite('ironGear', 0.5);
+        \App\Core\Utils\Logger::initialize();
+
+        $iron = new \App\Core\Component\Item('iron_plate');
+        $ironGear = new \App\Core\Component\Composite('iron_gear_wheel', 0.5);
         $ironGear->addItems($iron, 2);
         
-        $parser = new \Parser\Parser();
-        $parserResult = $parser->buildTree('ironGear');
+        $parser = new \App\Core\Parser();
+        $parserResult = $parser->buildTree('iron_gear_wheel');
         
         $this->assertEquals($ironGear, $parserResult);
     }
