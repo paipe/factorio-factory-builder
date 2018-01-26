@@ -9,16 +9,16 @@
 
 declare(strict_types=1);
 
-namespace App\Core\Component;
+namespace App\Core\Parser;
 
 
-use App\Core\Component;
+use App\Core\Parser\Component;
 
 /**
  * Композитный (сборный) продукт на дереве продуктов
  *
  * Class Composite
- * @package App\Core\Component
+ * @package App\Core\Parser\Component
  */
 class Composite extends Component
 {

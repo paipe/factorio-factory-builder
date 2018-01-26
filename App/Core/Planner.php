@@ -19,7 +19,7 @@ class Planner
 {
 
     /** Расстоение между мини-схемами */
-    const DISTANCE = 10;
+    const DISTANCE = 4;
 
     /**
      * @var Builder

@@ -12,10 +12,11 @@ declare(strict_types=1);
 namespace App\Core;
 
 
+use App\Core\Parser\Component;
 use Exceptions\EmptyItemsException;
 use Symfony\Component\Yaml\Yaml;
-use App\Core\Component\Composite;
-use App\Core\Component\Item;
+use App\Core\Parser\Composite;
+use App\Core\Parser\Item;
 use App\Core\Utils\Logger;
 
 class Parser

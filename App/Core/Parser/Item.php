@@ -9,16 +9,16 @@
 
 declare(strict_types=1);
 
-namespace App\Core\Component;
+namespace App\Core\Parser;
 
 
-use App\Core\Component;
+use App\Core\Parser\Component;
 
 /**
  * "Лист" на дереве продуктов (начальные продукты)
  *
  * Class Item
- * @package App\Core\Component
+ * @package App\Core\Parser\Component
  */
 class Item extends Component
 {

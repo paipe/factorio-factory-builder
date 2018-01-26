@@ -13,7 +13,7 @@ class ItemTest extends \PHPUnit\Framework\TestCase
 
     public function testCountItems()
     {
-        $item = new \App\Core\Component\Item('copper');
+        $item = new \App\Core\Parser\Item('copper');
         $this->assertEquals(['copper', 'copper', 'copper'], $item->countItems(3));
     }
 
