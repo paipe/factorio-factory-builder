@@ -16,6 +16,13 @@ use App\Core\Map\Objects\EePointRoadObject;
 use App\Core\Map\Objects\RoadObject;
 use App\Core\Utils\Utils;
 
+/**
+ * @todo: класс карты должен быть чисто контейнером
+ * всю обработку разнести нафиг
+ *
+ * Class Map
+ * @package App\Core
+ */
 class Map
 {
     private $grid = [];
