@@ -28,6 +28,7 @@ class Drawer
     public function setMap(Map $map)
     {
         $this->map = $map;
+        return $this;
     }
 
     public function draw()
@@ -51,7 +52,7 @@ class Drawer
     /**
      * @param ObjectProto $object
      */
-    public function drawObject($object) {
+    private function drawObject($object) {
         $x = $object->getX() * self::PIXELS_ON_DOT;
         $y = $object->getY() * self::PIXELS_ON_DOT;
         $fileName = $object->getFileName();
