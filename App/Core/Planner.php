@@ -12,6 +12,7 @@ namespace App\Core;
 
 
 use App\Core\Map\Objects\EePointRoadObject;
+use App\Core\Planner\PathFinder;
 use App\Core\Utils\Logger;
 use App\Core\Utils\Utils;
 

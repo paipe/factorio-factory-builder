@@ -14,7 +14,7 @@ namespace App\Core\PathFinder;
  * Нода, использующаяся при построении пути PathFinder'ом
  *
  * Class Node
- * @package App\Core\PathFinder
+ * @package App\Core\Planner\PathFinder
  */
 class Node
 {

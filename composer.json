@@ -6,6 +6,7 @@
       "Component": "App/Core/Component/",
       "Map": "App/Core/Map/",
       "Objects": "App/Core/Map/Objects/",
+      "Planner": "App/Core/Planner",
       "PathFinder": "App/Core/PathFinder/",
       "Utils": "App/Core/Utils/"
     }

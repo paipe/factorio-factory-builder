@@ -8,9 +8,10 @@
 
 declare(strict_types=1);
 
-namespace App\Core;
+namespace App\Core\Planner;
 
 
+use App\Core\Map;
 use App\Core\PathFinder\Node;
 use App\Core\Map\Objects\EePointRoadObject;
 use App\Core\Map\Objects\RoadObject;

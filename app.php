@@ -31,7 +31,7 @@ $buildingSchemes = (new \App\Core\Builder())->setTree($tree)->setCount(0.1)->bui
  * Из небольших схем собираем одну большую, одновременно
  * с этим строим дороги для соединений отдельных мини-схем
  */
-$resultMap = (new \App\Core\Planner(new \App\Core\PathFinder()))->plan($buildingSchemes);
+$resultMap = (new \App\Core\Planner(new \App\Core\Planner\PathFinder()))->plan($buildingSchemes);
 
 /**
  * Отрисовываем полученную схему
