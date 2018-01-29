@@ -80,20 +80,24 @@ abstract class ObjectProto
      * Использовать только при мердже карт!
      *
      * @param int $x
+     * @return self
      */
-    public function setX(int $x): void
+    public function setX(int $x): self
     {
         $this->x = $x;
+        return $this;
     }
 
     /**
      * Использовать только при мердже карт!
      *
      * @param int $y
+     * @return self
      */
-    public function setY(int $y): void
+    public function setY(int $y): self
     {
         $this->y = $y;
+        return $this;
     }
 
     public function getCoordinates(): array

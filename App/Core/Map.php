@@ -84,6 +84,11 @@ class Map
         return $this->grid[$coordinates['y']][$coordinates['x']] ?? null;
     }
 
+    public function isEmptyCoordinates(array $coordinates): bool
+    {
+        return isset($this->grid[$coordinates['y']][$coordinates['x']]);
+    }
+
     public function mergeMaps(Map $map, array $coordinates): void
     {
         $mapWidth = $map->getWidth();
@@ -271,6 +276,10 @@ class Map
         return $result;
     }
 
+    /**
+     * @param bool $iterateLinks
+     * @return \Generator
+     */
     public function iterateMapObjects(): \Generator
     {
         foreach ($this->grid as $y => $row) {

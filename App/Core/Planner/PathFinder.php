@@ -17,6 +17,12 @@ use App\Core\Map\Objects\EePointRoadObject;
 use App\Core\Map\Objects\RoadObject;
 use App\Core\Utils\Utils;
 
+/**
+ * Класс для поиска пути из точки А в точку Б
+ *
+ * Class PathFinder
+ * @package App\Core\Planner
+ */
 class PathFinder
 {
 
@@ -40,6 +46,14 @@ class PathFinder
      */
     protected $goal;
 
+    /**
+     * @todo Сделать повороты дороги менее предпочтительными по сравнению с прямыми участками
+     *
+     * @param $map
+     * @param $start
+     * @param $goal
+     * @return Map|null
+     */
     public function findPath($map, $start, $goal): ?Map
     {
         $this->map = $map;
