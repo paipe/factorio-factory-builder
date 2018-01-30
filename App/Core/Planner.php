@@ -11,7 +11,9 @@ declare(strict_types=1);
 namespace App\Core;
 
 
+use App\Core\Map\MapManager;
 use App\Core\Map\Objects\EePointRoadObject;
+use App\Core\Map\Objects\RoadObject;
 use App\Core\Planner\PathFinder;
 use App\Core\Utils\Logger;
 use App\Core\Utils\Utils;
@@ -42,9 +44,12 @@ class Planner
      */
     protected $objectMap;
 
+    protected $mapManager;
+
     public function __construct(PathFinder $pathFinder)
     {
         $this->pathFinder = $pathFinder;
+        $this->mapManager = new MapManager();
     }
 
     /**
@@ -57,10 +62,7 @@ class Planner
         $x = 0;
         $y = 0;
         foreach ($buildObjects as $object) {
-            $this->objectMap->mergeMaps(
-                $object,
-                Utils::c($x, $y)
-            );
+            $this->mapManager->mergeMaps($this->objectMap, $object, Utils::c($x, $y));
             Logger::info('Object merged to map.', [
                 'height' => $object->getHeight(),
                 'width'  => $object->getWidth(),
@@ -71,8 +73,8 @@ class Planner
             $x += $object->getWidth() + self::DISTANCE;
         }
 
-//        $this->buildRoads();
-        $this->newBuildRoads();
+        $this->buildRoads();
+//        $this->newBuildRoads();
 
         return $this->objectMap;
     }
@@ -82,8 +84,8 @@ class Planner
         $combinations = $this->objectMap->getStartEndRoadCombinations();
         foreach ($combinations as $combination) {
             /**
-             * @var EePointRoadObject $entryPoint
-             * @var EePointRoadObject $exitPoint
+             * @var RoadObject $entryPoint
+             * @var RoadObject $exitPoint
              */
             $entryPoint = $combination['entry'];
             $exitPoint  = $combination['exit'];
@@ -94,7 +96,8 @@ class Planner
                 $exitPoint
             );
             try {
-                $this->objectMap->mergeMaps(
+                $this->mapManager->mergeMaps(
+                    $this->objectMap,
                     $road,
                     Utils::c(0, 0)
                 );
@@ -120,18 +123,18 @@ class Planner
     }
 
     /**
-     * @param EePointRoadObject[] $group
+     * @param RoadObject[] $group
      * @throws \Exception
      */
     protected function simpleBuildRoad($group): void
     {
         foreach ($group as $object) {
-            if ($object->getPointType() === EePointRoadObject::T_EXIT) {
-                /** @var EePointRoadObject $exitPoint */
+            if ($object->getPointType() === RoadObject::T_EXIT) {
+                /** @var RoadObject $exitPoint */
                 $exitPoint = $object;
             }
-            if ($object->getPointType() === EePointRoadObject::T_ENTRY) {
-                /** @var EePointRoadObject $entryPoint */
+            if ($object->getPointType() === RoadObject::T_ENTRY) {
+                /** @var RoadObject $entryPoint */
                 $entryPoint = $object;
             }
         }
@@ -160,7 +163,7 @@ class Planner
     }
 
     /**
-     * @param EePointRoadObject[] $group
+     * @param RoadObject[] $group
      */
     private function magicBuildRoad(array $group): void
     {

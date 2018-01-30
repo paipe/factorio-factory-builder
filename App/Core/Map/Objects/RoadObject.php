@@ -31,6 +31,10 @@ class RoadObject extends ObjectProto
 
     const D_DEFAULT = 'left';
 
+    /** Тип точки */
+    const T_ENTRY = 'entry';
+    const T_EXIT  = 'exit';
+
     /**
      * @var string
      */
@@ -57,6 +61,11 @@ class RoadObject extends ObjectProto
     /**
      * @var string
      */
+    protected $pointType;
+
+    /**
+     * @var string
+     */
     protected $leftSide;
 
     /**
@@ -79,15 +88,19 @@ class RoadObject extends ObjectProto
         return $this->fileName . '_' . $this->direction;
     }
 
-    public function setLeftSide(string $productName): RoadObject
+    public function setLeftSide(?string $productName): self
     {
-        $this->leftSide = $productName;
+        if ($productName !== null) {
+            $this->leftSide = $productName;
+        }
         return $this;
     }
 
-    public function setRightSide(string $productName): RoadObject
+    public function setRightSide(?string $productName): self
     {
-        $this->rightSide = $productName;
+        if ($productName !== null) {
+            $this->rightSide = $productName;
+        }
         return $this;
     }
 
@@ -101,12 +114,12 @@ class RoadObject extends ObjectProto
         return $this->rightSide;
     }
 
-    public function getPrevRoad(): ?RoadObject
+    public function getPrevRoad(): ?self
     {
         return $this->prevRoad;
     }
 
-    public function getNextRoad(): ?RoadObject
+    public function getNextRoad(): ?self
     {
         return $this->nextRoad;
     }
@@ -137,15 +150,6 @@ class RoadObject extends ObjectProto
         $this->nextRoad = $road;
     }
 
-    public function isEmptyLeftSide(): bool
-    {
-        return !isset($this->leftSide);
-    }
-
-    public function isEmptyRightSide(): bool
-    {
-        return !isset($this->rightSide);
-    }
 
     public function isEmptyPrevRoad(): bool
     {
@@ -165,6 +169,17 @@ class RoadObject extends ObjectProto
     public function setDirection(string $direction): void
     {
         $this->direction = $direction;
+    }
+
+    public function setPointType(string $pointType): self
+    {
+        $this->pointType = $pointType;
+        return $this;
+    }
+
+    public function getPointType(): ?string
+    {
+        return $this->pointType;
     }
 
 }

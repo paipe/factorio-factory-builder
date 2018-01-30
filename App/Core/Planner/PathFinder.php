@@ -13,7 +13,6 @@ namespace App\Core\Planner;
 
 use App\Core\Map;
 use App\Core\PathFinder\Node;
-use App\Core\Map\Objects\EePointRoadObject;
 use App\Core\Map\Objects\RoadObject;
 use App\Core\Utils\Utils;
 
@@ -42,7 +41,7 @@ class PathFinder
     protected $map;
 
     /**
-     * @var EePointRoadObject
+     * @var RoadObject
      */
     protected $goal;
 
@@ -66,7 +65,7 @@ class PathFinder
         return $path;
     }
 
-    private function run(EePointRoadObject $start, EePointRoadObject $goal): ?Map
+    private function run(RoadObject $start, RoadObject $goal): ?Map
     {
         $startNode = new Node($start->getCoordinates());
         $goalNode  = new Node($goal->getCoordinates());

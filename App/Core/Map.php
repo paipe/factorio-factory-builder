@@ -211,8 +211,8 @@ class Map
         foreach ($this->grid as $row) {
             foreach ($row as $object) {
                 if (
-                    $object instanceof EePointRoadObject &&
-                    $object->getPointType() === EePointRoadObject::T_ENTRY
+                    $object instanceof RoadObject &&
+                    $object->getPointType() === RoadObject::T_ENTRY
                 ) {
                     $entryPoints[] = $object;
                 }
@@ -228,8 +228,8 @@ class Map
         foreach ($this->grid as $row) {
             foreach ($row as $object) {
                 if (
-                    $object instanceof EePointRoadObject &&
-                    $object->getPointType() === EePointRoadObject::T_EXIT
+                    $object instanceof RoadObject &&
+                    $object->getPointType() === RoadObject::T_EXIT
                 ) {
                     $exitPoints[] = $object;
                 }
@@ -243,14 +243,17 @@ class Map
     {
         $result = [];
         /**
-         * @var EePointRoadObject[] $entryPoints
-         * @var EePointRoadObject[] $exitPoints
+         * @var RoadObject[] $entryPoints
+         * @var RoadObject[] $exitPoints
          */
         $entryPoints = $this->getEntryPoints();
         $exitPoints = $this->getExitPoints();
         foreach ($entryPoints as $entryPoint) {
             foreach ($exitPoints as $exitPoint) {
-                if ($entryPoint->getPointProduct() === $exitPoint->getPointProduct()) {
+                if (
+                    $entryPoint->getLeftSide() === $exitPoint->getLeftSide() &&
+                    $entryPoint->getRightSide() === $exitPoint->getRightSide()
+                ) {
                     $result[] = [
                         'entry' => $entryPoint,
                         'exit' => $exitPoint
@@ -267,7 +270,7 @@ class Map
         $result = [];
         foreach ($this->grid as $row) {
             foreach ($row as $object) {
-                if ($object instanceof EePointRoadObject) {
+                if ($object instanceof RoadObject && $object->getPointType() !== null) {
                     $result[$object->getPointProduct()][] = $object;
                 }
             }
@@ -277,7 +280,6 @@ class Map
     }
 
     /**
-     * @param bool $iterateLinks
      * @return \Generator
      */
     public function iterateMapObjects(): \Generator
