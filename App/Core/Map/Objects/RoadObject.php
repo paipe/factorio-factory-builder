@@ -127,27 +127,33 @@ class RoadObject extends ObjectProto
     /**
      * @param RoadObject $road
      * @param bool $force - нужно ли перезаписать связь (по умолчанию выкидывает эксепшен)
+     * @return self
      * @throws \Exception
      */
-    public function setPrevRoad(RoadObject $road, bool $force = false): void
+    public function setPrevRoad(RoadObject $road, bool $force = false): self
     {
         if (isset($this->prevRoad) && !$force) {
             throw new \Exception('У дороги уже установлен prevRoad');
         }
         $this->prevRoad = $road;
+
+        return $this;
     }
 
     /**
      * @param RoadObject $road
      * @param bool $force - нужно ли перезаписать связь (по умолчанию выкидывает эксепшен)
+     * @return self
      * @throws \Exception
      */
-    public function setNextRoad(RoadObject $road, bool $force = false): void
+    public function setNextRoad(RoadObject $road, bool $force = false): self
     {
         if (isset($this->nextRoad) && !$force) {
             throw new \Exception('У дороги уже установлен nextRoad');
         }
         $this->nextRoad = $road;
+
+        return $this;
     }
 
 

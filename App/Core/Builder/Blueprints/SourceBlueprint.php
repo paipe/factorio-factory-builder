@@ -31,7 +31,7 @@ class SourceBlueprint extends BlueprintProto
                 ->setDirection(Map\Objects\InserterObject::D_DOWN)
                 ->setType(Map\Objects\InserterObject::T_DEFAULT)
         );
-        $sourceMap->addRoadObject(
+        $sourceMap->addObject(
             (new Map\Objects\RoadObject(Utils::c($x, $y + 2)))
                 ->setPointType(Map\Objects\RoadObject::T_EXIT)
                 ->setLeftSide($object['name'])

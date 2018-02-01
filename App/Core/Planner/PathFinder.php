@@ -147,16 +147,23 @@ class PathFinder
     private function reconstructPath(Node $goalNode, RoadObject $road): Map
     {
         $pathMap = new Map();
+        $prevRoadObject = null;
         $currentNode = $goalNode->cameFrom;
-        while ($currentNode->cameFrom != NULL) {
+        while ($currentNode->cameFrom !== null) {
             $roadObject = new RoadObject(Utils::c($currentNode->x, $currentNode->y));
+            if ($prevRoadObject !== null) {
+                /** @var RoadObject $prevRoadObject */
+                $roadObject->setPrevRoad($prevRoadObject);
+                $prevRoadObject->setNextRoad($roadObject);
+            }
             if ($road->getLeftSide() !== null) {
                 $roadObject->setLeftSide($road->getLeftSide());
             }
             if ($road->getRightSide() !== null) {
                 $roadObject->setRightSide($road->getRightSide());
             }
-            $pathMap->addRoadObject($roadObject);
+            $pathMap->addObject($roadObject);
+            $prevRoadObject = $roadObject;
             $currentNode = $currentNode->cameFrom;
         }
 

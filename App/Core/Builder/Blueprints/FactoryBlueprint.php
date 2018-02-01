@@ -11,6 +11,7 @@ namespace App\Core\Builder\Blueprints;
 
 use App\Core\Builder\BlueprintProto;
 use App\Core\Map;
+use App\Core\Planner\PathFinder;
 use App\Core\Utils\Logger;
 use App\Core\Utils\Utils;
 use App\Core\Map\Objects\InserterObject;
@@ -34,15 +35,22 @@ class FactoryBlueprint extends BlueprintProto
     {
         $this->count = (int)ceil($object['time'] / 0.5);
         $this->isTwoIn = count($object['children']) > 1;
+        $children = array_keys($object['children']);
 
         $this
             ->addFabrics($object['name'], $object['children'])
             ->addInserters()
-            ->addRoads($object['name'], array_keys($object['children']));
+            ->addTopRoad($object['name'])
+            ->addBottomRoad($children[0]);
+
+        if ($this->isTwoIn) {
+            $this->addSecondBottomRoad($children[1]);
+        }
+
 
         Logger::info('Fabric added', [
             'out' => $object['name'],
-            'in'  => implode(', ', array_keys($object['children']))
+            'in'  => implode(', ', $children)
         ]);
 
         return $this->blueprintMap;
@@ -103,73 +111,94 @@ class FactoryBlueprint extends BlueprintProto
         return $this;
     }
 
-    /**
-     * Добавляет дороги
-     * @todo переделать под PathFinder или иным способом избавиться от Map::addRoadObject
-     *
-     * @param $name
-     * @param $children
-     * @return FactoryBlueprint
-     */
-    private function addRoads($name, $children): self
+    public function addTopRoad($name)
     {
-        //сверху и снизу строим дорогу справа налево
-        for ($j = $this->count * 3 - 1; $j >= 0 ; $j--) {
-            //верхняя
-            if ($j === 0) {
-                $this->blueprintMap->addRoadObject(
-                    (new RoadObject(Utils::c($j, 0)))
-                        ->setPointType(RoadObject::T_EXIT)
-                        ->setRightSide($name)
-                );
-            } else {
-                $this->blueprintMap->addRoadObject(
-                    (new RoadObject(Utils::c($j, 0)))
-                        ->setRightSide($name)
-                );
-            }
+        $leftSideX = 0;
+        $rightSideX = $this->count * 3 - 1;
+        $pathFinder = new PathFinder();
+        $mapManager = new Map\MapManager();
 
-            //нижняя
-            if ($j === $this->count * 3 - 1) {
-                $road = (new RoadObject(Utils::c($j, 6)))
-                    ->setPointType(RoadObject::T_ENTRY);
-                if (Utils::isSource($children[0])) {
-                    $road->setLeftSide($children[0]);
-                } else {
-                    $road->setRightSide($children[0]);
-                }
-                $this->blueprintMap->addRoadObject($road);
-            } else {
-                $road = new RoadObject(Utils::c($j, 6));
-                if (Utils::isSource($children[0])) {
-                    $road->setLeftSide($children[0]);
-                } else {
-                    $road->setRightSide($children[0]);
-                }
-                $this->blueprintMap->addRoadObject($road);
-            }
-            //вторая нижняя, если на входе два продукта
-            if ($this->isTwoIn) {
-                if ($j === $this->count * 3 - 1) {
-                    $road = (new RoadObject(Utils::c($j, 7)))
-                        ->setPointType(RoadObject::T_ENTRY);
-                    if (Utils::isSource($children[1])) {
-                        $road->setLeftSide($children[1]);
-                    } else {
-                        $road->setRightSide($children[1]);
-                    }
-                    $this->blueprintMap->addRoadObject($road);
-                } else {
-                    $road = new RoadObject(Utils::c($j, 7));
-                    if (Utils::isSource($children[1])) {
-                        $road->setLeftSide($children[1]);
-                    } else {
-                        $road->setRightSide($children[1]);
-                    }
-                    $this->blueprintMap->addRoadObject($road);
-                }
-            }
+        $entry = $this->blueprintMap->addObject(
+            (new RoadObject(Utils::c($rightSideX, 0)))
+                ->setRightSide($name)
+        );
+        $exit = $this->blueprintMap->addObject(
+            (new RoadObject(Utils::c($leftSideX, 0)))
+                ->setPointType(RoadObject::T_EXIT)
+                ->setRightSide($name)
+        );
+        $road = $pathFinder->findPath(
+            $this->blueprintMap,
+            $entry,
+            $exit
+        );
+        $mapManager->mergeRoadToMap($this->blueprintMap, $road, Utils::c(0, 0));
+
+        return $this;
+    }
+
+    public function addBottomRoad($name)
+    {
+        $leftSideX = 0;
+        $rightSideX = $this->count * 3 - 1;
+        $pathFinder = new PathFinder();
+        $mapManager = new Map\MapManager();
+
+        $entry = (new RoadObject(Utils::c($rightSideX, 6)))
+            ->setPointType(RoadObject::T_ENTRY);
+        if (Utils::isSource($name)) {
+            $entry->setLeftSide($name);
+        } else {
+            $entry->setRightSide($name);
         }
+        $entry = $this->blueprintMap->addObject($entry);
+
+        $exit = new RoadObject(Utils::c($leftSideX, 6));
+        if (Utils::isSource($name)) {
+            $exit->setLeftSide($name);
+        } else {
+            $exit->setRightSide($name);
+        }
+        $exit = $this->blueprintMap->addObject($exit);
+        $road = $pathFinder->findPath(
+            $this->blueprintMap,
+            $entry,
+            $exit
+        );
+        $mapManager->mergeRoadToMap($this->blueprintMap, $road, Utils::c(0, 0));
+
+        return $this;
+    }
+
+    public function addSecondBottomRoad($name)
+    {
+        $leftSideX = 0;
+        $rightSideX = $this->count * 3 - 1;
+        $pathFinder = new PathFinder();
+        $mapManager = new Map\MapManager();
+
+        $entry = (new RoadObject(Utils::c($rightSideX, 7)))
+            ->setPointType(RoadObject::T_ENTRY);
+        if (Utils::isSource($name)) {
+            $entry->setLeftSide($name);
+        } else {
+            $entry->setRightSide($name);
+        }
+        $entry = $this->blueprintMap->addObject($entry);
+
+        $exit = new RoadObject(Utils::c($leftSideX, 7));
+        if (Utils::isSource($name)) {
+            $exit->setLeftSide($name);
+        } else {
+            $exit->setRightSide($name);
+        }
+        $exit = $this->blueprintMap->addObject($exit);
+        $road = $pathFinder->findPath(
+            $this->blueprintMap,
+            $entry,
+            $exit
+        );
+        $mapManager->mergeRoadToMap($this->blueprintMap, $road, Utils::c(0, 0));
 
         return $this;
     }
