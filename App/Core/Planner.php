@@ -96,7 +96,7 @@ class Planner
                 $exitPoint
             );
             try {
-                $this->mapManager->mergeMaps(
+                $this->mapManager->mergeRoadToMap(
                     $this->objectMap,
                     $road,
                     Utils::c(0, 0)

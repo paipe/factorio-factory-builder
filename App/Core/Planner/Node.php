@@ -8,7 +8,7 @@
 
 declare(strict_types=1);
 
-namespace App\Core\PathFinder;
+namespace App\Core\Planner;
 
 /**
  * Нода, использующаяся при построении пути PathFinder'ом

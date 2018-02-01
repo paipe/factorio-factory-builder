@@ -8,7 +8,6 @@
       "Objects": "App/Core/Map/Objects/",
       "Planner": "App/Core/Planner",
       "Builder": "App/Core/Builder",
-      "PathFinder": "App/Core/PathFinder/",
       "Utils": "App/Core/Utils/"
     }
   },

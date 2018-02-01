@@ -12,7 +12,7 @@ namespace App\Core\Planner;
 
 
 use App\Core\Map;
-use App\Core\PathFinder\Node;
+use App\Core\Planner\Node;
 use App\Core\Map\Objects\RoadObject;
 use App\Core\Utils\Utils;
 
@@ -147,14 +147,14 @@ class PathFinder
     private function reconstructPath(Node $goalNode, RoadObject $road): Map
     {
         $pathMap = new Map();
-        $currentNode = $goalNode;
-        while ($currentNode != NULL) {
+        $currentNode = $goalNode->cameFrom;
+        while ($currentNode->cameFrom != NULL) {
             $roadObject = new RoadObject(Utils::c($currentNode->x, $currentNode->y));
             if ($road->getLeftSide() !== null) {
-                $road->setLeftSide($road->getLeftSide());
+                $roadObject->setLeftSide($road->getLeftSide());
             }
             if ($road->getRightSide() !== null) {
-                $road->setRightSide($road->getRightSide());
+                $roadObject->setRightSide($road->getRightSide());
             }
             $pathMap->addRoadObject($roadObject);
             $currentNode = $currentNode->cameFrom;
