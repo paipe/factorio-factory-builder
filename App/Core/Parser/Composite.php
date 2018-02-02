@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Created by PhpStorm.
  * User: paipe
@@ -10,9 +9,6 @@
 declare(strict_types=1);
 
 namespace App\Core\Parser;
-
-
-use App\Core\Parser\Component;
 
 /**
  * Композитный (сборный) продукт на дереве продуктов

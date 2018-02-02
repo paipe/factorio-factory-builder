@@ -11,7 +11,7 @@ namespace App\Core\Builder\Blueprints;
 
 use App\Core\Builder\BlueprintProto;
 use App\Core\Map;
-use App\Core\Planner\PathFinder;
+use App\Core\Utils\PathFinder\PathFinder;
 use App\Core\Utils\Logger;
 use App\Core\Utils\Utils;
 use App\Core\Map\Objects\InserterObject;
@@ -25,8 +25,6 @@ class FactoryBlueprint extends BlueprintProto
 
     /**
      * Собирает план фабрики
-     * @todo: возможно, прямые дороги должен строить PathFinder
-     * @todo: но тогда его нужно зарефакторить
      *
      * @param array $object
      * @return Map

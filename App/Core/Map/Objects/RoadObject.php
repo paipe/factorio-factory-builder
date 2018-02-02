@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Core\Map\Objects;
 
 
+use App\Core\Map\Conductor;
 use App\Core\Map\ObjectProto;
 
 /**
@@ -21,7 +22,7 @@ use App\Core\Map\ObjectProto;
  * Class RoadObject
  * @package App\Core\Map\Objects
  */
-class RoadObject extends ObjectProto
+class RoadObject extends ObjectProto implements Conductor
 {
     /** Направление дороги */
     const D_UP = 'up';
@@ -114,25 +115,24 @@ class RoadObject extends ObjectProto
         return $this->rightSide;
     }
 
-    public function getPrevRoad(): ?self
+    public function getPrevObject(): ?self
     {
         return $this->prevRoad;
     }
 
-    public function getNextRoad(): ?self
+    public function getNextObject(): ?self
     {
         return $this->nextRoad;
     }
 
     /**
-     * @param RoadObject $road
-     * @param bool $force - нужно ли перезаписать связь (по умолчанию выкидывает эксепшен)
+     * @param Conductor $road
      * @return self
      * @throws \Exception
      */
-    public function setPrevRoad(RoadObject $road, bool $force = false): self
+    public function setPrevObject(Conductor $road): self
     {
-        if (isset($this->prevRoad) && !$force) {
+        if (isset($this->prevRoad)) {
             throw new \Exception('У дороги уже установлен prevRoad');
         }
         $this->prevRoad = $road;
@@ -141,21 +141,19 @@ class RoadObject extends ObjectProto
     }
 
     /**
-     * @param RoadObject $road
-     * @param bool $force - нужно ли перезаписать связь (по умолчанию выкидывает эксепшен)
+     * @param Conductor $road
      * @return self
      * @throws \Exception
      */
-    public function setNextRoad(RoadObject $road, bool $force = false): self
+    public function setNextObject(Conductor $road): self
     {
-        if (isset($this->nextRoad) && !$force) {
+        if (isset($this->nextRoad)) {
             throw new \Exception('У дороги уже установлен nextRoad');
         }
         $this->nextRoad = $road;
 
         return $this;
     }
-
 
     public function isEmptyPrevRoad(): bool
     {

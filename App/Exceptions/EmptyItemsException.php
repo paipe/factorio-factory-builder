@@ -12,5 +12,5 @@ namespace Exceptions;
 class EmptyItemsException extends \Exception
 {
     protected $message = 'Empty result on parse items.yaml file.';
-    protected $code    = '100';
+    protected $code    = '0';
 }

@@ -46,7 +46,6 @@ class Drawer
         $white = imagecolorallocate($this->img, 255, 255, 255);
         imagefill($this->img, 0, 0, $white);
         
-        $this->map->processRoadDirections();
         foreach ($this->map->iterateMapObjects() as $object) {
             $this->drawObject($object);
         }

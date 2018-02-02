@@ -13,14 +13,8 @@ namespace App\Core;
 
 use App\Core\Builder\Blueprints\FactoryBlueprint;
 use App\Core\Builder\Blueprints\SourceBlueprint;
-use App\Core\Map\Objects\ChestObject;
-use App\Core\Map\Objects\EePointRoadObject;
-use App\Core\Map\Objects\FactoryObject;
-use App\Core\Map\Objects\InserterObject;
-use App\Core\Map\Objects\RoadObject;
 use App\Core\Parser\Component;
 use App\Core\Utils\Logger;
-use App\Core\Utils\Utils;
 
 /**
  * Строит мини-схемы на основании дерева компонентов

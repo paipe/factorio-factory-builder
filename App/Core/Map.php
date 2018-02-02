@@ -13,6 +13,7 @@ namespace App\Core;
 
 use App\Core\Map\ObjectProto;
 use App\Core\Map\Objects\RoadObject;
+use App\Exceptions\PlaceToAddOccupiedException;
 
 /**
  * @todo: класс карты должен быть чисто контейнером
@@ -30,13 +31,18 @@ class Map
         for ($y = 0; $y < $object->getHeight(); $y++) {
             for ($x = 0; $x < $object->getWidth(); $x++) {
                 if (isset($this->grid[$object->getY() + $y][$object->getX() + $x])) {
-                    throw new \Exception('Перезапись занятой клетки карты!');
+                    throw new PlaceToAddOccupiedException();
                 }
                 $this->grid[$object->getY() + $y][$object->getX() + $x] = $object;
             }
         }
 
         return $object;
+    }
+
+    public function removeObject(array $coordinates): void
+    {
+        unset($this->grid[$coordinates['y']][$coordinates['x']]);
     }
 
     public function getObjectByCoordinates(array $coordinates): ?ObjectProto
@@ -55,8 +61,8 @@ class Map
             foreach ($row as $object) {
                 if ($object instanceof RoadObject && is_null($object->getDirection())) {
                     $road = $object;
-                    while (!is_null($road->getPrevRoad())) {
-                        $road = $road->getPrevRoad();
+                    while (!is_null($road->getPrevObject())) {
+                        $road = $road->getPrevObject();
                     }
 
                     $directions = [
@@ -68,9 +74,9 @@ class Map
 
                     $prevDirection = NULL;
                     do {
-                        if (is_null($road->getPrevRoad())) {
-                            if (!is_null($road->getNextRoad())) {
-                                $road = $road->getNextRoad();
+                        if (is_null($road->getPrevObject())) {
+                            if (!is_null($road->getNextObject())) {
+                                $road = $road->getNextObject();
                             } else {
                                 $prevRoad = $road;
                                 break;
@@ -78,8 +84,8 @@ class Map
                             continue;
                         }
 
-                        $key = (string)($road->getY() - $road->getPrevRoad()->getY()) .
-                            (string)($road->getX() - $road->getPrevRoad()->getX());
+                        $key = (string)($road->getY() - $road->getPrevObject()->getY()) .
+                            (string)($road->getX() - $road->getPrevObject()->getX());
                         $direction = $directions[$key];
 
                         if (is_null($prevDirection)) {
@@ -91,10 +97,10 @@ class Map
                             $roadType = $prevDirection . '_' . $direction;
                         }
 
-                        $road->getPrevRoad()->setDirection($roadType);
+                        $road->getPrevObject()->setDirection($roadType);
                         $prevDirection = $direction;
                         $prevRoad = $road;
-                        $road = $road->getNextRoad();
+                        $road = $road->getNextObject();
                     } while (!is_null($road));
                     $prevRoad->setDirection('left');
                 }

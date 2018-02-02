@@ -8,13 +8,13 @@
 
 declare(strict_types=1);
 
-namespace App\Core\Planner;
+namespace App\Core\Utils\PathFinder;
 
 /**
  * Нода, использующаяся при построении пути PathFinder'ом
  *
  * Class Node
- * @package App\Core\Planner\PathFinder
+ * @package App\Core\Utils\PathFinder\PathFinder
  */
 class Node
 {
@@ -69,6 +69,11 @@ class Node
         }
 
         return $result;
+    }
+
+    public function getCoordinates()
+    {
+        return ['x' => $this->x, 'y' => $this->y];
     }
 
 }

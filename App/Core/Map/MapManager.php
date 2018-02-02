@@ -65,8 +65,9 @@ class MapManager
      */
     public function mergeRoadToMap(Map $map, Map $road, array $coordinates): Map
     {
-        $firstRoad = $this->roadManager->getFirstRoadObject($road);
-        $lastRoad = $this->roadManager->getLastRoadObject($road);
+        $roadManager = new RoadManager();
+        $firstRoad = $roadManager->getFirstRoadObject($road);
+        $lastRoad = $roadManager->getLastRoadObject($road);
         $map = $this->mergeMaps($map, $road, $coordinates);
 
         $this->checkRoadNeighbourPoints($map, $firstRoad);
@@ -86,12 +87,13 @@ class MapManager
     private function checkRoadNeighbourPoints(Map $map, RoadObject $roadObject): bool
     {
         $result = false;
+        $roadManager = new RoadManager();
         $coordinateShifts = Utils::getPossibleCoordinatesShift($roadObject->getCoordinates());
         while (!empty($coordinateShifts) && $result === false) {
             $coordinates = array_shift($coordinateShifts);
             $testObject = $map->getObjectByCoordinates($coordinates);
             if ($testObject instanceof RoadObject) {
-                $result = $this->roadManager->connectRoads($roadObject, $testObject);
+                $result = $roadManager->connectRoads($roadObject, $testObject);
             }
         }
 

@@ -12,5 +12,5 @@ namespace Exceptions;
 class UnsupportedMethodException extends \Exception
 {
     protected $message = 'Unsupported method.';
-    protected $code    = '101';
+    protected $code    = '1';
 }

@@ -1,6 +1,6 @@
 <?php
 
-$loader = require_once __DIR__ . '/../../vendor/autoload.php';
+namespace App\Tests\Parser;
 
 /**
  * Created by PhpStorm.

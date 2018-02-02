@@ -14,7 +14,7 @@ namespace App\Core;
 use App\Core\Map\MapManager;
 use App\Core\Map\Objects\EePointRoadObject;
 use App\Core\Map\Objects\RoadObject;
-use App\Core\Planner\PathFinder;
+use App\Core\Utils\PathFinder\PathFinder;
 use App\Core\Utils\Logger;
 use App\Core\Utils\Utils;
 
@@ -35,7 +35,7 @@ class Planner
     protected $drawer;
 
     /**
-     * @var PathFinder
+     * @var \App\Core\Utils\\App\Core\Utils\PathFinder\PathFinder
      */
     protected $pathFinder;
 
@@ -74,6 +74,7 @@ class Planner
         }
 
         $this->buildRoads();
+        $this->objectMap->processRoadDirections();
 //        $this->newBuildRoads();
 
         return $this->objectMap;

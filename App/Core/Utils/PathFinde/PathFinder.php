@@ -8,19 +8,15 @@
 
 declare(strict_types=1);
 
-namespace App\Core\Planner;
+namespace App\Core\Utils\PathFinder;
 
 
 use App\Core\Map;
-use App\Core\Planner\Node;
 use App\Core\Map\Objects\RoadObject;
 use App\Core\Utils\Utils;
 
 /**
  * Класс для поиска пути из точки А в точку Б
- *
- * Class PathFinder
- * @package App\Core\Planner
  */
 class PathFinder
 {
@@ -41,34 +37,27 @@ class PathFinder
     protected $map;
 
     /**
-     * @var RoadObject
+     * @var Map\Conductor
      */
-    protected $goal;
+    protected $proto;
 
-    /**
-     * @todo Сделать повороты дороги менее предпочтительными по сравнению с прямыми участками
-     *
-     * @param $map
-     * @param $start
-     * @param $goal
-     * @return Map|null
-     */
-    public function findPath($map, $start, $goal): ?Map
+    public function __construct(Map $map, Map\Conductor $proto)
     {
         $this->map = $map;
+        $this->proto = $proto;
         $this->openSet = [];
         $this->closedSet = [];
-        //todo костыль для пересечения в конечной точке
-        $this->goal = $goal;
-        $path = $this->run($start, $goal);
-
-        return $path;
     }
 
-    private function run(RoadObject $start, RoadObject $goal): ?Map
+    /**
+     * @param array $start -- coordinates
+     * @param array $goal -- coordinates
+     * @return Map|null
+     */
+    public function run(array $start, array $goal): ?Map
     {
-        $startNode = new Node($start->getCoordinates());
-        $goalNode  = new Node($goal->getCoordinates());
+        $startNode = new Node($start);
+        $goalNode  = new Node($goal);
         $startNode->g = 0;
         $startNode->h = $this->heuristicCostEstimate($startNode, $goalNode);
         $startNode->calculateF();
@@ -79,10 +68,10 @@ class PathFinder
             /**
              * @var Node $x
              */
-            list($x, $xKey) = $this->findNodeWithLowestF();
+            [$x, $xKey] = $this->findNodeWithLowestF();
 
             if ($x->compareNodes($goalNode)) {
-                return $this->reconstructPath($x, $start);
+                return $this->reconstructPath($x);
             }
 
             unset($this->openSet[$xKey]);
@@ -144,26 +133,20 @@ class PathFinder
         return [$min, $minKey];
     }
 
-    private function reconstructPath(Node $goalNode, RoadObject $road): Map
+    private function reconstructPath(Node $goalNode): Map
     {
         $pathMap = new Map();
-        $prevRoadObject = null;
-        $currentNode = $goalNode->cameFrom;
-        while ($currentNode->cameFrom !== null) {
+        $prevObject = null;
+        $currentNode = $goalNode;
+        while ($currentNode !== null) {
             $roadObject = new RoadObject(Utils::c($currentNode->x, $currentNode->y));
-            if ($prevRoadObject !== null) {
-                /** @var RoadObject $prevRoadObject */
-                $roadObject->setPrevRoad($prevRoadObject);
-                $prevRoadObject->setNextRoad($roadObject);
-            }
-            if ($road->getLeftSide() !== null) {
-                $roadObject->setLeftSide($road->getLeftSide());
-            }
-            if ($road->getRightSide() !== null) {
-                $roadObject->setRightSide($road->getRightSide());
+            if ($prevObject !== null) {
+                /** @var Map\Conductor $prevObject */
+                $roadObject->setNextObject($prevObject);
+                $prevObject->setPrevObject($roadObject);
             }
             $pathMap->addObject($roadObject);
-            $prevRoadObject = $roadObject;
+            $prevObject = $roadObject;
             $currentNode = $currentNode->cameFrom;
         }
 
@@ -172,29 +155,11 @@ class PathFinder
 
     private function getNodeNeighbors(Node $node): array
     {
-        $arr1 = [-1, 0, 1];
-        $arr2 = $arr1;
-        $modifiers = [];
-        foreach ($arr1 as $var1) {
-            foreach ($arr2 as $var2) {
-                if (($var1 == $var2 && $var1 == 0) || (abs($var1) - abs($var2)) == 0) {
-                    continue;
-                }
-                $modifiers[] = ['x' => $var1, 'y' => $var2];
-            }
-        }
-
         $result = [];
-        foreach ($modifiers as $modifier) {
-            $coordinates = [
-                'x' => $node->x + $modifier['x'],
-                'y' => $node->y + $modifier['y']
-            ];
+        $possibleShifts = Utils::getPossibleCoordinatesShift($node->getCoordinates());
+        foreach ($possibleShifts as $coordinates) {
             $object = $this->map->getObjectByCoordinates($coordinates);
-            if (
-                is_null($object) ||
-                $object === $this->goal
-            ) {
+            if (is_null($object)) {
                 $result[] = new Node($coordinates);
             }
         }
