@@ -113,19 +113,19 @@ class FactoryBlueprint extends BlueprintProto
     {
         $leftSideX = 0;
         $rightSideX = $this->count * 3 - 1;
-        $pathFinder = new PathFinder();
+        $roadManager = new Map\RoadManager();
         $mapManager = new Map\MapManager();
 
-        $entry = $this->blueprintMap->addObject(
-            (new RoadObject(Utils::c($rightSideX, 0)))
-                ->setRightSide($name)
-        );
-        $exit = $this->blueprintMap->addObject(
-            (new RoadObject(Utils::c($leftSideX, 0)))
-                ->setPointType(RoadObject::T_EXIT)
-                ->setRightSide($name)
-        );
-        $road = $pathFinder->findPath(
+        $entry = (new RoadObject(Utils::c($rightSideX, 0)))
+            ->setRightSide($name);
+        $exit = (new RoadObject(Utils::c($leftSideX, 0)))
+            ->setPointType(RoadObject::T_EXIT)
+            ->setRightSide($name);
+
+        $this->blueprintMap->addObject($entry);
+        $this->blueprintMap->addObject($exit);
+
+        $road = $roadManager->findPath(
             $this->blueprintMap,
             $entry,
             $exit
@@ -139,7 +139,7 @@ class FactoryBlueprint extends BlueprintProto
     {
         $leftSideX = 0;
         $rightSideX = $this->count * 3 - 1;
-        $pathFinder = new PathFinder();
+        $roadManager = new Map\RoadManager();
         $mapManager = new Map\MapManager();
 
         $entry = (new RoadObject(Utils::c($rightSideX, 6)))
@@ -149,7 +149,7 @@ class FactoryBlueprint extends BlueprintProto
         } else {
             $entry->setRightSide($name);
         }
-        $entry = $this->blueprintMap->addObject($entry);
+        $this->blueprintMap->addObject($entry);
 
         $exit = new RoadObject(Utils::c($leftSideX, 6));
         if (Utils::isSource($name)) {
@@ -157,8 +157,9 @@ class FactoryBlueprint extends BlueprintProto
         } else {
             $exit->setRightSide($name);
         }
-        $exit = $this->blueprintMap->addObject($exit);
-        $road = $pathFinder->findPath(
+        $this->blueprintMap->addObject($exit);
+
+        $road = $roadManager->findPath(
             $this->blueprintMap,
             $entry,
             $exit
@@ -172,7 +173,7 @@ class FactoryBlueprint extends BlueprintProto
     {
         $leftSideX = 0;
         $rightSideX = $this->count * 3 - 1;
-        $pathFinder = new PathFinder();
+        $roadManager = new Map\RoadManager();
         $mapManager = new Map\MapManager();
 
         $entry = (new RoadObject(Utils::c($rightSideX, 7)))
@@ -182,7 +183,7 @@ class FactoryBlueprint extends BlueprintProto
         } else {
             $entry->setRightSide($name);
         }
-        $entry = $this->blueprintMap->addObject($entry);
+        $this->blueprintMap->addObject($entry);
 
         $exit = new RoadObject(Utils::c($leftSideX, 7));
         if (Utils::isSource($name)) {
@@ -190,8 +191,9 @@ class FactoryBlueprint extends BlueprintProto
         } else {
             $exit->setRightSide($name);
         }
-        $exit = $this->blueprintMap->addObject($exit);
-        $road = $pathFinder->findPath(
+        $this->blueprintMap->addObject($exit);
+
+        $road = $roadManager->findPath(
             $this->blueprintMap,
             $entry,
             $exit

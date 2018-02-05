@@ -11,7 +11,6 @@ namespace App\Tests\Map;
 use App\Core\Map;
 use App\Core\Map\Objects\RoadObject;
 use App\Core\Map\RoadManager;
-use App\Core\Utils\Utils;
 use PHPUnit\Framework\TestCase;
 
 class RoadManagerTest extends TestCase

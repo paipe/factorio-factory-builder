@@ -83,11 +83,11 @@ class RoadManager
             $firstRoad->getLeftSide() === $secondRoad->getLeftSide() &&
             $firstRoad->getRightSide() === $secondRoad->getRightSide()
         ) {
-            if ($firstRoad->isEmptyPrevRoad() && $secondRoad->isEmptyNextRoad()) {
+            if ($firstRoad->isEmptyPrevRoad() && $secondRoad->isEmptyNextRoad() && $secondRoad->getPointType() !== RoadObject::T_ENTRY) {
                 $firstRoad->setPrevObject($secondRoad);
                 $secondRoad->setNextObject($firstRoad);
                 $result = true;
-            } elseif ($firstRoad->isEmptyNextRoad() && $secondRoad->isEmptyPrevRoad()) {
+            } elseif ($firstRoad->isEmptyNextRoad() && $secondRoad->isEmptyPrevRoad() && $secondRoad->getPointType() !== RoadObject::T_EXIT) {
                 $firstRoad->setNextObject($secondRoad);
                 $secondRoad->setPrevObject($firstRoad);
                 $result = true;
@@ -122,7 +122,7 @@ class RoadManager
             do {
                 $someRoad->setLeftSide($start->getLeftSide());
                 $someRoad->setRightSide($start->getRightSide());
-                $someRoad = $someRoad->getPrevObject();
+                $someRoad = $someRoad->getNextObject();
             } while (!is_null($someRoad));
 
             $result = $road;

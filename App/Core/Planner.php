@@ -12,9 +12,8 @@ namespace App\Core;
 
 
 use App\Core\Map\MapManager;
-use App\Core\Map\Objects\EePointRoadObject;
 use App\Core\Map\Objects\RoadObject;
-use App\Core\Utils\PathFinder\PathFinder;
+use App\Core\Map\RoadManager;
 use App\Core\Utils\Logger;
 use App\Core\Utils\Utils;
 
@@ -35,20 +34,17 @@ class Planner
     protected $drawer;
 
     /**
-     * @var \App\Core\Utils\\App\Core\Utils\PathFinder\PathFinder
-     */
-    protected $pathFinder;
-
-    /**
      * @var Map
      */
     protected $objectMap;
 
     protected $mapManager;
 
-    public function __construct(PathFinder $pathFinder)
+    protected $roadManager;
+
+    public function __construct()
     {
-        $this->pathFinder = $pathFinder;
+        $this->roadManager = new RoadManager();
         $this->mapManager = new MapManager();
     }
 
@@ -91,7 +87,7 @@ class Planner
             $entryPoint = $combination['entry'];
             $exitPoint  = $combination['exit'];
             //ищем от конца до начала, чтобы потом не разворачивать массив
-            $road = $this->pathFinder->findPath(
+            $road = $this->roadManager->findPath(
                 $this->objectMap,
                 $entryPoint,
                 $exitPoint
