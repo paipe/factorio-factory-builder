@@ -113,10 +113,19 @@ class RoadManager
             );
             $lastRoad = $this->getLastRoadObject($road);
             $firstRoad = $this->getFirstRoadObject($road);
+            $lastRoad->getNextObject()->clearPrevObject();
+            $firstRoad->getPrevObject()->clearNextObject();
             $road->removeObject($lastRoad->getCoordinates());
             $road->removeObject($firstRoad->getCoordinates());
-            $mapManager = new MapManager();
-            $result = $mapManager->mergeRoadToMap($map, $road, Utils::c(0, 0));
+
+            $someRoad = $this->getFirstRoadObject($road);
+            do {
+                $someRoad->setLeftSide($start->getLeftSide());
+                $someRoad->setRightSide($start->getRightSide());
+                $someRoad = $someRoad->getPrevObject();
+            } while (!is_null($someRoad));
+
+            $result = $road;
         } catch (\Exception $e) {
             Logger::notice(
                 'Не удалось найти путь для дороги.',

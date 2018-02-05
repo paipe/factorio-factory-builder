@@ -11,6 +11,7 @@ namespace App\Tests\Map;
 use App\Core\Map;
 use App\Core\Map\Objects\RoadObject;
 use App\Core\Map\RoadManager;
+use App\Core\Utils\Utils;
 use PHPUnit\Framework\TestCase;
 
 class RoadManagerTest extends TestCase
@@ -22,7 +23,7 @@ class RoadManagerTest extends TestCase
         $roadStart = (new RoadObject(['x' => 0, 'y' => 0]))
             ->setPointType(RoadObject::T_EXIT)
             ->setLeftSide('red_bottle');
-        $roadGoal = (new RoadObject(['x' => 3, 'y' => 0]))
+        $roadGoal = (new RoadObject(['x' => 5, 'y' => 0]))
             ->setPointType(RoadObject::T_ENTRY)
             ->setLeftSide('red_bottle');
         $map->addObject($roadStart);
@@ -33,16 +34,22 @@ class RoadManagerTest extends TestCase
         $this->assertInstanceOf(Map::class, $road);
 
         /**
+         * @var RoadObject $road0
          * @var RoadObject $road1
          * @var RoadObject $road2
          * @var RoadObject $road3
          * @var RoadObject $road4
+         * @var RoadObject $road5
          */
-        $road1 = $road->getObjectByCoordinates(['x' => 0, 'y' => 0]);
-        $road2 = $road->getObjectByCoordinates(['x' => 1, 'y' => 0]);
-        $road3 = $road->getObjectByCoordinates(['x' => 2, 'y' => 0]);
-        $road4 = $road->getObjectByCoordinates(['x' => 3, 'y' => 0]);
+        $road0 = $road->getObjectByCoordinates(['x' => 0, 'y' => 0]);
+        $road1 = $road->getObjectByCoordinates(['x' => 1, 'y' => 0]);
+        $road2 = $road->getObjectByCoordinates(['x' => 2, 'y' => 0]);
+        $road3 = $road->getObjectByCoordinates(['x' => 3, 'y' => 0]);
+        $road4 = $road->getObjectByCoordinates(['x' => 4, 'y' => 0]);
+        $road5 = $road->getObjectByCoordinates(['x' => 5, 'y' => 0]);
 
+        $this->assertNull($road0);
+        $this->assertNull($road5);
         $this->assertContainsOnlyInstancesOf(
             RoadObject::class,
             [$road1, $road2, $road3, $road4]

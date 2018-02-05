@@ -155,6 +155,17 @@ class RoadObject extends ObjectProto implements Conductor
         return $this;
     }
 
+    public function clearPrevObject()
+    {
+        $this->prevRoad = null;
+    }
+
+    public function clearNextObject()
+    {
+        $this->nextRoad = null;
+    }
+
+
     public function isEmptyPrevRoad(): bool
     {
         return !isset($this->prevRoad);

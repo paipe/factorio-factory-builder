@@ -20,4 +20,6 @@ interface Conductor
     public function getNextObject();
     public function setPrevObject(Conductor $object);
     public function setNextObject(Conductor $object);
+    public function clearPrevObject();
+    public function clearNextObject();
 }
