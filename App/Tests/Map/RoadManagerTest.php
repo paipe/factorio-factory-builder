@@ -20,10 +20,10 @@ class RoadManagerTest extends TestCase
     {
         $map = new Map();
         $roadStart = (new RoadObject(['x' => 0, 'y' => 0]))
-            ->setPointType(RoadObject::T_EXIT)
+            ->setPointType(RoadObject::T_ROAD_START)
             ->setLeftSide('red_bottle');
         $roadGoal = (new RoadObject(['x' => 5, 'y' => 0]))
-            ->setPointType(RoadObject::T_ENTRY)
+            ->setPointType(RoadObject::T_ROAD_GOAL)
             ->setLeftSide('red_bottle');
         $map->addObject($roadStart);
         $map->addObject($roadGoal);

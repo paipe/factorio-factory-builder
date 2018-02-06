@@ -126,11 +126,11 @@ class Planner
     protected function simpleBuildRoad($group): void
     {
         foreach ($group as $object) {
-            if ($object->getPointType() === RoadObject::T_EXIT) {
+            if ($object->getPointType() === RoadObject::T_ROAD_START) {
                 /** @var RoadObject $exitPoint */
                 $exitPoint = $object;
             }
-            if ($object->getPointType() === RoadObject::T_ENTRY) {
+            if ($object->getPointType() === RoadObject::T_ROAD_GOAL) {
                 /** @var RoadObject $entryPoint */
                 $entryPoint = $object;
             }

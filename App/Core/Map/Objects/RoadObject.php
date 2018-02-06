@@ -33,8 +33,8 @@ class RoadObject extends ObjectProto implements Conductor
     const D_DEFAULT = 'left';
 
     /** Тип точки */
-    const T_ENTRY = 'entry';
-    const T_EXIT  = 'exit';
+    const T_ROAD_GOAL = 'entry';
+    const T_ROAD_START  = 'exit';
 
     /**
      * @var string
@@ -195,6 +195,11 @@ class RoadObject extends ObjectProto implements Conductor
     public function getPointType(): ?string
     {
         return $this->pointType;
+    }
+
+    public function clearPointType()
+    {
+        $this->pointType = null;
     }
 
 }

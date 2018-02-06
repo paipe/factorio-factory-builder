@@ -71,9 +71,9 @@ class MapTest extends TestCase
         $source = new Map\Objects\ChestObject(['x' => 0, 'y' => 1]);
         $road = new Map\Objects\RoadObject(['x' => 1, 'y' => 0]);
         $roadEntry = (new Map\Objects\RoadObject(['x' => 0, 'y' => 0]))
-            ->setPointType(Map\Objects\RoadObject::T_ENTRY);
+            ->setPointType(Map\Objects\RoadObject::T_ROAD_GOAL);
         $roadExit = (new Map\Objects\RoadObject(['x' => 2, 'y' => 0]))
-            ->setPointType(Map\Objects\RoadObject::T_EXIT);
+            ->setPointType(Map\Objects\RoadObject::T_ROAD_START);
 
         $map->addObject($source);
         $map->addObject($road);
@@ -97,9 +97,9 @@ class MapTest extends TestCase
         $source = new Map\Objects\ChestObject(['x' => 0, 'y' => 1]);
         $road = new Map\Objects\RoadObject(['x' => 1, 'y' => 0]);
         $roadEntry = (new Map\Objects\RoadObject(['x' => 0, 'y' => 0]))
-            ->setPointType(Map\Objects\RoadObject::T_ENTRY);
+            ->setPointType(Map\Objects\RoadObject::T_ROAD_GOAL);
         $roadExit = (new Map\Objects\RoadObject(['x' => 2, 'y' => 0]))
-            ->setPointType(Map\Objects\RoadObject::T_EXIT);
+            ->setPointType(Map\Objects\RoadObject::T_ROAD_START);
 
         $map->addObject($source);
         $map->addObject($road);

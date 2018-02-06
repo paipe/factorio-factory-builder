@@ -27,14 +27,14 @@ class RoadManager
 {
 
     /**
-     * Находит первый объект дороги в результате работы PathFinder'a
+     * Находит финишный (последний) объект дороги в результате работы PathFinder'a
      *
      * @param Map $road
      * @return RoadObject
      *
      * @throws \Exception
      */
-    public function getFirstRoadObject(Map $road): RoadObject
+    public function getGoalRoadObject(Map $road): RoadObject
     {
         $firstRoad = $road->iterateMapObjects()->current();
         if (!($firstRoad instanceof RoadObject)) {
@@ -48,14 +48,14 @@ class RoadManager
     }
 
     /**
-     * Находит последний объект дороги в результате работы PathFinder'a
+     * Находит первый (стартовый) объект дороги в результате работы PathFinder'a
      *
      * @param Map $road
      * @return RoadObject
      *
      * @throws \Exception
      */
-    public function getLastRoadObject(Map $road): RoadObject
+    public function getStartRoadObject(Map $road): RoadObject
     {
         $lastRoad = $road->iterateMapObjects()->current();
         if (!($lastRoad instanceof RoadObject)) {
@@ -83,13 +83,15 @@ class RoadManager
             $firstRoad->getLeftSide() === $secondRoad->getLeftSide() &&
             $firstRoad->getRightSide() === $secondRoad->getRightSide()
         ) {
-            if ($firstRoad->isEmptyPrevRoad() && $secondRoad->isEmptyNextRoad() && $secondRoad->getPointType() !== RoadObject::T_ENTRY) {
+            if ($firstRoad->isEmptyPrevRoad() && $secondRoad->isEmptyNextRoad()) {
                 $firstRoad->setPrevObject($secondRoad);
                 $secondRoad->setNextObject($firstRoad);
+                $secondRoad->clearPointType();
                 $result = true;
-            } elseif ($firstRoad->isEmptyNextRoad() && $secondRoad->isEmptyPrevRoad() && $secondRoad->getPointType() !== RoadObject::T_EXIT) {
+            } elseif ($firstRoad->isEmptyNextRoad() && $secondRoad->isEmptyPrevRoad()) {
                 $firstRoad->setNextObject($secondRoad);
                 $secondRoad->setPrevObject($firstRoad);
+                $secondRoad->clearPointType();
                 $result = true;
             }
         }
@@ -111,14 +113,14 @@ class RoadManager
                 $start->getCoordinates(),
                 $goal->getCoordinates()
             );
-            $lastRoad = $this->getLastRoadObject($road);
-            $firstRoad = $this->getFirstRoadObject($road);
+            $lastRoad = $this->getStartRoadObject($road);
+            $firstRoad = $this->getGoalRoadObject($road);
             $lastRoad->getNextObject()->clearPrevObject();
             $firstRoad->getPrevObject()->clearNextObject();
             $road->removeObject($lastRoad->getCoordinates());
             $road->removeObject($firstRoad->getCoordinates());
 
-            $someRoad = $this->getFirstRoadObject($road);
+            $someRoad = $this->getGoalRoadObject($road);
             do {
                 $someRoad->setLeftSide($start->getLeftSide());
                 $someRoad->setRightSide($start->getRightSide());

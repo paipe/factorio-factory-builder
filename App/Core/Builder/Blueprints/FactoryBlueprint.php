@@ -116,21 +116,23 @@ class FactoryBlueprint extends BlueprintProto
         $roadManager = new Map\RoadManager();
         $mapManager = new Map\MapManager();
 
-        $entry = (new RoadObject(Utils::c($rightSideX, 0)))
+        $goal = (new RoadObject(Utils::c($leftSideX, 0)))
+            ->setPointType(RoadObject::T_ROAD_GOAL)
             ->setRightSide($name);
-        $exit = (new RoadObject(Utils::c($leftSideX, 0)))
-            ->setPointType(RoadObject::T_EXIT)
+        $start = (new RoadObject(Utils::c($rightSideX, 0)))
+            ->setPointType(RoadObject::T_ROAD_START)
             ->setRightSide($name);
 
-        $this->blueprintMap->addObject($entry);
-        $this->blueprintMap->addObject($exit);
+        $this->blueprintMap->addObject($goal);
+        $this->blueprintMap->addObject($start);
 
         $road = $roadManager->findPath(
             $this->blueprintMap,
-            $entry,
-            $exit
+            $start,
+            $goal
         );
         $mapManager->mergeRoadToMap($this->blueprintMap, $road, Utils::c(0, 0));
+
 
         return $this;
     }
@@ -143,7 +145,7 @@ class FactoryBlueprint extends BlueprintProto
         $mapManager = new Map\MapManager();
 
         $entry = (new RoadObject(Utils::c($rightSideX, 6)))
-            ->setPointType(RoadObject::T_ENTRY);
+            ->setPointType(RoadObject::T_ROAD_GOAL);
         if (Utils::isSource($name)) {
             $entry->setLeftSide($name);
         } else {
@@ -177,7 +179,7 @@ class FactoryBlueprint extends BlueprintProto
         $mapManager = new Map\MapManager();
 
         $entry = (new RoadObject(Utils::c($rightSideX, 7)))
-            ->setPointType(RoadObject::T_ENTRY);
+            ->setPointType(RoadObject::T_ROAD_GOAL);
         if (Utils::isSource($name)) {
             $entry->setLeftSide($name);
         } else {

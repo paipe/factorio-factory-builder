@@ -55,10 +55,10 @@ class MapManagerTest extends TestCase
         $roadMap = new Map();
 
         $roadStart = (new Map\Objects\RoadObject(['x' => 0, 'y' => 0]))
-            ->setPointType(Map\Objects\RoadObject::T_EXIT)
+            ->setPointType(Map\Objects\RoadObject::T_ROAD_START)
             ->setLeftSide('red_bottle');
         $roadGoal = (new Map\Objects\RoadObject(['x' => 4, 'y' => 0]))
-            ->setPointType(Map\Objects\RoadObject::T_ENTRY)
+            ->setPointType(Map\Objects\RoadObject::T_ROAD_GOAL)
             ->setLeftSide('red_bottle');
 
         $road2 = (new Map\Objects\RoadObject(['x' => 1, 'y' => 0]))
@@ -95,10 +95,10 @@ class MapManagerTest extends TestCase
         $roadMap = new Map();
 
         $roadStart = (new Map\Objects\RoadObject(['x' => 0, 'y' => 0]))
-            ->setPointType(Map\Objects\RoadObject::T_EXIT)
+            ->setPointType(Map\Objects\RoadObject::T_ROAD_START)
             ->setLeftSide('red_bottle');
         $roadGoal = (new Map\Objects\RoadObject(['x' => 2, 'y' => 0]))
-            ->setPointType(Map\Objects\RoadObject::T_ENTRY)
+            ->setPointType(Map\Objects\RoadObject::T_ROAD_GOAL)
             ->setLeftSide('red_bottle');
 
         $road2 = (new Map\Objects\RoadObject(['x' => 1, 'y' => 0]))

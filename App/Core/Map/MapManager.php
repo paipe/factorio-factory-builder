@@ -66,12 +66,12 @@ class MapManager
     public function mergeRoadToMap(Map $map, Map $road, array $coordinates): Map
     {
         $roadManager = new RoadManager();
-        $firstRoad = $roadManager->getFirstRoadObject($road);
-        $lastRoad = $roadManager->getLastRoadObject($road);
+        $goalRoad = $roadManager->getGoalRoadObject($road);
+        $startRoad = $roadManager->getStartRoadObject($road);
         $map = $this->mergeMaps($map, $road, $coordinates);
 
-        $this->checkRoadNeighbourPoints($map, $firstRoad);
-        $this->checkRoadNeighbourPoints($map, $lastRoad);
+        $this->checkRoadNeighbourPoints($map, $goalRoad, RoadObject::T_ROAD_GOAL);
+        $this->checkRoadNeighbourPoints($map, $startRoad, RoadObject::T_ROAD_START);
 
         return $map;
     }
@@ -82,9 +82,10 @@ class MapManager
      *
      * @param Map $map
      * @param RoadObject $roadObject
+     * @param string $type
      * @return bool
      */
-    private function checkRoadNeighbourPoints(Map $map, RoadObject $roadObject): bool
+    private function checkRoadNeighbourPoints(Map $map, RoadObject $roadObject, string $type): bool
     {
         $result = false;
         $roadManager = new RoadManager();
@@ -92,7 +93,7 @@ class MapManager
         while (!empty($coordinateShifts) && $result === false) {
             $coordinates = array_shift($coordinateShifts);
             $testObject = $map->getObjectByCoordinates($coordinates);
-            if ($testObject instanceof RoadObject) {
+            if ($testObject instanceof RoadObject && $testObject->getPointType() === $type) {
                 $result = $roadManager->connectRoads($roadObject, $testObject);
             }
         }

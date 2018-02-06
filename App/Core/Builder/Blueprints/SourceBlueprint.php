@@ -33,7 +33,7 @@ class SourceBlueprint extends BlueprintProto
         );
         $sourceMap->addObject(
             (new Map\Objects\RoadObject(Utils::c($x, $y + 2)))
-                ->setPointType(Map\Objects\RoadObject::T_EXIT)
+                ->setPointType(Map\Objects\RoadObject::T_ROAD_START)
                 ->setLeftSide($object['name'])
         );
 

@@ -116,7 +116,7 @@ class Map
             foreach ($row as $object) {
                 if (
                     $object instanceof RoadObject &&
-                    $object->getPointType() === RoadObject::T_ENTRY
+                    $object->getPointType() === RoadObject::T_ROAD_GOAL
                 ) {
                     $entryPoints[] = $object;
                 }
@@ -133,7 +133,7 @@ class Map
             foreach ($row as $object) {
                 if (
                     $object instanceof RoadObject &&
-                    $object->getPointType() === RoadObject::T_EXIT
+                    $object->getPointType() === RoadObject::T_ROAD_START
                 ) {
                     $exitPoints[] = $object;
                 }
