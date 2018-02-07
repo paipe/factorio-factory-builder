@@ -132,7 +132,7 @@ class FactoryBlueprint extends BlueprintProto
             $goal
         );
         $mapManager->mergeRoadToMap($this->blueprintMap, $road, Utils::c(0, 0));
-
+        $goal->setPointType(RoadObject::T_ROAD_START);
 
         return $this;
     }
@@ -144,29 +144,29 @@ class FactoryBlueprint extends BlueprintProto
         $roadManager = new Map\RoadManager();
         $mapManager = new Map\MapManager();
 
-        $entry = (new RoadObject(Utils::c($rightSideX, 6)))
-            ->setPointType(RoadObject::T_ROAD_GOAL);
-        if (Utils::isSource($name)) {
-            $entry->setLeftSide($name);
-        } else {
-            $entry->setRightSide($name);
-        }
-        $this->blueprintMap->addObject($entry);
+        $start = (new RoadObject(Utils::c($rightSideX, 6)))
+            ->setPointType(RoadObject::T_ROAD_START);
+        $this->blueprintMap->addObject($start);
 
-        $exit = new RoadObject(Utils::c($leftSideX, 6));
+        $goal = (new RoadObject(Utils::c($leftSideX, 6)))
+            ->setPointType(RoadObject::T_ROAD_GOAL);
+        $this->blueprintMap->addObject($goal);
+
         if (Utils::isSource($name)) {
-            $exit->setLeftSide($name);
+            $goal->setLeftSide($name);
+            $start->setLeftSide($name);
         } else {
-            $exit->setRightSide($name);
+            $goal->setRightSide($name);
+            $start->setRightSide($name);
         }
-        $this->blueprintMap->addObject($exit);
 
         $road = $roadManager->findPath(
             $this->blueprintMap,
-            $entry,
-            $exit
+            $start,
+            $goal
         );
         $mapManager->mergeRoadToMap($this->blueprintMap, $road, Utils::c(0, 0));
+        $start->setPointType(RoadObject::T_ROAD_GOAL);
 
         return $this;
     }
@@ -178,29 +178,29 @@ class FactoryBlueprint extends BlueprintProto
         $roadManager = new Map\RoadManager();
         $mapManager = new Map\MapManager();
 
-        $entry = (new RoadObject(Utils::c($rightSideX, 7)))
-            ->setPointType(RoadObject::T_ROAD_GOAL);
-        if (Utils::isSource($name)) {
-            $entry->setLeftSide($name);
-        } else {
-            $entry->setRightSide($name);
-        }
-        $this->blueprintMap->addObject($entry);
+        $start = (new RoadObject(Utils::c($rightSideX, 7)))
+            ->setPointType(RoadObject::T_ROAD_START);
+        $this->blueprintMap->addObject($start);
 
-        $exit = new RoadObject(Utils::c($leftSideX, 7));
+        $goal = (new RoadObject(Utils::c($leftSideX, 7)))
+            ->setPointType(RoadObject::T_ROAD_GOAL);
+        $this->blueprintMap->addObject($goal);
+
         if (Utils::isSource($name)) {
-            $exit->setLeftSide($name);
+            $start->setLeftSide($name);
+            $goal->setLeftSide($name);
         } else {
-            $exit->setRightSide($name);
+            $start->setRightSide($name);
+            $goal->setRightSide($name);
         }
-        $this->blueprintMap->addObject($exit);
 
         $road = $roadManager->findPath(
             $this->blueprintMap,
-            $entry,
-            $exit
+            $start,
+            $goal
         );
         $mapManager->mergeRoadToMap($this->blueprintMap, $road, Utils::c(0, 0));
+        $start->setPointType(RoadObject::T_ROAD_GOAL);
 
         return $this;
     }

@@ -94,7 +94,7 @@ class MapManager
             $coordinates = array_shift($coordinateShifts);
             $testObject = $map->getObjectByCoordinates($coordinates);
             if ($testObject instanceof RoadObject && $testObject->getPointType() === $type) {
-                $result = $roadManager->connectRoads($roadObject, $testObject);
+                $result = $roadManager->connectRoads($roadObject, $testObject, $type);
             }
         }
 

@@ -74,21 +74,22 @@ class RoadManager
      *
      * @param RoadObject $firstRoad
      * @param RoadObject $secondRoad
+     * @param string $type
      * @return bool
      */
-    public function connectRoads(RoadObject $firstRoad, RoadObject $secondRoad): bool
+    public function connectRoads(RoadObject $firstRoad, RoadObject $secondRoad, string $type): bool
     {
         $result = false;
         if (
             $firstRoad->getLeftSide() === $secondRoad->getLeftSide() &&
             $firstRoad->getRightSide() === $secondRoad->getRightSide()
         ) {
-            if ($firstRoad->isEmptyPrevRoad() && $secondRoad->isEmptyNextRoad()) {
+            if ($firstRoad->isEmptyPrevRoad() && $secondRoad->isEmptyNextRoad() && $type === RoadObject::T_ROAD_START) {
                 $firstRoad->setPrevObject($secondRoad);
                 $secondRoad->setNextObject($firstRoad);
                 $secondRoad->clearPointType();
                 $result = true;
-            } elseif ($firstRoad->isEmptyNextRoad() && $secondRoad->isEmptyPrevRoad()) {
+            } elseif ($firstRoad->isEmptyNextRoad() && $secondRoad->isEmptyPrevRoad() && $type === RoadObject::T_ROAD_GOAL) {
                 $firstRoad->setNextObject($secondRoad);
                 $secondRoad->setPrevObject($firstRoad);
                 $secondRoad->clearPointType();
