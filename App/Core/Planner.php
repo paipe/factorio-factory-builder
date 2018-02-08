@@ -70,8 +70,8 @@ class Planner
         }
 
         $this->buildRoads();
-        $this->resultMap->processRoadDirections();
-//        $this->newBuildRoads();
+        $roadManager = new RoadManager();
+        $roadManager->processRoadDirections($this->resultMap);
 
         return $this->resultMap;
     }
@@ -102,69 +102,6 @@ class Planner
                 echo 'Кривой мердж карт' . PHP_EOL;
             }
         }
-    }
-
-    protected function newBuildRoads(): void
-    {
-        $pointGroups = $this->resultMap->getRoadCombinationsGroupedByProduct();
-        foreach ($pointGroups as $productName => $group) {
-            if (count($group) === 1) {
-                continue;
-            } elseif (count($group) === 2) {
-                $this->simpleBuildRoad($group);
-            } else {
-                $this->magicBuildRoad($group);
-            }
-        }
-
-    }
-
-    /**
-     * @param RoadObject[] $group
-     * @throws \Exception
-     */
-    protected function simpleBuildRoad($group): void
-    {
-        foreach ($group as $object) {
-            if ($object->getPointType() === RoadObject::T_ROAD_START) {
-                /** @var RoadObject $exitPoint */
-                $exitPoint = $object;
-            }
-            if ($object->getPointType() === RoadObject::T_ROAD_GOAL) {
-                /** @var RoadObject $entryPoint */
-                $entryPoint = $object;
-            }
-        }
-        if (!(isset($entryPoint) && isset($exitPoint))) {
-            throw new \Exception();
-        }
-        $road = $this->pathFinder->findPath(
-            $this->resultMap,
-            $entryPoint,
-            $exitPoint
-        );
-        try {
-            $this->resultMap->mergeMaps(
-                $road,
-                Utils::c(0, 0)
-            );
-        } catch (\Error $e) {
-            echo 'Кривой мердж карт' . PHP_EOL;
-        }
-
-        Logger::info('Simple road was built.', [
-            'start' => 'x: ' . $entryPoint->getX() . ', y: ' . $entryPoint->getY(),
-            'end'   => 'x: ' . $exitPoint->getX() . ', y: ' . $exitPoint->getY(),
-            'product' => $entryPoint->getPointProduct()
-        ]);
-    }
-
-    /**
-     * @param RoadObject[] $group
-     */
-    private function magicBuildRoad(array $group): void
-    {
-        //todo ветвление и все такое будут тут
     }
 
 }

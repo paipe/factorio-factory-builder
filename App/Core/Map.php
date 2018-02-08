@@ -16,9 +16,6 @@ use App\Core\Map\Objects\RoadObject;
 use App\Exceptions\PlaceToAddOccupiedException;
 
 /**
- * @todo: класс карты должен быть чисто контейнером
- * всю обработку разнести нафиг
- *
  * Class Map
  * @package App\Core
  */
@@ -53,60 +50,6 @@ class Map
     public function isEmptyCoordinates(array $coordinates): bool
     {
         return isset($this->grid[$coordinates['y']][$coordinates['x']]);
-    }
-
-    public function processRoadDirections(): void
-    {
-        foreach ($this->grid as $row) {
-            foreach ($row as $object) {
-                if ($object instanceof RoadObject && is_null($object->getDirection())) {
-                    $road = $object;
-                    while (!is_null($road->getPrevObject())) {
-                        $road = $road->getPrevObject();
-                    }
-
-                    $directions = [
-                        '10' => 'down',
-                        '-10' => 'up',
-                        '01' => 'right',
-                        '0-1' => 'left'
-                    ];
-
-                    $prevDirection = NULL;
-                    do {
-                        if (is_null($road->getPrevObject())) {
-                            if (!is_null($road->getNextObject())) {
-                                $road = $road->getNextObject();
-                            } else {
-                                $prevRoad = $road;
-                                break;
-                            }
-                            continue;
-                        }
-
-                        $key = (string)($road->getY() - $road->getPrevObject()->getY()) .
-                            (string)($road->getX() - $road->getPrevObject()->getX());
-                        $direction = $directions[$key];
-
-                        if (is_null($prevDirection)) {
-                            $prevDirection = $direction;
-                        }
-                        if ($direction === $prevDirection) {
-                            $roadType = $direction;
-                        } else {
-                            $roadType = $prevDirection . '_' . $direction;
-                        }
-
-                        $road->getPrevObject()->setDirection($roadType);
-                        $prevDirection = $direction;
-                        $prevRoad = $road;
-                        $road = $road->getNextObject();
-                    } while (!is_null($road));
-                    $prevRoad->setDirection('left');
-                }
-            }
-        }
-
     }
 
     public function getEntryPoints(): array
@@ -162,20 +105,6 @@ class Map
                         'entry' => $entryPoint,
                         'exit' => $exitPoint
                     ];
-                }
-            }
-        }
-
-        return $result;
-    }
-
-    public function getRoadCombinationsGroupedByProduct(): array
-    {
-        $result = [];
-        foreach ($this->grid as $row) {
-            foreach ($row as $object) {
-                if ($object instanceof RoadObject && $object->getPointType() !== null) {
-                    $result[$object->getPointProduct()][] = $object;
                 }
             }
         }
