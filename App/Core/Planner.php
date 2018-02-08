@@ -36,7 +36,7 @@ class Planner
     /**
      * @var Map
      */
-    protected $objectMap;
+    protected $resultMap;
 
     protected $mapManager;
 
@@ -54,11 +54,11 @@ class Planner
      */
     public function plan(array $buildObjects): Map
     {
-        $this->objectMap = new Map();
+        $this->resultMap = new Map();
         $x = 0;
         $y = 0;
         foreach ($buildObjects as $object) {
-            $this->mapManager->mergeMaps($this->objectMap, $object, Utils::c($x, $y));
+            $this->mapManager->mergeMaps($this->resultMap, $object, Utils::c($x, $y));
             Logger::info('Object merged to map.', [
                 'height' => $object->getHeight(),
                 'width'  => $object->getWidth(),
@@ -70,15 +70,15 @@ class Planner
         }
 
         $this->buildRoads();
-        $this->objectMap->processRoadDirections();
+        $this->resultMap->processRoadDirections();
 //        $this->newBuildRoads();
 
-        return $this->objectMap;
+        return $this->resultMap;
     }
 
     protected function buildRoads(): void
     {
-        $combinations = $this->objectMap->getStartEndRoadCombinations();
+        $combinations = $this->resultMap->getStartEndRoadCombinations();
         foreach ($combinations as $combination) {
             /**
              * @var RoadObject $entryPoint
@@ -88,13 +88,13 @@ class Planner
             $exitPoint  = $combination['exit'];
             //ищем от конца до начала, чтобы потом не разворачивать массив
             $road = $this->roadManager->findPath(
-                $this->objectMap,
+                $this->resultMap,
                 $entryPoint,
                 $exitPoint
             );
             try {
                 $this->mapManager->mergeRoadToMap(
-                    $this->objectMap,
+                    $this->resultMap,
                     $road,
                     Utils::c(0, 0)
                 );
@@ -106,7 +106,7 @@ class Planner
 
     protected function newBuildRoads(): void
     {
-        $pointGroups = $this->objectMap->getRoadCombinationsGroupedByProduct();
+        $pointGroups = $this->resultMap->getRoadCombinationsGroupedByProduct();
         foreach ($pointGroups as $productName => $group) {
             if (count($group) === 1) {
                 continue;
@@ -139,12 +139,12 @@ class Planner
             throw new \Exception();
         }
         $road = $this->pathFinder->findPath(
-            $this->objectMap,
+            $this->resultMap,
             $entryPoint,
             $exitPoint
         );
         try {
-            $this->objectMap->mergeMaps(
+            $this->resultMap->mergeMaps(
                 $road,
                 Utils::c(0, 0)
             );

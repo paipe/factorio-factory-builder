@@ -142,8 +142,8 @@ class PathFinder
             $roadObject = new RoadObject(Utils::c($currentNode->x, $currentNode->y));
             if ($prevObject !== null) {
                 /** @var Map\Conductor $prevObject */
-                $roadObject->setNextObject($prevObject);
-                $prevObject->setPrevObject($roadObject);
+                $roadObject->setPrevObject($prevObject);
+                $prevObject->setNextObject($roadObject);
             }
             $pathMap->addObject($roadObject);
             $prevObject = $roadObject;
