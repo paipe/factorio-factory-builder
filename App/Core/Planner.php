@@ -86,7 +86,6 @@ class Planner
              */
             $entryPoint = $combination['entry'];
             $exitPoint  = $combination['exit'];
-            //ищем от конца до начала, чтобы потом не разворачивать массив
             $road = $this->roadManager->findPath(
                 $this->resultMap,
                 $entryPoint,
