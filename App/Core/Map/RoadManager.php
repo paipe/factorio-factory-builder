@@ -125,7 +125,7 @@ class RoadManager
             do {
                 $someRoad->setLeftSide($start->getLeftSide());
                 $someRoad->setRightSide($start->getRightSide());
-                $someRoad = $someRoad->getNextObject();
+                $someRoad = $someRoad->getPrevObject();
             } while (!is_null($someRoad));
 
             $result = $road;

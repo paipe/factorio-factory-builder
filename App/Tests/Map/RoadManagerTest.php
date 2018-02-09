@@ -54,13 +54,13 @@ class RoadManagerTest extends TestCase
             [$road1, $road2, $road3, $road4]
         );
 
-        $this->assertEquals($road2, $road1->getNextObject());
-        $this->assertEquals($road3, $road2->getNextObject());
-        $this->assertEquals($road4, $road3->getNextObject());
+        $this->assertEquals($road2, $road1->getPrevObject());
+        $this->assertEquals($road3, $road2->getPrevObject());
+        $this->assertEquals($road4, $road3->getPrevObject());
 
-        $this->assertEquals($road1, $road2->getPrevObject());
-        $this->assertEquals($road2, $road3->getPrevObject());
-        $this->assertEquals($road3, $road4->getPrevObject());
+        $this->assertEquals($road1, $road2->getNextObject());
+        $this->assertEquals($road2, $road3->getNextObject());
+        $this->assertEquals($road3, $road4->getNextObject());
 
         $this->assertEquals('red_bottle', $road1->getLeftSide());
         $this->assertEquals('red_bottle', $road2->getLeftSide());

@@ -39,13 +39,13 @@ class PathFinderTest extends TestCase
             [$road1, $road2, $road3, $road4]
         );
 
-        $this->assertEquals($road2, $road1->getNextObject());
-        $this->assertEquals($road3, $road2->getNextObject());
-        $this->assertEquals($road4, $road3->getNextObject());
+        $this->assertEquals($road2, $road1->getPrevObject());
+        $this->assertEquals($road3, $road2->getPrevObject());
+        $this->assertEquals($road4, $road3->getPrevObject());
 
-        $this->assertEquals($road1, $road2->getPrevObject());
-        $this->assertEquals($road2, $road3->getPrevObject());
-        $this->assertEquals($road3, $road4->getPrevObject());
+        $this->assertEquals($road1, $road2->getNextObject());
+        $this->assertEquals($road2, $road3->getNextObject());
+        $this->assertEquals($road3, $road4->getNextObject());
     }
 
     public function testOneBlockRoadRun()
@@ -70,11 +70,11 @@ class PathFinderTest extends TestCase
             [$road1, $road2, $road3]
         );
 
-        $this->assertEquals($road2, $road1->getNextObject());
-        $this->assertEquals($road3, $road2->getNextObject());
+        $this->assertEquals($road2, $road1->getPrevObject());
+        $this->assertEquals($road3, $road2->getPrevObject());
 
-        $this->assertEquals($road1, $road2->getPrevObject());
-        $this->assertEquals($road2, $road3->getPrevObject());
+        $this->assertEquals($road1, $road2->getNextObject());
+        $this->assertEquals($road2, $road3->getNextObject());
     }
 
     public function testEmptyBlockRoadRun()
@@ -97,8 +97,8 @@ class PathFinderTest extends TestCase
             [$road1, $road2]
         );
 
-        $this->assertEquals($road2, $road1->getNextObject());
+        $this->assertEquals($road2, $road1->getPrevObject());
 
-        $this->assertEquals($road1, $road2->getPrevObject());
+        $this->assertEquals($road1, $road2->getNextObject());
     }
 }
