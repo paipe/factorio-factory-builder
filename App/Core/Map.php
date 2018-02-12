@@ -88,24 +88,22 @@ class Map
 
     public function getStartEndRoadCombinations(): array
     {
-        $result = [];
-        /**
-         * @var RoadObject[] $entryPoints
-         * @var RoadObject[] $exitPoints
-         */
+        $preResult = [];
         $entryPoints = $this->getEntryPoints();
         $exitPoints = $this->getExitPoints();
-        foreach ($entryPoints as $entryPoint) {
-            foreach ($exitPoints as $exitPoint) {
-                if (
-                    $entryPoint->getLeftSide() === $exitPoint->getLeftSide() &&
-                    $entryPoint->getRightSide() === $exitPoint->getRightSide()
-                ) {
-                    $result[] = [
-                        'entry' => $entryPoint,
-                        'exit' => $exitPoint
-                    ];
-                }
+        /** @var RoadObject[] $points */
+        $points = array_merge($entryPoints, $exitPoints);
+        foreach ($points as $point) {
+            $key = implode(':', [$point->getLeftSide(), $point->getRightSide()]);
+            if ($key !== ':') {
+                $preResult[$key][] = $point;
+            }
+        }
+
+        $result = [];
+        foreach ($preResult as $item) {
+            if (count($item) > 1) {
+                $result[] = $item;
             }
         }
 

@@ -96,20 +96,27 @@ class MapTest extends TestCase
         $map = new Map();
         $source = new Map\Objects\ChestObject(['x' => 0, 'y' => 1]);
         $road = new Map\Objects\RoadObject(['x' => 1, 'y' => 0]);
-        $roadEntry = (new Map\Objects\RoadObject(['x' => 0, 'y' => 0]))
-            ->setPointType(Map\Objects\RoadObject::T_ROAD_GOAL);
-        $roadExit = (new Map\Objects\RoadObject(['x' => 2, 'y' => 0]))
-            ->setPointType(Map\Objects\RoadObject::T_ROAD_START);
+        $roadGoal = (new Map\Objects\RoadObject(['x' => 0, 'y' => 0]))
+            ->setPointType(Map\Objects\RoadObject::T_ROAD_GOAL)
+            ->setLeftSide('red_bottle');
+        $firstRoadStart = (new Map\Objects\RoadObject(['x' => 2, 'y' => 0]))
+            ->setPointType(Map\Objects\RoadObject::T_ROAD_START)
+            ->setLeftSide('red_bottle');
+        $secondRoadStart = (new Map\Objects\RoadObject(['x' => 5, 'y' => 0]))
+            ->setPointType(Map\Objects\RoadObject::T_ROAD_START)
+            ->setLeftSide('red_bottle');
 
         $map->addObject($source);
         $map->addObject($road);
-        $map->addObject($roadEntry);
-        $map->addObject($roadExit);
+        $map->addObject($firstRoadStart);
+        $map->addObject($secondRoadStart);
+        $map->addObject($roadGoal);
         $combinations = $map->getStartEndRoadCombinations();
 
         $this->assertTrue(is_array($combinations));
+        $this->assertTrue(is_array($combinations[0]));
         $this->assertCount(1, $combinations);
-        $this->assertCount(2, $combinations[0]);
+        $this->assertCount(3, $combinations[0]);
         $this->assertContainsOnlyInstancesOf(
             Map\Objects\RoadObject::class,
             $combinations[0]
