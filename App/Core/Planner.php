@@ -80,25 +80,46 @@ class Planner
     {
         $combinations = $this->resultMap->getStartEndRoadCombinations();
         foreach ($combinations as $combination) {
-            /**
-             * @var RoadObject $entryPoint
-             * @var RoadObject $exitPoint
-             */
-            $entryPoint = $combination['entry'];
-            $exitPoint  = $combination['exit'];
-            $road = $this->roadManager->findPath(
-                $this->resultMap,
-                $entryPoint,
-                $exitPoint
-            );
-            try {
+            if (count($combination) === 2) {
+                /** @var RoadObject $point */
+                foreach ($combination as $point) {
+                    if ($point->getPointType() === RoadObject::T_ROAD_GOAL) {
+                        $goalPoint = $point;
+                    }
+                    if ($point->getPointType() === RoadObject::T_ROAD_START) {
+                        $startPoint = $point;
+                    }
+                }
+                $road = $this->roadManager->findPath(
+                    $this->resultMap,
+                    $goalPoint,
+                    $startPoint
+                );
                 $this->mapManager->mergeRoadToMap(
                     $this->resultMap,
                     $road,
                     Utils::c(0, 0)
                 );
-            } catch (\Error $e) {
-                echo 'Кривой мердж карт' . PHP_EOL;
+            } elseif (count($combination) === 3) {
+                //верим, что тут только 3+ комбинации
+                $count = [];
+                /** @var RoadObject $point */
+                foreach ($combination as $point) {
+                    $count[] = $point->getPointType();
+                }
+                $data = array_count_values($count);
+                $type = array_keys($data, max($data))[0];
+                switch ($type) {
+                    case RoadObject::T_ROAD_START:
+                        throw new \Exception('Вариант с двумя выходами и одним входом пока не поддерживается!');
+                        break;
+                    case RoadObject::T_ROAD_GOAL:
+                        //TODO: тут будет вариант ветвления дороги с 1 на 2
+                        break;
+                }
+
+            } else {
+                throw new \Exception('Нестандартный размер пака комбинаций!');
             }
         }
     }
