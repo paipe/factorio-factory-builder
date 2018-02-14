@@ -19,7 +19,7 @@ use App\Core\Map\ObjectProto;
  * а так же именя входящих и исходящего продуктов.
  *
  * Class FactoryObject
- * @package App\Core\Map\Objects
+ * @package App\Core\Map\Map\Objects
  */
 class FactoryObject extends ObjectProto
 {

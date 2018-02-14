@@ -8,7 +8,7 @@
 
 namespace App\Tests\Utils;
 
-use App\Core\Map;
+use App\Core\Map\Map;
 use App\Core\Map\Objects\RoadObject;
 use App\Core\Utils\PathFinder\PathFinder;
 use PHPUnit\Framework\TestCase;

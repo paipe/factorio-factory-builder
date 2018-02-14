@@ -17,7 +17,7 @@ use App\Core\Map\ObjectProto;
  * Объект сундука, хранит в себе ресурс одного типа
  *
  * Class ChestObject
- * @package App\Core\Map\Objects
+ * @package App\Core\Map\Map\Objects
  */
 class ChestObject extends ObjectProto
 {

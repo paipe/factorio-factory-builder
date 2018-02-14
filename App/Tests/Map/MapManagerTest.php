@@ -8,9 +8,10 @@
 
 namespace App\Tests\Map;
 
-use App\Core\Map;
+use App\Core\Map\Map;
 use App\Core\Map\MapManager;
-use App\Core\Utils\Utils;
+use App\Core\Map\Objects\ChestObject;
+use App\Core\Map\Objects\RoadObject;
 use App\Exceptions\PlaceToAddOccupiedException;
 use PHPUnit\Framework\TestCase;
 
@@ -21,8 +22,8 @@ class MapManagerTest extends TestCase
     {
         $map1 = new Map();
         $map2 = new Map();
-        $source1 = new Map\Objects\ChestObject(['x' => 0, 'y' => 0]);
-        $source2 = new Map\Objects\ChestObject(['x' => 0, 'y' => 0]);
+        $source1 = new ChestObject(['x' => 0, 'y' => 0]);
+        $source2 = new ChestObject(['x' => 0, 'y' => 0]);
         $map1->addObject($source1);
         $map2->addObject($source2);
 
@@ -39,8 +40,8 @@ class MapManagerTest extends TestCase
 
         $map1 = new Map();
         $map2 = new Map();
-        $source1 = new Map\Objects\ChestObject(['x' => 0, 'y' => 0]);
-        $source2 = new Map\Objects\ChestObject(['x' => 0, 'y' => 0]);
+        $source1 = new ChestObject(['x' => 0, 'y' => 0]);
+        $source2 = new ChestObject(['x' => 0, 'y' => 0]);
         $map1->addObject($source1);
         $map2->addObject($source2);
 
@@ -54,18 +55,18 @@ class MapManagerTest extends TestCase
         $map = new Map();
         $roadMap = new Map();
 
-        $roadStart = (new Map\Objects\RoadObject(['x' => 0, 'y' => 0]))
-            ->setPointType(Map\Objects\RoadObject::T_ROAD_START)
+        $roadStart = (new RoadObject(['x' => 0, 'y' => 0]))
+            ->setPointType(RoadObject::T_ROAD_START)
             ->setLeftSide('red_bottle');
-        $roadGoal = (new Map\Objects\RoadObject(['x' => 4, 'y' => 0]))
-            ->setPointType(Map\Objects\RoadObject::T_ROAD_GOAL)
+        $roadGoal = (new RoadObject(['x' => 4, 'y' => 0]))
+            ->setPointType(RoadObject::T_ROAD_GOAL)
             ->setLeftSide('red_bottle');
 
-        $road2 = (new Map\Objects\RoadObject(['x' => 1, 'y' => 0]))
+        $road2 = (new RoadObject(['x' => 1, 'y' => 0]))
             ->setLeftSide('red_bottle');
-        $road3 = (new Map\Objects\RoadObject(['x' => 2, 'y' => 0]))
+        $road3 = (new RoadObject(['x' => 2, 'y' => 0]))
             ->setLeftSide('red_bottle');
-        $road4 = (new Map\Objects\RoadObject(['x' => 3, 'y' => 0]))
+        $road4 = (new RoadObject(['x' => 3, 'y' => 0]))
             ->setLeftSide('red_bottle');
 
         $road2->setNextObject($road3);
@@ -94,14 +95,14 @@ class MapManagerTest extends TestCase
         $map = new Map();
         $roadMap = new Map();
 
-        $roadStart = (new Map\Objects\RoadObject(['x' => 0, 'y' => 0]))
-            ->setPointType(Map\Objects\RoadObject::T_ROAD_START)
+        $roadStart = (new RoadObject(['x' => 0, 'y' => 0]))
+            ->setPointType(RoadObject::T_ROAD_START)
             ->setLeftSide('red_bottle');
-        $roadGoal = (new Map\Objects\RoadObject(['x' => 2, 'y' => 0]))
-            ->setPointType(Map\Objects\RoadObject::T_ROAD_GOAL)
+        $roadGoal = (new RoadObject(['x' => 2, 'y' => 0]))
+            ->setPointType(RoadObject::T_ROAD_GOAL)
             ->setLeftSide('red_bottle');
 
-        $road2 = (new Map\Objects\RoadObject(['x' => 1, 'y' => 0]))
+        $road2 = (new RoadObject(['x' => 1, 'y' => 0]))
             ->setLeftSide('red_bottle');
 
         $map->addObject($roadStart);

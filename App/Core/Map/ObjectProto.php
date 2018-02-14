@@ -15,7 +15,7 @@ namespace App\Core\Map;
  * на сетке карты (объект Map)
  *
  * Class ObjectProto
- * @package App\Core\Map
+ * @package App\Core\Map\Map
  */
 abstract class ObjectProto
 {

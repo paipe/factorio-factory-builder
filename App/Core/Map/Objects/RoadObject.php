@@ -20,7 +20,7 @@ use App\Core\Map\ObjectProto;
  * а так же ссылки на предыдущую и следующую дорогу в цепочке
  *
  * Class RoadObject
- * @package App\Core\Map\Objects
+ * @package App\Core\Map\Map\Objects
  */
 class RoadObject extends ObjectProto implements Conductor
 {

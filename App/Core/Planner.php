@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Core;
 
 
+use App\Core\Map\Map;
 use App\Core\Map\MapManager;
 use App\Core\Map\Objects\RoadObject;
 use App\Core\Map\RoadManager;
@@ -76,12 +77,14 @@ class Planner
         return $this->resultMap;
     }
 
+    //TODO: тут нужно будет рефакторить
     protected function buildRoads(): void
     {
-        $combinations = $this->resultMap->getStartEndRoadCombinations();
+        $combinations = $this->resultMap->getRoadPointsCombinations();
         foreach ($combinations as $combination) {
             if (count($combination) === 2) {
                 /** @var RoadObject $point */
+                //TODO костыль
                 foreach ($combination as $point) {
                     if ($point->getPointType() === RoadObject::T_ROAD_GOAL) {
                         $goalPoint = $point;
@@ -101,7 +104,6 @@ class Planner
                     Utils::c(0, 0)
                 );
             } elseif (count($combination) === 3) {
-                //верим, что тут только 3+ комбинации
                 $count = [];
                 /** @var RoadObject $point */
                 foreach ($combination as $point) {
@@ -114,7 +116,15 @@ class Planner
                         throw new \Exception('Вариант с двумя выходами и одним входом пока не поддерживается!');
                         break;
                     case RoadObject::T_ROAD_GOAL:
-                        //TODO: тут будет вариант ветвления дороги с 1 на 2
+                        //TODO костыль
+                        foreach ($combination as $point) {
+                            if ($point->getPointType() === RoadObject::T_ROAD_START) {
+                                $startPoint = $point;
+                                break;
+                            }
+                        }
+
+
                         break;
                 }
 

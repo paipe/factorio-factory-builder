@@ -8,7 +8,7 @@
 
 declare(strict_types=1);
 
-namespace App\Core;
+namespace App\Core\Map;
 
 
 use App\Core\Map\ObjectProto;
@@ -86,7 +86,7 @@ class Map
         return $exitPoints;
     }
 
-    public function getStartEndRoadCombinations(): array
+    public function getRoadPointsCombinations(): array
     {
         $preResult = [];
         $entryPoints = $this->getEntryPoints();
@@ -101,9 +101,22 @@ class Map
         }
 
         $result = [];
+        /** @var RoadObject[] $item */
         foreach ($preResult as $item) {
-            if (count($item) > 1) {
+            if (count($item) > 3) {
                 $result[] = $item;
+            } elseif (count($item) === 2) {
+                if ($item[0]->getPointType() === RoadObject::T_ROAD_START) {
+                    $result[] = [
+                        'start' => $item[0],
+                        'goal'  => $item[1]
+                    ];
+                } else {
+                    $result[] = [
+                        'goal' => $item[0],
+                        'start' => $item[1]
+                    ];
+                }
             }
         }
 

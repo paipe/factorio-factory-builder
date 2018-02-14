@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace App\Core\Map;
 
 
-use App\Core\Map;
+use App\Core\Map\Map;
 use App\Core\Map\Objects\RoadObject;
 use App\Core\Utils\Logger;
 use App\Core\Utils\PathFinder\PathFinder;
@@ -21,7 +21,7 @@ use App\Core\Utils\Utils;
  * Класс для управления дорогами
  *
  * Class RoadManager
- * @package App\Core\Map
+ * @package App\Core\Map\Map
  */
 class RoadManager
 {
@@ -100,6 +100,14 @@ class RoadManager
         return $result;
     }
 
+    /**
+     * Прокладывает дорогу из точки А в точку Б
+     *
+     * @param \App\Core\Map\Map $map
+     * @param RoadObject $start
+     * @param RoadObject $goal
+     * @return \App\Core\Map\Map|null
+     */
     public function findPath(Map $map, RoadObject $start, RoadObject $goal): ?Map
     {
         //клонируем карту и удаляем пункт назначения, чтобы PathFinder
@@ -137,6 +145,25 @@ class RoadManager
         }
 
         return $result;
+    }
+
+    /**
+     * Строит сепаратор на карте
+     *
+     * @param Map $map
+     * @param array $roadPoints
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function buildSeparator(Map $map, array $roadPoints): array
+    {
+        if (count($roadPoints) !== 3) {
+            throw new \Exception('Какой-то не запланированный сценарий!');
+        }
+
+
+
     }
 
     public function processRoadDirections(Map $map)

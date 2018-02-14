@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace App\Core\Map;
 
-use App\Core\Map;
+use App\Core\Map\Map;
 use App\Core\Utils\Utils;
 use App\Core\Map\Objects\RoadObject;
 
@@ -18,7 +18,7 @@ use App\Core\Map\Objects\RoadObject;
  * Класс-надстройка для операций с картами
  *
  * Class MapManager
- * @package App\Core\Map
+ * @package App\Core\Map\Map
  */
 class MapManager
 {

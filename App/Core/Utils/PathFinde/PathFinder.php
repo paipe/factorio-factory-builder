@@ -11,7 +11,8 @@ declare(strict_types=1);
 namespace App\Core\Utils\PathFinder;
 
 
-use App\Core\Map;
+use App\Core\Map\Conductor;
+use App\Core\Map\Map;
 use App\Core\Map\Objects\RoadObject;
 use App\Core\Utils\Utils;
 
@@ -37,11 +38,11 @@ class PathFinder
     protected $map;
 
     /**
-     * @var Map\Conductor
+     * @var Conductor
      */
     protected $proto;
 
-    public function __construct(Map $map, Map\Conductor $proto)
+    public function __construct(Map $map, Conductor $proto)
     {
         $this->map = $map;
         $this->proto = $proto;
@@ -52,7 +53,7 @@ class PathFinder
     /**
      * @param array $start -- coordinates
      * @param array $goal -- coordinates
-     * @return Map|null
+     * @return \App\Core\Map\Map|null
      */
     public function run(array $start, array $goal): ?Map
     {

@@ -8,7 +8,8 @@
 
 namespace App\Tests\Map;
 
-use App\Core\Map;
+use App\Core\Map\Map;
+use App\Core\Map\Objects\ChestObject;
 use App\Core\Map\Objects\RoadObject;
 use App\Core\Map\RoadManager;
 use PHPUnit\Framework\TestCase;
@@ -71,6 +72,35 @@ class RoadManagerTest extends TestCase
         $this->assertNull($road2->getRightSide());
         $this->assertNull($road3->getRightSide());
         $this->assertNull($road4->getRightSide());
+    }
+
+    public function testBuildSeparator()
+    {
+        $map = new Map();
+        $roadStart = (new RoadObject(['x' => 4, 'y' => 1]))
+            ->setPointType(RoadObject::T_ROAD_START)
+            ->setLeftSide('red_bottle');
+        $roadGoalFirst = (new RoadObject(['x' => 0, 'y' => 1]))
+            ->setPointType(RoadObject::T_ROAD_START)
+            ->setLeftSide('red_bottle');
+        $roadGoalSecond = (new RoadObject(['x' => 0, 'y' => 5]))
+            ->setPointType(RoadObject::T_ROAD_START)
+            ->setLeftSide('red_bottle');
+        $map->addObject($roadStart);
+        $map->addObject($roadGoalFirst);
+        $map->addObject($roadGoalSecond);
+        $map->addObject(new ChestObject(['x' => 3, 'y' => 2]));
+
+        $roadManager = new RoadManager();
+        $combinations = $roadManager->buildSeparator(
+            $map, [$roadStart, $roadGoalFirst, $roadGoalSecond]
+        );
+
+        foreach ($combinations as $combination) {
+            $this->assertTrue(count($combination) === 2);
+
+        }
+
     }
 
 }

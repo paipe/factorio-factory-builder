@@ -10,8 +10,10 @@ namespace App\Core\Builder\Blueprints;
 
 
 use App\Core\Builder\BlueprintProto;
-use App\Core\Map;
-use App\Core\Utils\PathFinder\PathFinder;
+use App\Core\Map\Map;
+use App\Core\Map\MapManager;
+use App\Core\Map\Objects\FactoryObject;
+use App\Core\Map\RoadManager;
 use App\Core\Utils\Logger;
 use App\Core\Utils\Utils;
 use App\Core\Map\Objects\InserterObject;
@@ -67,7 +69,7 @@ class FactoryBlueprint extends BlueprintProto
         for ($i = 0; $i < $this->count; $i++) {
             $x = ($i * 3);
             $this->blueprintMap->addObject(
-                (new Map\Objects\FactoryObject(Utils::c($x, 2)))
+                (new FactoryObject(Utils::c($x, 2)))
                     ->setInOut($children, $name)
             );
         }
@@ -113,8 +115,8 @@ class FactoryBlueprint extends BlueprintProto
     {
         $leftSideX = 0;
         $rightSideX = $this->count * 3 - 1;
-        $roadManager = new Map\RoadManager();
-        $mapManager = new Map\MapManager();
+        $roadManager = new RoadManager();
+        $mapManager = new MapManager();
 
         $goal = (new RoadObject(Utils::c($leftSideX, 0)))
             ->setPointType(RoadObject::T_ROAD_GOAL)
@@ -141,8 +143,8 @@ class FactoryBlueprint extends BlueprintProto
     {
         $leftSideX = 0;
         $rightSideX = $this->count * 3 - 1;
-        $roadManager = new Map\RoadManager();
-        $mapManager = new Map\MapManager();
+        $roadManager = new RoadManager();
+        $mapManager = new MapManager();
 
         $start = (new RoadObject(Utils::c($rightSideX, 6)))
             ->setPointType(RoadObject::T_ROAD_START);
@@ -175,8 +177,8 @@ class FactoryBlueprint extends BlueprintProto
     {
         $leftSideX = 0;
         $rightSideX = $this->count * 3 - 1;
-        $roadManager = new Map\RoadManager();
-        $mapManager = new Map\MapManager();
+        $roadManager = new RoadManager();
+        $mapManager = new MapManager();
 
         $start = (new RoadObject(Utils::c($rightSideX, 7)))
             ->setPointType(RoadObject::T_ROAD_START);

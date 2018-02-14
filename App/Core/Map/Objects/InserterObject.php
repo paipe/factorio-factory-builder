@@ -18,7 +18,7 @@ use App\Core\Map\ObjectProto;
  * и тип манипулятора (обычный, длинный, быстрый и т.д.)
  *
  * Class InserterObject
- * @package App\Core\Map\Objects
+ * @package App\Core\Map\Map\Objects
  */
 class InserterObject extends ObjectProto
 {

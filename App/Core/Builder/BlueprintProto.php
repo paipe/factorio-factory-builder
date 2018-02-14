@@ -9,7 +9,7 @@
 namespace App\Core\Builder;
 
 
-use App\Core\Map;
+use App\Core\Map\Map;
 
 abstract class BlueprintProto
 {

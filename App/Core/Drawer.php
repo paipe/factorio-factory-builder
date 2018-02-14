@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Core;
 
 
+use App\Core\Map\Map;
 use App\Core\Map\ObjectProto;
 
 class Drawer

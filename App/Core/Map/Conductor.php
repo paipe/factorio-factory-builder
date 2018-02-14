@@ -12,7 +12,7 @@ namespace App\Core\Map;
  * Интерфейс всех путей (дорога, трубы)
  *
  * Interface Conductor
- * @package App\Core\Map
+ * @package App\Core\Map\Map
  */
 interface Conductor
 {
