@@ -96,9 +96,11 @@ class RoadManagerTest extends TestCase
             $map, [$roadStart, $roadGoalFirst, $roadGoalSecond]
         );
 
+        /** @var RoadObject[] $combination */
         foreach ($combinations as $combination) {
             $this->assertTrue(count($combination) === 2);
-
+            $this->assertEquals(RoadObject::T_ROAD_START, $combination['start']->getPointType());
+            $this->assertEquals(RoadObject::T_ROAD_GOAL, $combination['goal']->getPointType());
         }
 
     }

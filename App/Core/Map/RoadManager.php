@@ -162,6 +162,7 @@ class RoadManager
             throw new \Exception('Какой-то не запланированный сценарий!');
         }
 
+        
 
 
     }
