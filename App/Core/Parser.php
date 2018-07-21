@@ -13,7 +13,7 @@ namespace App\Core;
 
 
 use App\Core\Parser\Component;
-use Exceptions\EmptyItemsException;
+use App\Exceptions\EmptyItemsException;
 use Symfony\Component\Yaml\Yaml;
 use App\Core\Parser\Composite;
 use App\Core\Parser\Item;

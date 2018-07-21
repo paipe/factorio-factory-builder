@@ -6,7 +6,7 @@
  * Time: 21:38
  */
 
-namespace Exceptions;
+namespace App\Exceptions;
 
 
 class EmptyItemsException extends \Exception

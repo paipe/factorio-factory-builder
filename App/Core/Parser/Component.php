@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace App\Core\Parser;
 
-use Exceptions\UnsupportedMethodException;
+use App\Exceptions\UnsupportedMethodException;
 
 /**
  * Абстрактный класс для построения дерева продуктов
