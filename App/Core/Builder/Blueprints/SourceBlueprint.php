@@ -40,9 +40,6 @@ class SourceBlueprint extends BlueprintProto
                 ->setLeftSide($object['name'])
         );
 
-        Logger::info('Source added', [
-            'out' => $object['name']
-        ]);
         return $sourceMap;
     }
 

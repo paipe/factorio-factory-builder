@@ -138,10 +138,6 @@ class RoadManager
 
             $result = $road;
         } catch (\Exception $e) {
-            Logger::notice(
-                'Не удалось найти путь для дороги.',
-                [$start->getCoordinates(), $goal->getCoordinates()]
-            );
         }
 
         return $result;

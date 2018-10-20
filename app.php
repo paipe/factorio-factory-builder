@@ -9,8 +9,6 @@
 $loader = require_once __DIR__ . '/vendor/autoload.php';
 
 $time = -microtime(true);
-\App\Core\Utils\Logger::initialize();
-\App\Core\Utils\Logger::info('Application start');
 
 
 /**
@@ -40,7 +38,3 @@ $resultMap = (new \App\Core\Planner())->plan($buildingSchemes);
 
 
 $time += microtime(true);
-\App\Core\Utils\Logger::info('Application finish', [
-    'time' => round($time, 2),
-    'memory' => memory_get_peak_usage(true) / 1024 / 1024
-]);

@@ -18,7 +18,7 @@ class Drawer
 {
     /** Параметры для создания изображения */
     const PIXELS_ON_DOT = 50;
-    const SRC_PATH = __DIR__ . '/../../src/images/';
+    const SRC_PATH = __DIR__ . '/../../resources/images/';
     const SRC_EXTENSION = '.png';
     const RESULT_FILENAME = 'result.jpeg';
 

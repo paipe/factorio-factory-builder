@@ -48,11 +48,6 @@ class FactoryBlueprint extends BlueprintProto
         }
 
 
-        Logger::info('Fabric added', [
-            'out' => $object['name'],
-            'in'  => implode(', ', $children)
-        ]);
-
         return $this->blueprintMap;
     }
 

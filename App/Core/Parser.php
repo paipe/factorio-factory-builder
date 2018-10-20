@@ -21,13 +21,12 @@ use App\Core\Utils\Logger;
 
 class Parser
 {
-    private const YAML_FILE = __DIR__ . '/../../src/items.yaml';
+    private const YAML_FILE = __DIR__ . '/../../resources/items.yaml';
 
     private $data;
 
     public function buildTree(string $name): Component
     {
-        Logger::info('Start building tree', ['name' => $name]);
         $this->data = $this->parse();
         if (empty($this->data)) {
             throw new EmptyItemsException();

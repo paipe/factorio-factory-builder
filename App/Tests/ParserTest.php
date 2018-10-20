@@ -13,7 +13,6 @@ class ParserTest extends \PHPUnit\Framework\TestCase
     
     public function testConstruct()
     {
-        \App\Core\Utils\Logger::initialize();
 
         $iron = new \App\Core\Parser\Item('iron_plate');
         $ironGear = new \App\Core\Parser\Composite('iron_gear_wheel', 0.5);

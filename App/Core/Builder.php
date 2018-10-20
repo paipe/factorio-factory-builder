@@ -50,7 +50,6 @@ class Builder
     {
         $result = [];
         $schema = $this->tree->countConstructTime($this->count);
-        Logger::info('Start building objects', $schema);
         foreach ($schema as $object) {
             if ($object['time'] > 0) {
                 $factoryBlueprint = new FactoryBlueprint();

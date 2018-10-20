@@ -60,12 +60,6 @@ class Planner
         $y = 0;
         foreach ($buildObjects as $object) {
             $this->mapManager->mergeMaps($this->resultMap, $object, Utils::c($x, $y));
-            Logger::info('Object merged to map.', [
-                'height' => $object->getHeight(),
-                'width'  => $object->getWidth(),
-                'x' => $x,
-                'y' => $y
-            ]);
             //строим пока что все в линию слева на право, так что просто инкрементим X
             $x += $object->getWidth() + self::DISTANCE;
         }
